@@ -36,9 +36,11 @@
             <!-- Bottom Section -->
             <div class="columns">
                 <div class="column is-half foot-container-left">
-                    <p class="olm-title">#OpenLitterMap</p>
+                    <p class="olm-title">#EngageKilkenny</p>
 
-                    <p class="footer-text mb1">{{ $t('home.footer.need-your-help') }}.</p>
+                    <p class="footer-text mb1">
+                        Engage with your Historic Town Center and help us collect valuable data about the town.
+                    </p>
 
                     <img
                         v-for="s in socials"
@@ -46,6 +48,7 @@
                         @click="open(s.url)"
                         class="footer-icon"
                     />
+
                     <br>
                 </div>
 
@@ -53,20 +56,13 @@
                     <p class="olm-subtitle">{{ $t('home.footer.read') }}</p>
 
                     <p class="footer-link" @click="open('https://openlittermap.medium.com/')">{{ $t('home.footer.blog') }}</p>
-                    <p class="footer-link" @click="open('https://opengeospatialdata.springeropen.com/articles/10.1186/s40965-018-0050-y')">{{ $t('home.footer.research-paper') }}</p>
-                    <router-link tag="p" to="/references" class="footer-link">{{ $t('home.footer.references') }}</router-link>
                     <router-link tag="p" to="/credits" class="footer-link">{{ $t('home.footer.credits') }}</router-link>
                 </div>
 
                 <div class="column is-2">
                     <p class="olm-subtitle">{{ $t('home.footer.watch') }}</p>
 
-                    <p class="footer-link" @click="open('https://www.youtube.com/watch?v=my7Cx-kZhT4')">TEDx 2017</p>
-                    <p class="footer-link" @click="open('https://www.youtube.com/watch?v=E_qhEhHwUGM')">State of the Map 2019</p>
-                    <p class="footer-link" @click="open('https://www.youtube.com/watch?v=T8rGf1ScR1I')">Datapub 2020</p>
-                    <p class="footer-link" @click="open('https://www.youtube.com/watch?v=5HuaQNeHuZ8')">ESA PhiWeek 2020</p>
-                    <p class="footer-link" @click="open('https://www.youtube.com/watch?v=QhLsA0WIfTA')">Geneva Form, UN 2020</p>
-                    <p class="footer-link" @click="open('https://www.youtube.com/watch?v=Pe4nHdoAlu4')">Cardano4Climate Meetup 2021</p>
+                    <p class="footer-link">Todo - How To Use The App</p>
                 </div>
 
                 <div class="column is-2">
@@ -76,19 +72,18 @@
                         <p class="footer-link">{{ $t('home.footer.contact-us') }}</p>
                     </router-link>
                     <p class="footer-link">{{ $t('home.footer.create-account') }}</p>
-                    <p class="footer-link" @click="open('https://angel.co/openlittermap/jobs')">{{ $t('home.footer.join-the-team') }}</p>
-                    <p class="footer-link" @click="open('https://join.slack.com/t/openlittermap/shared_invite/zt-fdctasud-mu~OBQKReRdC9Ai9KgGROw')">{{ $t('home.footer.join-slack') }}</p>
-                    <p class="footer-link" @click="open('https://github.com/openlittermap')">GitHub</p>
-                    <p class="footer-link" @click="open('https://www.facebook.com/pg/openlittermap/groups/')">{{ $t('home.footer.fb-group') }}</p>
-                    <router-link to="/donate" class="footer-link">{{ $t('home.footer.single-donation') }}</router-link>
-                    <router-link to="/signup" class="footer-link">{{ $t('home.footer.crowdfunding') }}</router-link>
+                    <p class="footer-link" @click="open('https://github.com/engage-kilkenny')">GitHub</p>
                 </div>
             </div>
         </div>
 
         <!-- Very bottom section -->
         <div class="footer-bottom">
-            <p class="footer-text">{{ $t('home.footer.olm-is-flagship') }}</p>
+            <p class="footer-text">
+                Engage Kilkenny is brought to you by GeoTech Innovations Ltd,
+                a software developmeny company in Ireland
+                specialising in building citizen science and geospatial data collection experiences.
+            </p>
         </div>
     </footer>
 </template>
@@ -104,8 +99,6 @@ export default {
                 { icon: 'facebook2.png', url: 'https://facebook.com/openlittermap' }, // 0
                 { icon: 'ig2.png', url: 'https://instagram.com/openlittermap' }, // 1
                 { icon: 'twitter2.png', url: 'https://twitter.com/openlittermap' }, // 2
-                { icon: 'reddit.png', url: 'https://reddit.com/r/openlittermap' }, // 3
-                { icon: 'tumblr.png', url: 'https://tumblr.com/openlittermap' }, // 4
             ]
         };
     },
@@ -196,6 +189,7 @@ export default {
         left: 25%;
         border-top: 1px solid #3c6fcd;
         padding: 1em 0;
+        width: 50%;
     }
 
     .foot-container-left {

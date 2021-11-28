@@ -1,12 +1,11 @@
 <template>
     <div>
-        <div style="height: 1px; background-color: #00CBAB;" />
         <nav class="navbar main-nav">
             <div class="container">
                 <div class="navbar-brand">
 
                     <router-link to="/" class="navbar-item">
-                        <h1 class="nav-title">#OpenLitterMap</h1>
+                        <h1 class="nav-title">#EngageKilkenny</h1>
                     </router-link>
 
                     <!-- Mobile -->
@@ -20,19 +19,14 @@
                 <div :class="nav">
                     <div class="navbar-end">
 
-                        <!-- About -->
-                        <router-link to="/about" class="navbar-item" @click.native="close">
-                              {{ $t('nav.about')}}
-                        </router-link>
+<!--                        &lt;!&ndash; About &ndash;&gt;-->
+<!--                        <router-link to="/about" class="navbar-item" @click.native="close">-->
+<!--                            {{ $t('nav.about')}}-->
+<!--                        </router-link>-->
 
                         <!-- Global Map -->
                         <router-link to="/global" class="navbar-item" @click.native="close">
-                             {{ $t('nav.global-map')}}
-                        </router-link>
-
-                        <!-- World Cup -->
-                        <router-link to="/world" class="navbar-item" @click.native="close">
-                             {{ $t('nav.world-cup')}}
+                            Map
                         </router-link>
 
                         <!-- if auth -->
@@ -106,9 +100,6 @@
                             <router-link to="/signup" class="navbar-item">
                                  {{ $t('nav.signup')}}
                             </router-link>
-
-                            <!-- Menu for available languages -->
-                            <Languages />
 
                         </div>
                     </div>

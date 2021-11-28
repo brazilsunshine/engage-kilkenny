@@ -5,14 +5,13 @@
             <!-- Title, Subtitle, App Icons -->
             <div class="columns c-1">
                 <div class="column is-half">
-                    <transition name="slide-fade-left" mode="out-in">
-                        <h1 class="main-title variable-height"
-                            :key="activeHeading.title"
-                            v-html="activeHeading.title"
-                        ></h1>.
-                    </transition>
+                        <h1 class="main-title variable-height">
+                            Engage with Historic Buildings
+                        </h1>.
                     <h2 class="subtitle is-3 home-img-padding">
-                        {{ $t('home.welcome.help-us') }}.
+                        How do different buildings make you feel?
+                        What features do you like about them?
+                        We want to know!
                     </h2>
 
                     <!-- Download app icons -->
@@ -33,21 +32,15 @@
 
                 <div class="column is-half">
                     <div class="top-image">
-                        <transition name="slide-fade-right" mode="out-in">
-                            <img
-                                :key="activeHeading.title"
-                                :src="activeHeading.img"
-                                :alt="activeHeading.title"
-                            />
-                        </transition>
+                        <img src="https://kilkennynow.ie/wp-content/uploads/Kilkenny-shop-front.jpg" />
                     </div>
                 </div>
             </div>
 
-            <!-- Why its important -->
+            <!-- What are we doing? -->
             <div class="why-container">
-                <h1 class="main-title">
-                    {{ $t('home.welcome.why-collect-data') }}?
+                <h1 class="main-title mb1">
+                    What are we doing?
                 </h1>
 
                 <div class="columns welcome-mb">
@@ -59,10 +52,11 @@
 
                     <div class="column ma">
                         <h2 class="main-subtitle">
-                            1. {{ $t('home.welcome.visibility') }}
+                            1. Collecting Data
                         </h2>
                         <h3 class="welcome-subtitle mb1em">
-                            {{ $t('home.welcome.our-maps-reveal-litter-normality') }}.
+                            There is a huge lack of data about the quality and type of historic town center buildings.
+                            We need your help to collect and map this data.
                         </h3>
                     </div>
                 </div>
@@ -77,10 +71,11 @@
 
                     <div class="column ma">
                         <h2 class="main-subtitle">
-                            2. {{ $t('home.welcome.science') }}
+                            2. Discovering New Insights
                         </h2>
                         <h3 class="welcome-subtitle mb1em">
-                            {{ $t('home.welcome.our-data-open-source') }}.
+                            How does our town center make people feel?
+                            Are there any areas that could be changed or improved?
                         </h3>
                     </div>
                 </div>
@@ -95,10 +90,11 @@
 
                     <div class="column ma">
                         <h2 class="main-subtitle">
-                            3. {{ $t('home.welcome.community') }}
+                            3. Collecting Stories
                         </h2>
                         <h3 class="welcome-subtitle">
-                            {{ $t('home.welcome.must-work-together') }}.
+                            Do you have any historic memories about the town center that you would like to share?
+                            You can now add them to our map!
                         </h3>
                     </div>
                 </div>
@@ -106,7 +102,7 @@
 
             <!-- How does it work -->
             <div>
-                <h1 class="main-title">
+                <h1 class="main-title mb1">
                     {{ $t('home.welcome.how-does-it-work') }}?
                 </h1>
 
@@ -120,10 +116,11 @@
 
                     <div class="column ma">
                         <h2 class="main-subtitle">
-                            1. {{ $t('home.welcome.take-a-photo') }}
+                            1. Take a photo
                         </h2>
                         <h3 class="welcome-subtitle mb1em">
-                            {{ $t('home.welcome.device-captures-info') }}
+                            Your devices captures valuable information including the time + location you took the photo.
+                            We need you to take geotagged photos of buildings and tell us what you think about them.
                         </h3>
                     </div>
                 </div>
@@ -138,10 +135,11 @@
 
                     <div class="column ma">
                         <h2 class="main-subtitle">
-                            2. {{ $t('home.welcome.tag-the-litter') }}
+                            2. Add Tags
                         </h2>
                         <h3 class="welcome-subtitle mb1em">
-                            {{ $t('home.welcome.tag-litter-you-see') }}!
+                            After taking a photo, choose from our tags. Is it a beautiful old sign? A broken window?
+                            How does the image make you feel?
                         </h3>
                     </div>
                 </div>
@@ -156,10 +154,10 @@
 
                     <div class="column ma">
                         <h2 class="main-subtitle">
-                            3. {{ $t('home.welcome.share-results') }}
+                            3. Explore the map
                         </h2>
                         <h3 class="welcome-subtitle">
-                            {{ $t('home.welcome.share') }}!
+                            Visit the EngageKilkenny map and engage with the buildings online!
                         </h3>
                     </div>
                 </div>
@@ -167,7 +165,9 @@
 
             <!-- Partners -->
             <div class="partners-container container is-max-desktop">
-                <p class="has-text-centered main-title">{{ $t('home.welcome.our-partners') }}</p>
+                <p class="has-text-centered main-title mb1">
+                    Brought to you by
+                </p>
 
                 <Partners />
             </div>
@@ -293,7 +293,7 @@ export default {
         font-weight: 800;
         color: #363636;
         line-height: 1.125;
-        margin-bottom: 1em;
+        margin-bottom: 0.25em;
     }
 
     .icon-center {
