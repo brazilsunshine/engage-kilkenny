@@ -131,7 +131,7 @@ class PhotosController extends Controller
         {
             if (array_key_exists('DateTime', $exif))
             {
-              $dateTime = $exif["DateTime"];
+                $dateTime = $exif["DateTime"];
             }
         }
         if (!$dateTime)
@@ -163,6 +163,8 @@ class PhotosController extends Controller
             $dateTime,
             $file->hashName()
         );
+
+        \Log::info(['imageName', $imageName]);
 
         $bboxImageName = $this->uploadPhotoAction->run(
             $this->makeImageAction->run($file, true)['image'],
@@ -267,7 +269,9 @@ class PhotosController extends Controller
             $dateTime
         ));
 
-        return ['success' => true];
+        return [
+            'success' => true
+        ];
     }
 
     /**

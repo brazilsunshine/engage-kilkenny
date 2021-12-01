@@ -161,8 +161,7 @@ export default {
         'annotations': { type: Boolean, required: false },
         'isVerifying': { type: Boolean, required: false }
     },
-    created ()
-    {
+    created () {
         if (this.$localStorage.get('recentTags'))
         {
             this.$store.commit('initRecentTags', JSON.parse(this.$localStorage.get('recentTags')));
@@ -180,8 +179,7 @@ export default {
             this.$refs.search.input.focus();
         });
     },
-    data ()
-    {
+    data () {
         return {
             btn: 'button is-medium is-success',
             quantity: 1,
@@ -205,10 +203,12 @@ export default {
             let results = [];
 
             categories.forEach(cat => {
+                console.log({ cat });
                 if (litterkeys.hasOwnProperty(cat)) {
                     results = [
                         ...results,
                         ...litterkeys[cat].map(tag => {
+                            console.log({ tag });
                             return {
                                 key: cat + ':' + tag,
                                 title: this.$i18n.t('litter.categories.' + cat) + ': ' + this.$i18n.t(`litter.${cat}.${tag}`)

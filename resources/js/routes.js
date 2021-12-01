@@ -55,10 +55,6 @@ const router = new VueRouter({
         },
         {
             path: '/signup',
-            component: require('./views/Auth/SignUp').default
-        },
-        {
-            path: '/join/:plan?',
             component: require('./views/Auth/Subscribe').default
         },
         {

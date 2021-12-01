@@ -21,9 +21,11 @@
 /*** Tags (previously AddedItems) is quite similar to AdminItems except here we remove the tag, on AdminItems we reset the tag.*/
 export default {
     name: 'Tags',
-    props: ['admin', 'photoId'], // bool
+    props: [
+        'admin',
+        'photoId'
+    ],
     computed: {
-
         /**
          * Categories from the tags object the user has created
          */
@@ -45,7 +47,6 @@ export default {
         },
     },
     methods: {
-
         /**
          * Return translated value for category key
          */

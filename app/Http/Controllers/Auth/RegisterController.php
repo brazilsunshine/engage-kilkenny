@@ -87,6 +87,7 @@ class RegisterController extends Controller
         $user->save();
 
         return [
+            'success' => true,
             'user_id' => $user->id,
             'email' => $user->email
         ];

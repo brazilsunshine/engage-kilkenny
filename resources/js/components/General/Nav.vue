@@ -59,7 +59,7 @@
 
                                     <!-- Tag Litter -->
                                     <router-link to="/tag" class="navbar-item drop-item">
-                                        {{ $t('nav.tag-litter')}}
+                                        Add Tags
                                     </router-link>
 
                                     <!-- Profile -->
@@ -67,10 +67,10 @@
                                         {{ $t('nav.profile')}}
                                     </router-link>
 
-                                    <!-- Teams -->
-                                    <router-link to="/teams" class="navbar-item drop-item">
-                                        {{ $t('nav.teams') }}
-                                    </router-link>
+<!--                                    &lt;!&ndash; Teams &ndash;&gt;-->
+<!--                                    <router-link to="/teams" class="navbar-item drop-item">-->
+<!--                                        {{ $t('nav.teams') }}-->
+<!--                                    </router-link>-->
 
                                     <!-- Settings -->
                                     <router-link to="/settings/password" class="navbar-item drop-item">
@@ -78,15 +78,18 @@
                                     </router-link>
 
                                     <!-- Bounding boxes -->
-                                    <router-link v-if="can('create boxes')" to="/bbox" class="navbar-item drop-item" @click.native="close">
-                                       {{ $t('nav.bounding-boxes')}}
-                                    </router-link>
+<!--                                    <router-link v-if="can('create boxes')" to="/bbox" class="navbar-item drop-item" @click.native="close">-->
+<!--                                       {{ $t('nav.bounding-boxes')}}-->
+<!--                                    </router-link>-->
 
                                     <!-- Logout -->
-                                    <a class="navbar-item drop-item" @click="logout"> {{ $t('nav.logout')}}</a>
+                                    <a
+                                        class="navbar-item drop-item"
+                                        @click="logout"
+                                    >{{ $t('nav.logout')}}</a>
 
                                     <!-- Menu for available languages -->
-                                    <Languages />
+<!--                                    <Languages />-->
                                 </div>
                             </div>
                         </div>

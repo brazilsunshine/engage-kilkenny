@@ -1,24 +1,9 @@
 <template>
 	<div class="container">
-		<div class="call-container">
-            <div class="has-text-centered">
-                <strong>{{ $t('auth.subscribe.crowdfunding-message') }}</strong>
-
-                <div class="control mt2">
-                    <div class="select">
-                        <select v-model="planInt" @change="changeUrl">
-                            <option v-for="plan in plans" :value="plan.id">
-                                {{ plan.name }} &mdash; €{{ plan.price / 100 }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-			</div>
-		</div>
-
 		<div class="signup-container">
-
-            <h3 class="title is-3">{{ $t('auth.subscribe.form-create-account') }}</h3>
+            <h3 class="title is-3">
+                {{ $t('auth.subscribe.form-create-account') }}
+            </h3>
 
             <form
                 method="post"
@@ -27,7 +12,9 @@
             >
                 <div class="field">
                     <!-- NAME -->
-                    <label class="label" for="name">{{ $t('auth.subscribe.form-field-name') }}</label>
+                    <label class="label" for="name">
+                        {{ $t('auth.subscribe.form-field-name') }}
+                    </label>
 
                     <div class="control has-icons-left">
                         <input
@@ -102,7 +89,9 @@
 
                 <div class="field">
                     <!-- PASSWORD -->
-                    <label class="label" for="password">{{ $t('auth.subscribe.form-field-password') }}</label>
+                    <label class="label" for="password">
+                        {{ $t('auth.subscribe.form-field-password') }}
+                    </label>
 
                     <div class="control has-icons-left">
                         <input
@@ -128,7 +117,9 @@
 
                 <div class="field">
                     <!-- CONFIRM PASSWORD -->
-                    <label class="label" for="password_confirmation">{{ $t('auth.subscribe.form-field-pass-confirm') }}</label>
+                    <label class="label" for="password_confirmation">
+                        {{ $t('auth.subscribe.form-field-pass-confirm') }}
+                    </label>
 
                     <div class="control has-icons-left">
                         <input
@@ -161,15 +152,16 @@
                         id="ConfirmToS"
                         v-model="checkbox"
                     />
-                    <label for="ConfirmToS" v-html="$t('auth.subscribe.form-account-conditions')">
-
-                    </label>
+                    <label
+                        for="ConfirmToS"
+                        v-html="$t('auth.subscribe.form-account-conditions')"
+                    />
                 </p>
 
                 <div class="captcha">
                     <div>
                         <vue-recaptcha
-                            sitekey="6Le9FtwcAAAAAMOImuwEoOYssOVdNf7dfI2x8XZh"
+                            sitekey="6LepsGgdAAAAALjpC6EWQ6LMHLcl8gx1Q3DI3knb"
                             v-model="g_recaptcha_response"
                             :loadRecaptchaScript="true"
                             @verify="recaptcha"
@@ -181,13 +173,14 @@
                         v-text="getFirstError('g-recaptcha-response')"
                     />
                 </div>
-                <br>
-                <div style="text-align: center; padding-bottom: 1em;">
 
+                <br>
+
+                <div style="text-align: center; padding-bottom: 1em;">
                     <button
                         class="button is-medium is-primary mb1"
                         :class="processing ? 'is-loading' : ''"
-                        :disabled="checkDisabled"
+                        :disabled="processing"
                     >{{ $t('auth.subscribe.form-btn') }}</button>
 
                     <p>{{ $t('auth.subscribe.create-account-note') }} </p>
@@ -202,24 +195,11 @@ import VueRecaptcha from 'vue-recaptcha'
 
 export default {
 	name: 'CreateAccount',
-	props: [
-        'plan'
-    ],
     components: {
         VueRecaptcha
     },
-	created () {
-		if (this.plan)
-		{
-			if (this.plan === 'startup') this.planInt = 2;
-			else if (this.plan === 'basic') this.planInt = 3;
-			else if (this.plan === 'advanced') this.planInt = 4;
-			else if (this.plan === 'pro') this.planInt = 5;
-		}
-	},
 	data () {
 		return {
-            planInt: 1,
             processing: false,
             // REGISTRATION
             name: '',
@@ -232,20 +212,6 @@ export default {
 		};
 	},
 	computed: {
-	    /**
-         * Return true to disable the button
-         */
-	    checkDisabled ()
-        {
-            if (this.processing) return true
-
-            // todo - disable the button when there are errors
-            // and disable it when all errors have been cleared
-            // if (Object.keys(this.errors).length > 0) return true;
-
-            return false;
-        },
-
         /**
          * Errors object from plans
          */
@@ -269,21 +235,6 @@ export default {
         clearError (key)
         {
             if (this.errors[key]) this.$store.commit('clearCreateAccountError', key);
-        },
-
-        /**
-         * Update query string in the url bar
-         */
-        changeUrl (e)
-        {
-            let plan = this.plans[e.target.value -1].name.toLowerCase();
-
-            this.$router.push({
-                path: 'join',
-                query: {
-                    plan
-                }
-            });
         },
 
         /**
@@ -331,17 +282,13 @@ export default {
 
             this.processing = true;
 
-            let plan_id = this.plans[this.planInt -1].plan_id;
-
             await this.$store.dispatch('CREATE_ACCOUNT', {
                 name: this.name,
                 username: this.username,
                 email: this.email,
                 password: this.password,
                 password_confirmation: this.password_confirmation,
-                g_recaptcha_response: this.g_recaptcha_response,
-                plan: this.planInt,
-                plan_id
+                g_recaptcha_response: this.g_recaptcha_response
             });
 
             this.password_confirmation = '';
@@ -377,7 +324,7 @@ export default {
 	}
 
     .signup-container {
-        margin: auto;
+        margin: 5em auto;
         width: 35em;
     }
 
