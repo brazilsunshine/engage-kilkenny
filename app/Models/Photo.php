@@ -41,20 +41,13 @@ class Photo extends Model
         'state_id',
         'country_id',
 
-    	'smoking_id',
-        'alcohol_id',
-        'coffee_id',
-    	'food_id',
-    	'softdrinks_id',
-        'dumping_id',
-        'sanitary_id',
-        'industrial_id',
-        'other_id',
-        'coastal_id',
-        'art_id',
-        'brands_id',
-        'trashdog_id',
-        'dogshit_id',
+        'buildings_id',
+        'cables_id',
+        'pipes_id',
+        'roofs_id',
+        'signs_id',
+        'walls_id',
+        'windows_id',
 
         'platform',
         'bounding_box',
@@ -110,19 +103,13 @@ class Photo extends Model
     public static function categories ()
     {
         return [
-            'smoking',
-            'food',
-            'coffee',
-            'alcohol',
-            'softdrinks',
-            'sanitary',
-            'coastal',
-            'dumping',
-            'industrial',
-            'brands',
-            'dogshit',
-            'art',
-            'other',
+            'buildings',
+            'cables',
+            'pipes',
+            'roofs',
+            'signs',
+            'walls',
+            'windows'
         ];
     }
 
@@ -247,79 +234,40 @@ class Photo extends Model
     }
 
     /**
-     * Litter categories
+     * All Categories
      */
-    public function smoking ()
+    public function buildings ()
     {
-    	return $this->belongsTo('App\Models\Litter\Categories\Smoking', 'smoking_id', 'id');
+        return $this->belongsTo(Building::class);
     }
 
-    public function food ()
+    public function cables ()
     {
-    	return $this->belongsTo('App\Models\Litter\Categories\Food', 'food_id', 'id');
+        return $this->belongsTo(Cable::class);
     }
 
-    public function coffee ()
+    public function pipes ()
     {
-    	return $this->belongsTo('App\Models\Litter\Categories\Coffee', 'coffee_id', 'id');
+        return $this->belongsTo(Pipe::class);
     }
 
-    public function softdrinks ()
+    public function roofs ()
     {
-    	return $this->belongsTo('App\Models\Litter\Categories\SoftDrinks', 'softdrinks_id', 'id');
-	}
-
-	public function alcohol ()
-    {
-		return $this->belongsTo('App\Models\Litter\Categories\Alcohol', 'alcohol_id', 'id');
-	}
-
-	public function sanitary ()
-    {
-		return $this->belongsTo('App\Models\Litter\Categories\Sanitary', 'sanitary_id', 'id');
-	}
-
-    public function dumping ()
-    {
-        return $this->belongsTo('App\Models\Litter\Categories\Dumping', 'dumping_id', 'id');
+        return $this->belongsTo(Roof::class);
     }
 
-	public function other ()
+    public function signs ()
     {
-		return $this->belongsTo('App\Models\Litter\Categories\Other', 'other_id', 'id');
-	}
-
-    public function industrial ()
-    {
-        return $this->belongsTo('App\Models\Litter\Categories\Industrial', 'industrial_id', 'id');
+        return $this->belongsTo(Sign::class);
     }
 
-    public function coastal ()
+    public function walls ()
     {
-        return $this->belongsTo('App\Models\Litter\Categories\Coastal', 'coastal_id', 'id');
+        return $this->belongsTo(Wall::class);
     }
 
-    public function art ()
+    public function window ()
     {
-        return $this->belongsTo('App\Models\Litter\Categories\Art', 'art_id', 'id');
+        return $this->belongsTo(Window::class);
     }
-
-    public function brands ()
-    {
-        return $this->belongsTo('App\Models\Litter\Categories\Brand', 'brands_id', 'id');
-    }
-
-    public function trashdog ()
-    {
-        return $this->belongsTo('App\Models\Litter\Categories\TrashDog', 'trashdog_id', 'id');
-    }
-
-    public function dogshit ()
-    {
-        return $this->belongsTo('App\Models\Litter\Categories\Dogshit', 'dogshit_id', 'id');
-    }
-
-    // public function politics() {
-    //     return $this->belongsTo('App\Models\Litter\Categories\Politicals', 'political_id', 'id');
-    // }
 }

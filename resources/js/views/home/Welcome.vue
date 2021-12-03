@@ -1,7 +1,6 @@
 <template>
     <div>
         <div class="container home-container">
-
             <!-- Title, Subtitle, App Icons -->
             <div class="columns c-1">
                 <div class="column is-half">
@@ -270,6 +269,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 
     .about-icon {
         height: 10em;
