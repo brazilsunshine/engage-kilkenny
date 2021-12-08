@@ -51,10 +51,10 @@
 
                     <div class="column ma">
                         <h2 class="main-subtitle">
-                            1. Collecting Data
+                            1. Collect Data
                         </h2>
                         <h3 class="welcome-subtitle mb1em">
-                            There is a huge lack of data about the quality and type of historic town center buildings.
+                            There is a lack of data about the quality and types of historic town center buildings and their features.
                             We need your help to collect and map this data.
                         </h3>
                     </div>
@@ -70,11 +70,11 @@
 
                     <div class="column ma">
                         <h2 class="main-subtitle">
-                            2. Discovering New Insights
+                            2. Discover New Insights
                         </h2>
                         <h3 class="welcome-subtitle mb1em">
                             How does our town center make people feel?
-                            Are there any areas that could be changed or improved?
+                            Is there anything that could be changed or improved?
                         </h3>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                         </h2>
                         <h3 class="welcome-subtitle">
                             Do you have any historic memories about the town center that you would like to share?
-                            You can now add them to our map!
+                            Soon you will be able to add them to our map!
                         </h3>
                     </div>
                 </div>
@@ -118,8 +118,8 @@
                             1. Take a photo
                         </h2>
                         <h3 class="welcome-subtitle mb1em">
-                            Your devices captures valuable information including the time + location you took the photo.
-                            We need you to take geotagged photos of buildings and tell us what you think about them.
+                            Your devices captures where you took the photo.
+                            We need your help to take geotagged photos of buildings and tell us what you think about them.
                         </h3>
                     </div>
                 </div>

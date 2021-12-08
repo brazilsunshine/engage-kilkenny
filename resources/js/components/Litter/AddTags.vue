@@ -73,23 +73,23 @@
 
             <br><br>
 
-            <div v-if="Object.keys(recentTags).length > 0 && this.annotations !== true && this.id !== 0" class="mb-5">
+<!--            <div v-if="Object.keys(recentTags).length > 0 && this.annotations !== true && this.id !== 0" class="mb-5">-->
 
-                <p class="mb-05">{{ $t('tags.recently-tags') }}</p>
+<!--                <p class="mb-05">{{ $t('tags.recently-tags') }}</p>-->
 
-                <div v-for="category in Object.keys(recentTags)">
-                    <p>{{ getCategoryName(category) }}</p>
+<!--                <div v-for="category in Object.keys(recentTags)">-->
+<!--                    <p>{{ getCategoryName(category) }}</p>-->
 
-                    <transition-group name="list" class="recent-tags" tag="div" :key="category">
-                        <div
-                            v-for="tag in Object.keys(recentTags[category])"
-                            class="litter-tag"
-                            :key="tag"
-                            @click="addRecentTag(category, tag)"
-                        ><p>{{ getTagName(category, tag) }}</p></div>
-                    </transition-group>
-                </div>
-            </div>
+<!--                    <transition-group name="list" class="recent-tags" tag="div" :key="category">-->
+<!--                        <div-->
+<!--                            v-for="tag in Object.keys(recentTags[category])"-->
+<!--                            class="litter-tag"-->
+<!--                            :key="tag"-->
+<!--                            @click="addRecentTag(category, tag)"-->
+<!--                        ><p>{{ getTagName(category, tag) }}</p></div>-->
+<!--                    </transition-group>-->
+<!--                </div>-->
+<!--            </div>-->
 
             <div>
                 <button

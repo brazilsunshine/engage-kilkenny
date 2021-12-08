@@ -266,7 +266,7 @@ class Photo extends Model
         return $this->belongsTo(Wall::class);
     }
 
-    public function window ()
+    public function windows ()
     {
         return $this->belongsTo(Window::class);
     }

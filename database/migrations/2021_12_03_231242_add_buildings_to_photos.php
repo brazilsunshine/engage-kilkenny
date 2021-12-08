@@ -23,12 +23,12 @@ class AddBuildingsToPhotos extends Migration
             $table->unsignedBigInteger('windows_id')->nullable();
 
             $table->foreign('buildings_id')->references('id')->on('buildings');
-            $table->foreign('cables_id')->references('id')->on('buildings');
-            $table->foreign('pipes_id')->references('id')->on('buildings');
-            $table->foreign('roofs_id')->references('id')->on('buildings');
-            $table->foreign('signs_id')->references('id')->on('buildings');
-            $table->foreign('walls_id')->references('id')->on('buildings');
-            $table->foreign('windows_id')->references('id')->on('buildings');
+            $table->foreign('cables_id')->references('id')->on('cables');
+            $table->foreign('pipes_id')->references('id')->on('pipes');
+            $table->foreign('roofs_id')->references('id')->on('roofs');
+            $table->foreign('signs_id')->references('id')->on('signs');
+            $table->foreign('walls_id')->references('id')->on('walls');
+            $table->foreign('windows_id')->references('id')->on('windows');
         });
     }
 
@@ -40,6 +40,14 @@ class AddBuildingsToPhotos extends Migration
     public function down()
     {
         Schema::table('photos', function (Blueprint $table) {
+            $table->dropForeign(['buildings_id']);
+            $table->dropForeign(['cables_id']);
+            $table->dropForeign(['pipes_id']);
+            $table->dropForeign(['roofs_id']);
+            $table->dropForeign(['signs_id']);
+            $table->dropForeign(['walls_id']);
+            $table->dropForeign(['windows_id']);
+
             $table->dropColumn('buildings_id');
             $table->dropColumn('cables_id');
             $table->dropColumn('pipes_id');
