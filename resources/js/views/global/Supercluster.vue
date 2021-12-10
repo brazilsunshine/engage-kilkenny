@@ -27,6 +27,8 @@ import './SmoothWheelZoom.js';
 import glify from 'leaflet.glify';
 import { mapHelper } from '../../maps/mapHelpers';
 
+var buildings;
+
 var map;
 var clusters;
 var litterArtPoints;

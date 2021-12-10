@@ -1,10 +1,20 @@
 <template>
-    <div class="has-text-centered">
-        <a href="https://www.heritagecouncil.ie/" target="_blank">
+    <div class="has-text-centered flex" style="align-items: center;">
+        <a href="https://www.heritagecouncil.ie/" target="_blank" class="flex-1">
             <img
                 loading="lazy"
                 src="/assets/HC_logo_retina.png"
                 alt="The Heritage Council"
+                style="max-width: 300%;"
+            >
+        </a>
+
+        <a href="https://www.heritagecouncil.ie/" target="_blank" class="flex-1">
+            <img
+                loading="lazy"
+                src="/assets/ctchc_logo.png"
+                alt="The Collaborative Town Centre Health Check"
+                style="max-width: 50%;"
             >
         </a>
     </div>

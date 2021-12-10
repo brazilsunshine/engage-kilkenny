@@ -5,10 +5,10 @@
             <div class="columns c-1">
                 <div class="column is-half">
                         <h1 class="main-title variable-height">
-                            Engage with Historic Buildings
+                            Engage with your historic town centre
                         </h1>.
                     <h2 class="subtitle is-3 home-img-padding">
-                        How do different buildings make you feel?
+                        How do historic buildings make you feel?
                         What features do you like about them?
                         We want to know!
                     </h2>
@@ -46,7 +46,8 @@
                     <div class="column is-one-quarter icon-center">
                         <img
                             src="/assets/icons/home/world.png"
-                            class="about-icon" />
+                            class="about-icon"
+                        />
                     </div>
 
                     <div class="column ma">
@@ -54,27 +55,8 @@
                             1. Collect Data
                         </h2>
                         <h3 class="welcome-subtitle mb1em">
-                            There is a lack of data about the quality and types of historic town center buildings and their features.
+                            There is a lack of data about the quality and types of historic town centre buildings, their features and characteristics.
                             We need your help to collect and map this data.
-                        </h3>
-                    </div>
-                </div>
-
-                <div class="columns welcome-mb">
-                    <div class="column is-one-quarter icon-center">
-                        <img
-                            src="/assets/icons/home/microscope.png"
-                            class="about-icon"
-                        />
-                    </div>
-
-                    <div class="column ma">
-                        <h2 class="main-subtitle">
-                            2. Discover New Insights
-                        </h2>
-                        <h3 class="welcome-subtitle mb1em">
-                            How does our town center make people feel?
-                            Is there anything that could be changed or improved?
                         </h3>
                     </div>
                 </div>
@@ -89,11 +71,30 @@
 
                     <div class="column ma">
                         <h2 class="main-subtitle">
-                            3. Collecting Stories
+                            2. Tell Stories
                         </h2>
                         <h3 class="welcome-subtitle">
-                            Do you have any historic memories about the town center that you would like to share?
+                            Do you have any historic memories about the town centre that you would like to share?
                             Soon you will be able to add them to our map!
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="columns welcome-mb">
+                    <div class="column is-one-quarter icon-center">
+                        <img
+                            src="/assets/icons/home/microscope.png"
+                            class="about-icon"
+                        />
+                    </div>
+
+                    <div class="column ma">
+                        <h2 class="main-subtitle">
+                            3. Discover New Insights
+                        </h2>
+                        <h3 class="welcome-subtitle mb1em">
+                            How does our town centre make people feel?
+                            How can we learn from and preserve our heritage?
                         </h3>
                     </div>
                 </div>
