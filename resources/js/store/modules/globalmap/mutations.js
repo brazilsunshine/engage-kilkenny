@@ -43,6 +43,14 @@ export const mutations = {
     },
 
     /**
+     * Buildings.geojson is fetched from the backend
+     */
+    setBuildings (state, payload)
+    {
+        state.buildingsGeojson = payload;
+    },
+
+    /**
      *
      */
 	toggleLangsButton (state)

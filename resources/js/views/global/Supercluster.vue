@@ -170,35 +170,73 @@ function onEachFeature (feature, layer)
 }
 
 /**
- * On each art point...
- *
- * Todo: Smooth zoom to that piece
+ * On each building feature
  */
-function onEachArtFeature (feature, layer)
+function onEachBuilding (feature, layer)
 {
     layer.on('click', function (e)
     {
-        map.flyTo(feature.geometry.coordinates, 14, {
-            animate: true,
-            duration: 10
+        console.log(feature.properties);
+
+        const keys = Object.keys(feature.properties);
+
+        let building = {};
+
+        keys.forEach(key => {
+            if (feature.properties[key])
+            {
+                building[key] = feature.properties[key];
+            }
+        })
+
+        console.log(building);
+    });
+
+    layer.on("mouseover",function(e){
+        layer.setStyle({
+            fillOpacity: 0.4,
+            color: 'yellow'
         });
+    });
 
-        const user = mapHelper.formatUserName(feature.properties.name, feature.properties.username);
-
-        L.popup(mapHelper.popupOptions)
-            .setLatLng(feature.geometry.coordinates)
-            .setContent(
-                mapHelper.getMapImagePopupContent(
-                    feature.properties.filename,
-                    null,
-                    feature.properties.datetime,
-                    user,
-                    feature.properties.team
-                )
-            )
-            .openOn(map);
+    layer.on("mouseout",function(e){
+        layer.setStyle({
+            fillOpacity: 0,
+            color: '#3388ff'
+        });
     });
 }
+
+// /**
+//  * On each art point...
+//  *
+//  * Todo: Smooth zoom to that piece
+//  */
+// function onEachArtFeature (feature, layer)
+// {
+//     layer.on('click', function (e)
+//     {
+//         map.flyTo(feature.geometry.coordinates, 14, {
+//             animate: true,
+//             duration: 10
+//         });
+//
+//         const user = mapHelper.formatUserName(feature.properties.name, feature.properties.username);
+//
+//         L.popup(mapHelper.popupOptions)
+//             .setLatLng(feature.geometry.coordinates)
+//             .setContent(
+//                 mapHelper.getMapImagePopupContent(
+//                     feature.properties.filename,
+//                     null,
+//                     feature.properties.datetime,
+//                     user,
+//                     feature.properties.team
+//                 )
+//             )
+//             .openOn(map);
+//     });
+// }
 
 /**
  * Get any active layers
@@ -236,8 +274,8 @@ export default {
     {
         /** 1. Create map object */
         map = L.map('super', {
-            center: [0, 0],
-            zoom: MIN_ZOOM,
+            center: [52.652046, -7.2501555],
+            zoom: 15,
             scrollWheelZoom: false,
             smoothWheelZoom: true,
             smoothSensitivity: 1,
@@ -259,24 +297,30 @@ export default {
 
         map.attributionControl.addAttribution('Litter data &copy OpenLitterMap & Contributors ' + year + ' Clustering @ MapBox');
 
-        // Empty Layer Group that will receive the clusters data on the fly.
-        clusters = L.geoJSON(null, {
-            pointToLayer: createClusterIcon,
-            onEachFeature: onEachFeature,
+        buildings = L.geoJSON(null, {
+            onEachFeature: onEachBuilding
         }).addTo(map);
 
-        clusters.addData(this.$store.state.globalmap.geojson.features);
+        buildings.addData(this.$store.state.globalmap.buildingsGeojson);
 
-        litterArtPoints = L.geoJSON(null, {
-            pointToLayer: createArtIcon,
-            onEachFeature: onEachArtFeature
-        });
+        // // Empty Layer Group that will receive the clusters data on the fly.
+        // clusters = L.geoJSON(null, {
+        //     pointToLayer: createClusterIcon,
+        //     onEachFeature: onEachFeature,
+        // }).addTo(map);
+        //
+        // clusters.addData(this.$store.state.globalmap.geojson.features);
 
-        litterArtPoints.addData(this.$store.state.globalmap.artData.features);
+        // litterArtPoints = L.geoJSON(null, {
+        //     pointToLayer: createArtIcon,
+        //     onEachFeature: onEachArtFeature
+        // });
+        //
+        // litterArtPoints.addData(this.$store.state.globalmap.artData.features);
+        //
+        // map.on('moveend', this.update);
 
-        map.on('moveend', this.update);
-
-        createGlobalGroups();
+        // createGlobalGroups();
 
         map.on('overlayadd', this.update);
         map.on('overlayremove', this.update)

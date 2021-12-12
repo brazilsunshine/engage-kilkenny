@@ -13,30 +13,16 @@ class GlobalMapController extends Controller
     use FilterPhotosByGeoHashTrait;
 
     /**
-     * Return the Art data for the global map
      *
-     * @return array points
      */
-    public function artData () :array
+    public function buildings ()
     {
-        $photos = Photo::select(
-            'id',
-            'verified',
-            'user_id',
-            'team_id',
-            'result_string',
-            'filename',
-            'geohash',
-            'lat',
-            'lon',
-            'datetime'
-        )
-        ->where([
-            ['verified', '>=', 2],
-            ['art_id', '!=', null]
-        ])->get();
+        $geojson = file_get_contents(public_path('/js/small_buildings.geojson'));
 
-        return $this->photosToGeojson($photos);
+        return [
+            'success' => true,
+            'geojson' => $geojson
+        ];
     }
 
     /**

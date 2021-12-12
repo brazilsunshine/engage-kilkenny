@@ -16,6 +16,27 @@ export const actions = {
     },
 
     /**
+     * Return the geojson file as an object
+     */
+    async GET_BUILDINGS (context)
+    {
+        await axios.get('/global/buildings')
+            .then(response => {
+                console.log('get_buildings', response);
+
+                if (response.data.success)
+                {
+                    const geojson = JSON.parse(response.data.geojson);
+
+                    context.commit('setBuildings', geojson);
+                }
+            })
+            .catch(error => {
+                console.error('get_buildings', error);
+            });
+    },
+
+    /**
      * Get clusters for the global map
      */
     async GET_CLUSTERS (context, payload)

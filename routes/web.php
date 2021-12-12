@@ -75,6 +75,7 @@ Route::post('/contact-us', 'ContactUsController')->name('contact');
 Route::get('global', 'HomeController@index');
 Route::get('/global/clusters', 'GlobalMap\ClusterController@index');
 Route::get('/global/points', 'GlobalMap\GlobalMapController@index');
+Route::get('/global/buildings', 'GlobalMap\GlobalMapController@buildings');
 Route::get('/global/art-data', 'GlobalMap\GlobalMapController@artData');
 
 /** Auth Routes */
