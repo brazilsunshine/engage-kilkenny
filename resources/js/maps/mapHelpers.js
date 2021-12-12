@@ -10,7 +10,9 @@ const helper = {
         minWidth: 350,
         maxWidth: 600,
         maxHeight: 700,
-        closeButton: true
+        closeButton: true,
+        autoPanPaddingTopLeft: 20,
+        autoPanPaddingBottomRight: 20
     },
 
     /**

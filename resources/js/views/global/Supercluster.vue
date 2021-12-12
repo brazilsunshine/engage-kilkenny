@@ -176,22 +176,26 @@ function onEachBuilding (feature, layer)
 {
     layer.on('click', function (e)
     {
-        console.log(feature.properties);
-
         const keys = Object.keys(feature.properties);
 
         let building = {};
+        let str = "";
 
         keys.forEach(key => {
             if (feature.properties[key])
             {
                 building[key] = feature.properties[key];
+
+                str += key + ": " + feature.properties[key] + " <br> ";
             }
         })
 
         console.log(building);
 
-        alert(Object.entries(building));
+        L.popup(mapHelper.popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(str)
+            .openOn(map);
     });
 
     layer.on("mouseover",function(e){
@@ -272,8 +276,7 @@ export default {
     components: {
         LiveEvents
     },
-    mounted ()
-    {
+    mounted () {
         /** 1. Create map object */
         map = L.map('super', {
             center: [52.652046, -7.2501555],
@@ -484,4 +487,7 @@ export default {
         pointer-events: visiblePainted !important;
     }
 
+    .leaflet-popup-content {
+        padding: 20px !important;
+    }
 </style>
