@@ -190,6 +190,8 @@ function onEachBuilding (feature, layer)
         })
 
         console.log(building);
+
+        alert(Object.entries(building));
     });
 
     layer.on("mouseover",function(e){
