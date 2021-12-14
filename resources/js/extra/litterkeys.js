@@ -43,9 +43,10 @@ export const litterkeys = {
         'troughs'
     ],
     use_case: [
+        'civic',
         'pub',
-        'butcher',
-        'retail',
+        'retail_food',
+        'retail_non_food',
         'residential'
     ],
     walls: [
