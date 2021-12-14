@@ -33,6 +33,11 @@
                     <div class="top-image">
                         <img src="https://kilkennynow.ie/wp-content/uploads/Kilkenny-shop-front.jpg" />
                     </div>
+
+                    <h3 class="subtitle is-4">
+                        EngageKilkenny is brought to you by the Heritage Councils Collaborative Town Center Health Check
+                        <a href="https://twitter.com/search?q=ctchc" target="_blank">#CTCHC</a>
+                    </h3>
                 </div>
             </div>
 

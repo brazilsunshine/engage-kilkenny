@@ -1,45 +1,62 @@
 export const litterkeys = {
     buildings: [
-        'burnt',
-        'clean',
         'derelict',
-        'dirty',
-        'graffiti',
-        'overgrown',
-        'vacant',
-        'vandalised'
+        'decorative_plaster',
+        'mosaic',
+        'plaque',
+        'poorly_maintained',
+        'projecting_chimney',
+        'stone_arch',
+        'stone_step',
+        'vacant'
     ],
     cables: [
-        'loose',
-        'damaged',
-        'dangerous',
-        'obstructing',
-        'ugly'
+        'loose'
     ],
     pipes: [
-        'broken',
-        'leaking',
-        'dirty'
+        'decorative_fixing_bracket',
+        'ornate_hopper',
+        'lead'
+    ],
+    lamps: [
+        'decorative'
     ],
     roofs: [
-        'dirty',
-        'loose_tiles'
+        'overhanging',
+        'bracketed_eaves',
+        'small_slates',
+        'large_slates',
+        'lead_ridges',
+        'degrated'
     ],
     signs: [
-        'dirty'
+        'gaelic_font',
+        'hand_pained',
+        'murals',
+        'hanging'
+    ],
+    slips: [
+        'stone_paving',
+        'stone_bollards'
+    ],
+    street_furniture: [
+        'troughs'
+    ],
+    use_case: [
+        'pub',
+        'butcher',
+        'retail',
+        'residential'
     ],
     walls: [
-        'chipped',
-        'damaged',
-        'dirty',
-        'needs_paint'
+        'limestone',
     ],
     windows: [
         'boarded_up',
         'broken',
-        'clean',
-        'new',
-        'old',
-        'dirty'
+        'double_sash',
+        'fan_light_decorative',
+        'fan_light_plain',
+        'stone_head'
     ]
 };
