@@ -31,7 +31,7 @@ export const litterkeys = {
     ],
     signs: [
         'gaelic_font',
-        'hand_pained',
+        'hand_painted',
         'murals',
         'hanging'
     ],
