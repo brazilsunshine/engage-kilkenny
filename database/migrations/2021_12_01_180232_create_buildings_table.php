@@ -15,15 +15,15 @@ class CreateBuildingsTable extends Migration
     {
         Schema::create('buildings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('burnt')->nullable();
-            $table->unsignedInteger('clean')->nullable();
             $table->unsignedInteger('derelict')->nullable();
-            $table->unsignedInteger('dirty')->nullable();
-            $table->unsignedInteger('needs_powerwash')->nullable();
-            $table->unsignedInteger('graffiti')->nullable();
-            $table->unsignedInteger('overgrown')->nullable();
+            $table->unsignedInteger('decorative_plaster')->nullable();
+            $table->unsignedInteger('mosaic')->nullable();
+            $table->unsignedInteger('plaque')->nullable();
+            $table->unsignedInteger('poorly_maintained')->nullable();
+            $table->unsignedInteger('projecting_chimney')->nullable();
+            $table->unsignedInteger('stone_arch')->nullable();
+            $table->unsignedInteger('stone_step')->nullable();
             $table->unsignedInteger('vacant')->nullable();
-            $table->unsignedInteger('vandalised')->nullable();
             $table->timestamps();
         });
     }

@@ -15,10 +15,7 @@ class CreateWallsTable extends Migration
     {
         Schema::create('walls', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('chipped')->nullable();
-            $table->unsignedInteger('damaged')->nullable();
-            $table->unsignedInteger('dirty')->nullable();
-            $table->unsignedInteger('needs_paint')->nullable();
+            $table->unsignedInteger('limestone')->nullable();
             $table->timestamps();
         });
     }

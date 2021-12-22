@@ -17,10 +17,10 @@ class CreateWindowsTable extends Migration
             $table->id();
             $table->unsignedInteger('boarded_up')->nullable();
             $table->unsignedInteger('broken')->nullable();
-            $table->unsignedInteger('clean')->nullable();
-            $table->unsignedInteger('new')->nullable();
-            $table->unsignedInteger('old')->nullable();
-            $table->unsignedInteger('dirty')->nullable();
+            $table->unsignedInteger('double_sash')->nullable();
+            $table->unsignedInteger('fan_light_decorative')->nullable();
+            $table->unsignedInteger('fan_light_plain')->nullable();
+            $table->unsignedInteger('stone_head')->nullable();
             $table->timestamps();
         });
     }

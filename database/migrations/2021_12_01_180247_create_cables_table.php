@@ -16,10 +16,6 @@ class CreateCablesTable extends Migration
         Schema::create('cables', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('loose')->nullable();
-            $table->unsignedInteger('damaged')->nullable();
-            $table->unsignedInteger('dangerous')->nullable();
-            $table->unsignedInteger('obstructing')->nullable();
-            $table->unsignedInteger('ugly')->nullable();
             $table->timestamps();
         });
     }

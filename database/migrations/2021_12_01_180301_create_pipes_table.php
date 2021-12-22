@@ -15,9 +15,9 @@ class CreatePipesTable extends Migration
     {
         Schema::create('pipes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('broken')->nullable();
-            $table->unsignedInteger('leaking')->nullable();
-            $table->unsignedInteger('dirty')->nullable();
+            $table->unsignedInteger('decorative_fixing_bracket')->nullable();
+            $table->unsignedInteger('ornate_hopper')->nullable();
+            $table->unsignedInteger('lead')->nullable();
             $table->timestamps();
         });
     }

@@ -44,7 +44,6 @@ export const litterkeys = {
     ],
     use_case: [
         'civic',
-        'pub',
         'retail_food',
         'retail_non_food',
         'residential'

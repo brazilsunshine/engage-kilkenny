@@ -3,8 +3,12 @@
         "buildings": "Buildings",
         "cables": "Cables",
         "pipes":  "Pipes",
+        "lamp": "Lamp",
         "roofs": "Roofs",
         "signs":  "Signs",
+        "slip": "Slip",
+        "street_furniture": "Street Furniture",
+        "use_case": "Use Case",
         "walls": "Walls",
         "windows":  "Windows"
     },
@@ -15,15 +19,15 @@
         "still-there": "Still there"
     },
     "buildings": {
-        "burnt":  "Burnt",
-        "clean": "Clean",
-        "derelict":  "Derelict",
-        "dirty": "Dirty",
-        "needs_powerwash": "Powerwash Needed",
-        "graffiti":  "Graffiti",
-        "overgrown": "Overgrown",
-        "vacant":  "Vacant",
-        "vandalised": "Vandalised"
+        "derelict": "Derelict",
+        "decorative_plaster": "Decorative Plaster",
+        "mosaic": "Mosaic",
+        "plaque": "Plaque",
+        "poorly_maintained": "Poorly Maintained",
+        "projecting_chimney": "Projecting Chimney",
+        "stone_arch": "Stone Arch",
+        "stone_step": "Stone Step",
+        "vacant": "Vacant"
     },
     "cables": {
         "loose":  "Loose",
@@ -32,30 +36,50 @@
         "obstructing": "Obstructing",
         "ugly": "Ugly"
     },
+    "lamp": {
+        "decorative": "Decorative"
+    },
     "pipes": {
-        "broken":  "Broken",
-        "leaking": "Leaking",
-        "dirty": "Dirty"
+        "decorative_fixing_bracket": "Fixing Bracket",
+        "ornate_hopper": "Ornate Hopper",
+        "lead": "Lead"
     },
     "roofs": {
-        "dirty": "Dirty",
-        "loose_tiles": "Loose Tiles"
+        "overhanging": "Overhanging",
+        "bracketed_eaves": "Bracketed Eaves",
+        "small_slates": "Small Slates",
+        "large_slates": "Large Slates",
+        "lead_ridges": "Lead Ridges",
+        "degrated": "Degrated"
     },
     "signs": {
-        "dirty": "Dirty"
+        "gaelic_font": "Gaelic Font",
+        "hand_painted": "Hand Painted",
+        "murals": "Murals",
+        "hanging": "Hanging"
+    },
+    "slips": {
+        "stone_paving": "Stone Paving",
+        "stone_bollards": "Stone Bollards"
+    },
+    "street_furniture": {
+        "troughs": "Troughs"
+    },
+    "use_case": {
+        "civic": "Civic",
+        "retail_food": "Retail (Food)",
+        "retail_non_food": "Retail (Not Food)",
+        "residential": "Residential"
     },
     "walls": {
-        "chipped":  "Chipped",
-        "damaged": "Damaged",
-        "dirty":  "Dirty",
-        "needs_paint": "Needs Paint"
+        "limestone": "Limestone"
     },
     "windows": {
-        "boarded_up":  "Boarded up",
+        "boarded_up": "Boarded up",
         "broken": "Broken",
-        "clean":  "Clean",
-        "new": "Looks New",
-        "old":  "Looks old",
-        "dirty": "Dirty"
+        "double_sash": "Double Sash",
+        "fan_light_decorative": "Fan Light (Decorative)",
+        "fan_light_plain": "Fan Light (Plain)",
+        "stone_head": "Stone Head"
     }
 }

@@ -10,6 +10,9 @@ Route::get('/references', 'HomeController@index');
 // Registration
 Route::get('/signup', 'HomeController@index');
 
+// Add a new story to a building
+Route::post('/add-story', 'StoryController@addNewStory');
+
 // Monthly subscription
 Route::post('subscribe', 'SubscribersController@create');
 

@@ -15,7 +15,10 @@ class CreateSignsTable extends Migration
     {
         Schema::create('signs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('dirty')->nullable();
+            $table->unsignedInteger('gaelic_font')->nullable();
+            $table->unsignedInteger('hand_painted')->nullable();
+            $table->unsignedInteger('murals')->nullable();
+            $table->unsignedInteger('hanging')->nullable();
             $table->timestamps();
         });
     }

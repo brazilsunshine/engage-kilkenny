@@ -1,7 +1,9 @@
 <template>
-    <div class="h100">
+    <div class="h100 flex">
         <!-- The map & data -->
         <div id="super" ref="super" />
+
+        <SideMapContainer />
 
         <!-- Websockets -->
         <LiveEvents />
@@ -26,6 +28,7 @@ import './SmoothWheelZoom.js';
 // Todo - fix this export bug (The request of a dependency is an expression...)
 import glify from 'leaflet.glify';
 import { mapHelper } from '../../maps/mapHelpers';
+import SideMapContainer from "../../components/global/SideMapContainer";
 
 var buildings;
 
@@ -176,6 +179,10 @@ function onEachBuilding (feature, layer)
 {
     layer.on('click', function (e)
     {
+        console.log('building was clicked');
+
+        this.buildingClicked = true;
+
         const keys = Object.keys(feature.properties);
 
         let building = {};
@@ -196,6 +203,8 @@ function onEachBuilding (feature, layer)
             .setLatLng(e.latlng)
             .setContent(str)
             .openOn(map);
+
+        L.DomEvent.stopPropagation(e);
     });
 
     layer.on("mouseover",function(e){
@@ -274,7 +283,13 @@ function getActiveLayers ()
 export default {
     name: 'Supercluster',
     components: {
+        SideMapContainer,
         LiveEvents
+    },
+    data () {
+        return {
+            buildingClicked: false
+        };
     },
     mounted () {
         /** 1. Create map object */
@@ -307,6 +322,12 @@ export default {
         }).addTo(map);
 
         buildings.addData(this.$store.state.globalmap.buildingsGeojson);
+
+        map.on('click', function (e) {
+            console.log('map was clicked');
+
+            this.buildingClicked = false;
+        });
 
         // // Empty Layer Group that will receive the clusters data on the fly.
         // clusters = L.geoJSON(null, {
@@ -469,6 +490,11 @@ export default {
         height: 100%;
         margin: 0;
         position: relative;
+        width: 70%;
+    }
+
+    .leaflet-bottom {
+        z-index: 1;
     }
 
     .leaflet-marker-icon {
@@ -490,4 +516,5 @@ export default {
     .leaflet-popup-content {
         padding: 20px !important;
     }
+
 </style>

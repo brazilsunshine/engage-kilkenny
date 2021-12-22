@@ -15,8 +15,12 @@ class CreateRoofsTable extends Migration
     {
         Schema::create('roofs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('dirty')->nullable();
-            $table->unsignedInteger('loose_tiles')->nullable();
+            $table->unsignedInteger('overhanging')->nullable();
+            $table->unsignedInteger('bracketed_eaves')->nullable();
+            $table->unsignedInteger('small_slates')->nullable();
+            $table->unsignedInteger('large_slates')->nullable();
+            $table->unsignedInteger('lead_ridges')->nullable();
+            $table->unsignedInteger('degrated')->nullable();
             $table->timestamps();
         });
     }
