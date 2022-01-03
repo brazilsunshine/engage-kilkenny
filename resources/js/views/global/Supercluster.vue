@@ -3,7 +3,9 @@
         <!-- The map & data -->
         <div id="super" ref="super" />
 
-        <SideMapContainer />
+        <SideMapContainer
+            :key="buildingsKey"
+        />
 
         <!-- Websockets -->
         <LiveEvents />
@@ -30,6 +32,7 @@ import glify from 'leaflet.glify';
 import { mapHelper } from '../../maps/mapHelpers';
 import SideMapContainer from "../../components/global/SideMapContainer";
 
+var clickedBuilding;
 var buildings;
 
 var map;
@@ -177,11 +180,9 @@ function onEachFeature (feature, layer)
  */
 function onEachBuilding (feature, layer)
 {
-    layer.on('click', function (e)
+    layer.on('click', async function (e)
     {
         console.log('building was clicked');
-
-        this.buildingClicked = true;
 
         const keys = Object.keys(feature.properties);
 
@@ -199,12 +200,33 @@ function onEachBuilding (feature, layer)
 
         console.log(building);
 
+        window.buildingsMap.building = building;
+
         L.popup(mapHelper.popupOptions)
             .setLatLng(e.latlng)
             .setContent(str)
             .openOn(map);
 
         L.DomEvent.stopPropagation(e);
+
+        // Check if the building has any stories
+        await axios.get('/check-building', {
+            params: {
+                osm_id: building.osm_id
+            }
+        })
+        .then(response => {
+            console.log('check_building', response);
+
+            if (response.data.success) {
+                window.buildingsMap.stories = response.data.stories;
+            }
+        })
+        .catch(error => {
+            console.error('check_building', error);
+        });
+
+        window.buildingsMap.buildingsKey++;
     });
 
     layer.on("mouseover",function(e){
@@ -220,6 +242,7 @@ function onEachBuilding (feature, layer)
             color: '#3388ff'
         });
     });
+
 }
 
 // /**
@@ -288,10 +311,15 @@ export default {
     },
     data () {
         return {
-            buildingClicked: false
+            building: null,
+            stories: [],
+            buildingsKey: 0
         };
     },
     mounted () {
+        /** 0: Bind variable outside of vue scope */
+        window.buildingsMap = this;
+
         /** 1. Create map object */
         map = L.map('super', {
             center: [52.652046, -7.2501555],
@@ -326,7 +354,7 @@ export default {
         map.on('click', function (e) {
             console.log('map was clicked');
 
-            this.buildingClicked = false;
+            window.buildingsMap.building = null;
         });
 
         // // Empty Layer Group that will receive the clusters data on the fly.

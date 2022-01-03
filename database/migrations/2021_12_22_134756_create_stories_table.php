@@ -15,6 +15,7 @@ class CreateStoriesTable extends Migration
     {
         Schema::create('stories', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id');
             $table->integer('osm_id');
             $table->text('story');
             $table->boolean('reviewed')->default(false);

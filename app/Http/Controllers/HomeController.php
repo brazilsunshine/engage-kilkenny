@@ -18,6 +18,7 @@ class HomeController extends Controller
         $auth = Auth::check();
 
         $user = null;
+
         if ($auth)
         {
             $user = Auth::user();

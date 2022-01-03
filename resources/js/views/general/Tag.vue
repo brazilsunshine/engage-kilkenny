@@ -29,45 +29,8 @@
 
                     <div class="columns">
 
-                        <!-- Todo - Put this into a component -->
-                        <!-- the Info box, Left -->
-                        <div id="image-metadata" class="column">
-                            <div class="box">
-
-                                <!-- Coordinates. was profile6 -->
-                                <p><strong>{{ $t('tags.coordinates') }}: </strong>{{ photo.lat }}, {{ photo.lon }}</p>
-                                <br>
-
-                                <!-- Full address. was profile7 -->
-                                <p><strong>{{ $t('tags.address') }}: </strong>{{ photo.display_name }}</p>
-                                <br>
-
-                                <!-- Presence button. was profile8 -->
-                                <div>
-                                    <strong>{{ $t('tags.picked-up-title') }}</strong>
-                                    <presence />
-                                </div>
-                                <br>
-
-                                <!-- Model of the device -->
-                                <p><strong>{{ $t('tags.device') }}: </strong>{{ photo.model }}</p>
-                                <br>
-
-                                <!-- Delete photo button -->
-                                <profile-delete :photoid="photo.id" />
-
-                                <!-- Clear recent tags -->
-                                <div v-show="hasRecentTags">
-                                    <br>
-                                    <p class="strong">{{ $t('tags.clear-tags') }}</p>
-
-                                    <button @click="clearRecentTags">{{ $t('tags.clear-tags-btn') }}</button>
-                                </div>
-                            </div>
-                        </div> <!-- end info box -->
-
-                        <!-- The Image, Middle -->
-                        <div class="column is-6 image-wrapper">
+                        <!-- The Image -->
+                        <div class="column is-half is-offset-1 image-wrapper">
                             <!-- The Image -->
                             <div class="image-content">
                                 <img :src="photo.filename" class="img">
@@ -80,7 +43,7 @@
                         </div>
 
                         <!-- Info, Tags, Right -->
-                        <div id="image-counts" class="column is-3">
+                        <div class="column is-3" id="image-counts">
                             <div class="box">
                                 <li class="list-group-item">
                                     {{ $t('tags.to-tag') }}: {{ remaining }}

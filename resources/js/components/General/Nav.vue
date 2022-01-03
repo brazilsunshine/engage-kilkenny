@@ -24,8 +24,13 @@
 <!--                            {{ $t('nav.about')}}-->
 <!--                        </router-link>-->
 
-                        <!-- Global Map -->
-                        <router-link to="/global" class="navbar-item" @click.native="close">
+                        <!-- Frequently Asked Questions -->
+                        <router-link to="/faq" class="navbar-item">
+                            FAQ
+                        </router-link>
+
+                        <!-- Kilkenny Map -->
+                        <router-link to="/map" class="navbar-item" @click.native="close">
                             Map
                         </router-link>
 

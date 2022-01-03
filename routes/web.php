@@ -7,11 +7,16 @@ Route::get('/about', 'HomeController@index');
 Route::get('/world', 'HomeController@index');
 Route::get('/references', 'HomeController@index');
 
+Route::get('faq', 'HomeController@index');
+
 // Registration
 Route::get('/signup', 'HomeController@index');
 
 // Add a new story to a building
 Route::post('/add-story', 'StoryController@addNewStory');
+
+// Check if a building has any stories
+Route::get('/check-building', 'StoryController@checkStory');
 
 // Monthly subscription
 Route::post('subscribe', 'SubscribersController@create');
@@ -75,7 +80,7 @@ Route::get('/contact-us', 'HomeController@index');
 Route::post('/contact-us', 'ContactUsController')->name('contact');
 
 // Get data for the Global Map
-Route::get('global', 'HomeController@index');
+Route::get('map', 'HomeController@index');
 Route::get('/global/clusters', 'GlobalMap\ClusterController@index');
 Route::get('/global/points', 'GlobalMap\GlobalMapController@index');
 Route::get('/global/buildings', 'GlobalMap\GlobalMapController@buildings');

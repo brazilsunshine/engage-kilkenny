@@ -103,6 +103,10 @@ html {
 	margin-bottom: -2em;
 }
 
+.capitalize {
+    text-transform: capitalize;
+}
+
 .country-back {
     font-size: 0.3em;
     margin: auto 0;
@@ -258,6 +262,10 @@ html {
 
 .pb2 {
     padding-bottom: 2em !important;
+}
+
+.pb10 {
+    padding-bottom: 10em;
 }
 
 .pointer {

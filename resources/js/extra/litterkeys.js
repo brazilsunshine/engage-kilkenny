@@ -1,62 +1,214 @@
 export const litterkeys = {
     buildings: [
-        'derelict',
-        'decorative_plaster',
-        'mosaic',
-        'plaque',
-        'poorly_maintained',
-        'projecting_chimney',
-        'stone_arch',
-        'stone_step',
-        'vacant'
+        {
+            key: 'derelict',
+            image: '/assets/buildings/derelict.jpg',
+            text: 'A derelict building is in a very poor condition as a result of disuse and neglect.'
+        },
+        {
+            key: 'decorative_plaster',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'mosaic',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'plaque',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'poorly_maintained',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'projecting_chimney',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'stone_arch',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'stone_step',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'vacant',
+            image: '',
+            text: ''
+        }
     ],
     cables: [
-        'loose'
+        {
+            key: 'loose',
+            image: '',
+            text: ''
+        }
     ],
     pipes: [
-        'decorative_fixing_bracket',
-        'ornate_hopper',
-        'lead'
+        {
+            key: 'decorative_fixing_bracket',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'ornate_hopper',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'lead',
+            image: '',
+            text: ''
+        }
     ],
     lamps: [
-        'decorative'
+        {
+            key: 'decorative',
+            image: '',
+            text: ''
+        }
     ],
     roofs: [
-        'overhanging',
-        'bracketed_eaves',
-        'small_slates',
-        'large_slates',
-        'lead_ridges',
-        'degrated'
+        {
+            key: 'overhanging',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'bracketed_eaves',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'small_slates',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'large_slates',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'lead_ridges',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'degrated',
+            image: '',
+            text: ''
+        }
     ],
     signs: [
-        'gaelic_font',
-        'hand_painted',
-        'murals',
-        'hanging'
+        {
+            key: 'gaelic_font',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'hand_painted',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'murals',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'hanging',
+            image: '',
+            text: ''
+        }
     ],
     slips: [
-        'stone_paving',
-        'stone_bollards'
+        {
+            key: 'stone_paving',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'stone_bollards',
+            image: '',
+            text: ''
+        }
     ],
     street_furniture: [
-        'troughs'
+        {
+            key: 'troughs',
+            image: '',
+            text: ''
+        }
     ],
     use_case: [
-        'civic',
-        'retail_food',
-        'retail_non_food',
-        'residential'
+        {
+            key: 'civic',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'retail_food',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'retail_non_food',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'residential',
+            image: '',
+            text: ''
+        }
     ],
     walls: [
-        'limestone',
+        {
+            key: 'limestone',
+            image: '',
+            text: ''
+        }
     ],
     windows: [
-        'boarded_up',
-        'broken',
-        'double_sash',
-        'fan_light_decorative',
-        'fan_light_plain',
-        'stone_head'
+        {
+            key: 'boarded_up',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'broken',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'double_sash',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'fan_light_decorative',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'fan_light_plain',
+            image: '',
+            text: ''
+        },
+        {
+            key: 'stone_head',
+            image: '',
+            text: ''
+        }
     ]
 };

@@ -50,8 +50,12 @@ const router = new VueRouter({
             component: require('./views/home/ContactUs').default
         },
         {
-            path: '/global',
+            path: '/map',
             component: require('./views/global/GlobalMapContainer').default
+        },
+        {
+            path: '/faq',
+            component: require('./views/general/FAQ').default
         },
         {
             path: '/signup',
