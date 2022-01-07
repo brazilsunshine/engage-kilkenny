@@ -2,6 +2,8 @@
     <div class="container mt5 w-40-em pb10">
         <p class="title is-3 mb1">This is the FAQ section</p>
 
+        <p>This is a new change</p>
+
         <p>Choose a category:</p>
 
         <select class="input capitalize mb1" v-model="category" @change="categoryChanged">
