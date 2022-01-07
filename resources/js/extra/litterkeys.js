@@ -7,208 +7,208 @@ export const litterkeys = {
         },
         {
             key: 'decorative_plaster',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'mosaic',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'plaque',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'poorly_maintained',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'projecting_chimney',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'stone_arch',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'stone_step',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'vacant',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         }
     ],
     cables: [
         {
             key: 'loose',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         }
     ],
     pipes: [
         {
             key: 'decorative_fixing_bracket',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'ornate_hopper',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'lead',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         }
     ],
     lamps: [
         {
             key: 'decorative',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         }
     ],
     roofs: [
         {
             key: 'overhanging',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'bracketed_eaves',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'small_slates',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'large_slates',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'lead_ridges',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'degrated',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         }
     ],
     signs: [
         {
             key: 'gaelic_font',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'hand_painted',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'murals',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'hanging',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         }
     ],
     slips: [
         {
             key: 'stone_paving',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'stone_bollards',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         }
     ],
     street_furniture: [
         {
             key: 'troughs',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         }
     ],
     use_case: [
         {
             key: 'civic',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'retail_food',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'retail_non_food',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'residential',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         }
     ],
     walls: [
         {
             key: 'limestone',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         }
     ],
     windows: [
         {
             key: 'boarded_up',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'broken',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'double_sash',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'fan_light_decorative',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'fan_light_plain',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         },
         {
             key: 'stone_head',
-            image: '',
-            text: ''
+            image: '/assets/buildings/derelict.jpg',
+            text: 'todo'
         }
     ]
 };

@@ -52,11 +52,19 @@ export default {
 
             let myArray = this.litterkeys[this.category];
 
+            console.log("My Array", myArray);
+
+            console.log("selectedItem", this.selectedItem);
+
             let myObject = myArray.find(obj => obj.key === this.selectedItem);
 
             console.log("My Object", myObject);
 
-            return myObject;
+            if (myObject) {
+                return myObject;
+            }
+
+            return false;
         }
     },
     methods: {
@@ -66,7 +74,7 @@ export default {
          * Update the selectedItem as the first element from the category array
          */
         categoryChanged () {
-            this.selectedItem = this.litterkeys[this.category][0];
+            this.selectedItem = this.litterkeys[this.category][0].key;
         }
     }
 }
