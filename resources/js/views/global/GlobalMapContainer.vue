@@ -29,8 +29,8 @@ export default {
         if (this.isMobile) this.addEventListenerIfMobile();
 
         await this.$store.dispatch('GET_BUILDINGS');
-        // await this.$store.dispatch('GET_CLUSTERS', 2);
-        // await this.$store.dispatch('GET_ART_DATA');
+
+        await this.$store.dispatch('GET_ALL_STORIES');
 
         this.$store.commit('globalLoading', false);
     },

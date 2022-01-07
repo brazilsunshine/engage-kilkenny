@@ -37,6 +37,22 @@ export const actions = {
     },
 
     /**
+     * Get all stories for all buildings
+     */
+    async GET_ALL_STORIES (context)
+    {
+        await axios.get('/buildings/all-stories')
+            .then(response => {
+                console.log('all_stories', response);
+
+                context.commit('addStoriesToBuildings', response.data);
+            })
+            .catch(error => {
+                console.log('all_stories', error);
+            });
+    },
+
+    /**
      * Get clusters for the global map
      */
     async GET_CLUSTERS (context, payload)

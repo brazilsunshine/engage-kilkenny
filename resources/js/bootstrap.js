@@ -24,23 +24,23 @@ if (token) {
  * allows your team to easily build robust real-time web applications.
  */
 
-import Echo from 'laravel-echo';
-
-window.Pusher = require('pusher-js');
+// import Echo from 'laravel-echo';
+//
+// window.Pusher = require('pusher-js');
 
 // let useTLSOverride = process.env.MIX_WEBSOCKET_USE_TLS == "true" ? true : false
 // if( !useTLSOverride){
 //     window.Pusher.Runtime.getProtocol = function() {return 'http:';}
 // }
 
-window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: 'aa1eecefcf9deb983617',
-    wsHost: window.location.hostname,
-    wssHost: window.location.hostname,
-    wsPort:  window.APP_DEBUG === 'true' ? 6001 : 6002,
-    wssPort: window.APP_DEBUG === 'true' ? 6001 : 6002,
-    disableStats: true,
-    encrypted: false,
-    enabledTransports: ['ws', 'wss']
-});
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: 'aa1eecefcf9deb983617',
+//     wsHost: window.location.hostname,
+//     wssHost: window.location.hostname,
+//     wsPort:  window.APP_DEBUG === 'true' ? 6001 : 6002,
+//     wssPort: window.APP_DEBUG === 'true' ? 6001 : 6002,
+//     disableStats: true,
+//     encrypted: false,
+//     enabledTransports: ['ws', 'wss']
+// });

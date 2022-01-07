@@ -10,10 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class StoryController extends Controller
 {
     /**
-     * Add a new story to a builiding
-     *
-     * When it has a Request object, we know its a post request.
-     * All of the data from the post request will be contained in the $request object.
+     * Add a new story to a building
      */
     public function addNewStory (Request $request)
     {
@@ -49,6 +46,26 @@ class StoryController extends Controller
         return [
             'success' => true
         ];
+    }
+
+    /**
+     * Get all the stories for the buildings
+     */
+    public function getAllStories ()
+    {
+        $stories = Story::all();
+
+        $buildingsIds = [];
+
+        foreach ($stories as $story)
+        {
+            if (! in_array($story->osm_id, $buildingsIds))
+            {
+                array_push($buildingsIds, $story->osm_id);
+            }
+        }
+
+        return $buildingsIds;
     }
 
     /**

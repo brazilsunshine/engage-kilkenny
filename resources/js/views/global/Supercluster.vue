@@ -229,19 +229,37 @@ function onEachBuilding (feature, layer)
         window.buildingsMap.buildingsKey++;
     });
 
-    layer.on("mouseover",function(e){
+    layer.on("mouseover", function(e) {
         layer.setStyle({
             fillOpacity: 0.4,
             color: 'yellow'
         });
     });
 
-    layer.on("mouseout",function(e){
-        layer.setStyle({
-            fillOpacity: 0,
-            color: '#3388ff'
-        });
+    layer.on("mouseout",function(e) {
+        if (feature.properties.hasStory)
+        {
+            layer.setStyle({
+                fillOpacity: 0.5,
+                color: '#2ecc71'
+            });
+        }
+        else
+        {
+            layer.setStyle({
+                fillOpacity: 0,
+                color: '#3388ff'
+            });
+        }
     });
+
+    if (feature.properties.hasStory)
+    {
+        layer.setStyle({
+            fillOpacity: 0.5,
+            color: '#2ecc71'
+        });
+    }
 
 }
 
@@ -352,8 +370,6 @@ export default {
         buildings.addData(this.$store.state.globalmap.buildingsGeojson);
 
         map.on('click', function (e) {
-            console.log('map was clicked');
-
             window.buildingsMap.building = null;
         });
 

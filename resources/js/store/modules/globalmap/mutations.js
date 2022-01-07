@@ -3,6 +3,27 @@ import { init } from './init'
 export const mutations = {
 
     /**
+     * Loop over all buildings
+     */
+    addStoriesToBuildings (state, payload)
+    {
+        console.log("5 stories", payload); // 3 Ids
+        // console.log("All buildings", state.buildingsGeojson.features); // ~4000 buildings
+
+        state.buildingsGeojson.features.forEach(building => {
+
+            if (payload.includes(parseInt(building.properties.osm_id)))
+            {
+                building.properties.hasStory = true;
+            }
+            else
+            {
+                building.properties.hasStory = false;
+            }
+        });
+    },
+
+    /**
      *
      */
 	closeDatesButton (state)

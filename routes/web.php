@@ -86,6 +86,9 @@ Route::get('/global/points', 'GlobalMap\GlobalMapController@index');
 Route::get('/global/buildings', 'GlobalMap\GlobalMapController@buildings');
 Route::get('/global/art-data', 'GlobalMap\GlobalMapController@artData');
 
+// Get all stories for all buildings
+Route::get('/buildings/all-stories', 'StoryController@getAllStories');
+
 /** Auth Routes */
 
 // Get currently auth user when logged in
