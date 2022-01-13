@@ -2,7 +2,7 @@
     <div class="map-side-container">
         <h1 class="title is-3 pt1">Your Historic Town Center</h1>
 
-        <div v-if="loggedIn">
+        <div v-if="loggedIn" class="flex-1">
             <p class="mb1">
                 Do you have any nice stories about this building?
             </p>
@@ -11,6 +11,7 @@
                 class="input mb1"
                 v-model="title"
                 placeholder="Give your story a nice title"
+                @input="deleteError('title')"
             />
 
             <textarea
@@ -18,17 +19,28 @@
                 rows="4"
                 class="textarea mb1"
                 placeholder="Once upon a time..."
+                @input="deleteError('story')"
             />
 
             <input
                 class="input mb1"
                 v-model="date"
                 placeholder="When did it happen"
+                @input="deleteError('date')"
             />
 
             <p v-if="showError" class="is-red mb1">
                 {{ this.error }}
             </p>
+
+            <!-- Display Validation Errors -->
+            <div v-if="Object.keys(this.errors).length > 0">
+                <ul class="mb1">
+                    <li v-for="error in this.errors" class="is-red">
+                        {{ error[0] }}
+                    </li>
+                </ul>
+            </div>
 
             <button
                 class="button is-medium is-primary"
@@ -83,7 +95,8 @@ export default {
             date: "",
             loading: false,
             showError: false,
-            error: ""
+            error: "",
+            errors: {}
         };
     },
     computed: {
@@ -133,7 +146,7 @@ export default {
                 osm_id: window.buildingsMap.building.osm_id
             })
             .then(response => {
-                console.log(response);
+                console.log('add_story', response);
 
                 if (response.data.success) {
                     console.log('The request was successful!');
@@ -158,14 +171,25 @@ export default {
                             position: 'top-right'
                         });
                     }
-
                 }
             })
             .catch(error => {
-                console.log(error);
+                console.log('found error');
+                console.log(error.response.data);
+
+                this.errors = error.response.data.errors;
             });
 
             this.loading = false;
+        },
+
+        /**
+         * Delete one of the errors, if it exists
+         */
+        deleteError (key) {
+            if (this.errors[key]) {
+                delete this.errors[key];
+            }
         }
     }
 }

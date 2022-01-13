@@ -246,7 +246,6 @@ export const actions = {
             console.log('login_success', response);
 
             context.commit('hideModal');
-            context.commit('login');
 
             window.location.href = '/map'; // we need to force page refresh to put CSRF token in the session
         })
