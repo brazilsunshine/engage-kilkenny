@@ -40,7 +40,7 @@
             </button>
         </div>
 
-        <div v-else>
+        <div v-else class="flex-1">
             <p>Please log in to perform this action.</p>
         </div>
 
@@ -58,6 +58,14 @@
                     </li>
                 </ul>
             </div>
+        </div>
+
+        <div class="mb1">
+            <p class="mb1">Engage Kilkenny is brought to you by the Heritage Council's Collaborative Town Centre Health Check</p>
+
+            <img src="/assets/HC_logo_retina.png" class="small_heritage_logo" />
+
+            <p>This data has been sourced from <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a></p>
         </div>
 
     </div>
@@ -177,6 +185,13 @@ export default {
         text-align: center;
         padding-left: 1em;
         padding-right: 1em;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .small_heritage_logo {
+        height: 45px;
+        margin-bottom: 0.5em;
     }
 
 </style>

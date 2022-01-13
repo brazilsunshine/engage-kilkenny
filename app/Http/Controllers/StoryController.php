@@ -16,7 +16,7 @@ class StoryController extends Controller
     {
         $request->validate([
            'title' => 'required|min:5|max:255',
-           'story' => 'required|min:50',
+           'story' => 'required|min:25',
            'date' => 'required|min:5',
            'osm_id' => 'required'
         ]);
