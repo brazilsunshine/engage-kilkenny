@@ -49,6 +49,12 @@
                                 <!-- Dropdown menu -->
                                 <div class="navbar-dropdown" style="z-index: 2;">
 
+                                    <!-- Admin - Review Stories -->
+<!--                                    v-if="can('review stories')"-->
+                                    <router-link  to="/admin/stories" class="navbar-item drop-item" @click.native="close">
+                                        ADMIN - Review Stories
+                                    </router-link>
+
                                     <!-- Admin -->
                                     <router-link v-if="can('update tags')" to="/admin/photos" class="navbar-item drop-item" @click.native="close">
                                         {{ $t('nav.admin-verify-photos')}}

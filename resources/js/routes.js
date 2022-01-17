@@ -105,6 +105,13 @@ const router = new VueRouter({
                 middleware: [ auth, admin ]
             }
         },
+        {
+            path: '/admin/stories',
+            component: require('./views/admin/VerifyStories').default,
+            meta: {
+                middleware: [ auth ] // admin
+            }
+        },
         // AUTH ROUTES
         {
             path: '/upload',

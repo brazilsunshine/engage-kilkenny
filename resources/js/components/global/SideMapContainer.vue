@@ -1,74 +1,84 @@
 <template>
     <div class="map-side-container">
-        <h1 class="title is-3 pt1">Your Historic Town Center</h1>
+        <h1 class="title is-3 pt1">Engage With Kilkenny</h1>
 
         <div v-if="loggedIn" class="flex-1">
-            <p class="mb1">
-                Do you have any nice stories about this building?
+
+            <p v-if="buildingNotSelected">
+                Select a building and then you can add a story
             </p>
 
-            <input
-                class="input mb1"
-                v-model="title"
-                placeholder="Give your story a nice title"
-                @input="deleteError('title')"
-            />
+            <div v-else>
 
-            <textarea
-                v-model="story"
-                rows="4"
-                class="textarea mb1"
-                placeholder="Once upon a time..."
-                @input="deleteError('story')"
-            />
+                <p class="mb1">
+                    Do you have any nice stories about this building?
+                </p>
 
-            <input
-                class="input mb1"
-                v-model="date"
-                placeholder="When did it happen"
-                @input="deleteError('date')"
-            />
+                <input
+                    class="input mb1"
+                    v-model="title"
+                    placeholder="Give your story a nice title"
+                    @input="deleteError('title')"
+                />
 
-            <p v-if="showError" class="is-red mb1">
-                {{ this.error }}
-            </p>
+                <textarea
+                    v-model="story"
+                    rows="4"
+                    class="textarea mb1"
+                    placeholder="Once upon a time..."
+                    @input="deleteError('story')"
+                />
 
-            <!-- Display Validation Errors -->
-            <div v-if="Object.keys(this.errors).length > 0">
-                <ul class="mb1">
-                    <li v-for="error in this.errors" class="is-red">
-                        {{ error[0] }}
-                    </li>
-                </ul>
+                <input
+                    class="input mb1"
+                    v-model="date"
+                    placeholder="When did it happen"
+                    @input="deleteError('date')"
+                />
+
+                <p v-if="showError" class="is-red mb1">
+                    {{ this.error }}
+                </p>
+
+                <!-- Display Validation Errors -->
+                <div v-if="Object.keys(this.errors).length > 0">
+                    <ul class="mb1">
+                        <li v-for="error in this.errors" class="is-red">
+                            {{ error[0] }}
+                        </li>
+                    </ul>
+                </div>
+
+                <button
+                    class="button is-medium is-primary"
+                    :class="loading ? 'is-loading' : ''"
+                    @click="addStory"
+                    :disabled="loading"
+                >
+                    Add Story
+                </button>
             </div>
-
-            <button
-                class="button is-medium is-primary"
-                :class="loading ? 'is-loading' : ''"
-                @click="addStory"
-                :disabled="loading"
-            >
-                Add Story
-            </button>
         </div>
 
         <div v-else class="flex-1">
-            <p>Please log in to perform this action.</p>
-        </div>
+            <p>Click any building to see the data associated with it</p>
 
-        <div
-            v-if="hasStories"
-        >
-            <h1 class="title is-3 mt1 mb1">
-                Here are some stories about this building!
-            </h1>
+            <p>Sign up to add stories about buildings</p>
 
-            <div class="content">
-                <ul>
-                    <li v-for="story in stories" class="building-story">
-                        <p>{{ story.story }}</p>
-                    </li>
-                </ul>
+            <div
+                v-if="hasStories"
+            >
+                <h1 class="title is-3 mt1 mb1">
+                    Here are some stories about this building!
+                </h1>
+
+                <div class="content">
+                    <ul>
+                        <li v-for="story in stories" class="building-story">
+                            <p>{{ story.story }}</p>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -100,6 +110,18 @@ export default {
         };
     },
     computed: {
+        /**
+         * Return True if the building object is null
+         */
+        buildingNotSelected () {
+
+            if (!window.hasOwnProperty('buildingsMap')) {
+                return true;
+            }
+
+            return (window.buildingsMap?.building === null);
+        },
+
         /**
          * Return True if stories array is greater than 0
          */

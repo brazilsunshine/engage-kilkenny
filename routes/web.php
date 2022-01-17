@@ -281,6 +281,16 @@ Route::get('/nav', function () {
  */
 Route::group(['prefix' => '/admin'], function () {
 
+    // Review stories
+    Route::get('stories', 'HomeController@index');
+
+    // Get stories to review
+    Route::get('stories/get-stories', 'Admin\AdminStoryController@getStories');
+
+    // Update a story as reviewed
+    Route::post('stories/accept-story', 'Admin\AdminStoryController@acceptStory');
+    Route::post('stories/delete-story', 'Admin\AdminStoryController@deleteStory');
+
     // route
     Route::get('photos', 'HomeController@index');
 

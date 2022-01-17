@@ -34,6 +34,11 @@
     <link rel="stylesheet" type="text/css" href="/css/MarkerCluster.css">
     <link rel="stylesheet" type="text/css" href="/css/MarkerCluster.Default.css">
 
+{{--    <link rel="stylesheet" type="text/css" href="/css/osm-buildings.css">--}}
+
+    <link href="https://cdn.osmbuildings.org/4.0.0/OSMBuildings.css" rel="stylesheet">
+    <script src="https://cdn.osmbuildings.org/4.0.0/OSMBuildings.js"></script>
+
     <!-- code to rotate an img -->
     <style type="text/css">
         .rotateimg180 {
