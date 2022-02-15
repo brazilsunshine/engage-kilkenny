@@ -1,9 +1,13 @@
 <template>
     <div class="global-map-container" :style="{height: mapHeight}">
 
-        <loading v-if="loading" :active.sync="loading" :is-full-page="true" />
+        <loading
+            v-if="loading"
+            :active.sync="loading"
+            :is-full-page="true"
+        />
 
-        <supercluster v-else />
+        <BuildingsMap v-else />
 
     </div>
 </template>
@@ -11,13 +15,13 @@
 <script>
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
-import Supercluster from './Supercluster'
+import BuildingsMap from './BuildingsMap'
 
 export default {
     name: 'GlobalMapContainer',
     components: {
         Loading,
-        Supercluster
+        BuildingsMap
     },
     data () {
         return {

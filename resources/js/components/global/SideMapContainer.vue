@@ -94,8 +94,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-
 export default {
     name: "SideMapContainer",
     data () {
@@ -177,9 +175,9 @@ export default {
                     this.story = "";
                     this.date = "";
 
-                    Vue.$vToastify.success({
+                    this.$vToastify.success({
                         title: "Success",
-                        body: "Your story was added to this building",
+                        body: "Your story was added to this building but it needs to be reviewed before its made public.",
                         position: 'top-right'
                     });
 
@@ -187,7 +185,7 @@ export default {
                     console.log('Did not work');
 
                     if (response.data.msg === "guest") {
-                        Vue.$vToastify.error({
+                        this.$vToastify.error({
                             title: "Error",
                             body: "You need to be logged in to perform this action. Please sign up.",
                             position: 'top-right'

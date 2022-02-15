@@ -12,10 +12,16 @@ class AdminStoryController extends Controller
      * Update a story as reviewed.
      *
      * This will make the story appear on the map when a building is clicked
+     *
+     * If admin has changed the title, story or date, we update it here.
      */
     public function acceptStory (Request $request)
     {
-        $story = Story::find($request->story_id);
+        $story = Story::find($request->story['id']);
+
+        $story->title = $request->story['title'];
+        $story->story = $request->story['story'];
+        $story->date = $request->story['date'];
 
         $story->reviewed = true;
         $story->save();

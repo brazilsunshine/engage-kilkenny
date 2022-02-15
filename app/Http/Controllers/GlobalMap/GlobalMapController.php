@@ -13,11 +13,11 @@ class GlobalMapController extends Controller
     use FilterPhotosByGeoHashTrait;
 
     /**
-     *
+     * Get the buildings geojson file
      */
     public function buildings ()
     {
-        $geojson = file_get_contents(public_path('/js/small_buildings.geojson'));
+        $geojson = file_get_contents(public_path('/js/kilkenny_roi.geojson'));
 
         return [
             'success' => true,

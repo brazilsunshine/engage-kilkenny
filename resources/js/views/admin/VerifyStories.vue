@@ -10,12 +10,14 @@
             <div v-else>
 
                 <div class="verify-stories-container">
-                    <p class="flex-1" style="font-size: 1.5rem;">Verify stories</p>
+                    <p style="font-size: 1.5rem;">Verify story: </p>
+
+                    <p class="flex-1" style="font-size: 1.5rem; margin-left: 1em;">#{{ stories[0].id }}</p>
 
                     <p>You have {{ stories.length }} stories to verify</p>
                 </div>
 
-                <div class="has-text-centered">
+                <div>
                     <p>Title:</p>
 
                     <input
@@ -25,14 +27,22 @@
 
                     <p>Story:</p>
 
-                    <p class="mb1">{{ stories[0].story }}</p>
+                    <textarea
+                        class="input mb1"
+                        v-model="stories[0].story"
+                        rows="4"
+                        style="height: auto;"
+                    />
 
                     <p>Date:</p>
-                    
-                    <p class="mb1">{{ stories[0].date }}</p>
 
-                    <div>
-                        <button class="button is-danger" @click="deleteStory">Delete</button>
+                    <input
+                        class="input mb3"
+                        v-model="stories[0].date"
+                    />
+
+                    <div class="has-text-centered">
+                        <button class="button is-danger mr2" @click="deleteStory">Delete</button>
 
                         <button class="button is-primary" @click="acceptStory">Accept</button>
                     </div>
@@ -43,6 +53,8 @@
 </template>
 
 <script>
+import Vue from "vue";
+
 export default {
     name: "VerifyStories",
     async created () {
@@ -68,14 +80,23 @@ export default {
         async acceptStory () {
 
             await axios.post('/admin/stories/accept-story', {
-                story_id: this.stories[0].id
+                story: this.stories[0]
             })
             .then(response => {
                 console.log('admin.accept_story', response);
 
-                if (response.data.success === true)
+                if (response.data.success)
                 {
+                    const title = "Success !";
+                    const body = "Story #" + this.stories[0].id + " has been accepted.";
+
                     this.stories.shift();
+
+                    this.$vToastify.success({
+                        title,
+                        body,
+                        position: 'bottom-right'
+                    });
                 }
             })
             .catch(error => {
@@ -95,9 +116,18 @@ export default {
             .then(response => {
                 console.log('admin.delete-story', response);
 
-                if (response.data.success === true)
+                if (response.data.success)
                 {
+                    const title = "Success !";
+                    const body = "Story #" + this.stories[0].id + " has been deleted.";
+
                     this.stories.shift();
+
+                    this.$vToastify.success({
+                        title,
+                        body,
+                        position: 'bottom-right'
+                    });
                 }
             })
             .catch(error => {
