@@ -16,9 +16,9 @@ export const actions = {
     },
 
     /**
-     * Return the geojson file as an object
+     * Return the geojson files
      */
-    async GET_BUILDINGS (context)
+    async GET_ALL_LAYERS (context)
     {
         await axios.get('/global/buildings')
             .then(response => {
@@ -26,9 +26,8 @@ export const actions = {
 
                 if (response.data.success)
                 {
-                    const geojson = JSON.parse(response.data.geojson);
-
-                    context.commit('setBuildings', geojson);
+                    context.commit('setBuildings', JSON.parse(response.data.buildings));
+                    context.commit('setStreets', JSON.parse(response.data.streets));
                 }
             })
             .catch(error => {

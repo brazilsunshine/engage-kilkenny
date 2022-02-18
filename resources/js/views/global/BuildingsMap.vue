@@ -1,8 +1,12 @@
 <template>
     <div class="h100 flex">
         <!-- The map & data -->
-        <div id="buildings-map" ref="buildings-map" />
+        <div
+            id="buildings-map"
+            ref="buildings-map"
+        />
 
+        <!-- Right-hand form container -->
         <SideMapContainer
             :key="buildingsKey"
         />
@@ -27,152 +31,29 @@ import {
 import L from 'leaflet';
 import './SmoothWheelZoom.js';
 
-// Todo - fix this export bug (The request of a dependency is an expression...)
-import glify from 'leaflet.glify';
 import { mapHelper } from '../../maps/mapHelpers';
 import SideMapContainer from "../../components/global/SideMapContainer";
 
-var clickedBuilding;
-var buildings;
-
 var map;
-var clusters;
-var litterArtPoints;
-var points;
-var prevZoom = MIN_ZOOM;
 
-var pointsLayerController;
-var globalLayerController;
-var pointsControllerShowing = false;
-var globalControllerShowing = false;
+var buildings;
+var streets;
+var parks;
+var carParks;
+var publicBuildings;
+var stories;
 
-const green_dot = L.icon({
-    iconUrl: './images/vendor/leaflet/dist/dot.png',
-    iconSize: [10, 10]
-});
-
-const grey_dot = L.icon({
-    iconUrl: './images/vendor/leaflet/dist/grey-dot.jpg',
-    iconSize: [13, 10]
-});
+var layerController;
 
 /**
- * Create the point to display for each piece of Litter Art
+ * Layer Controller
  */
-function createArtIcon (feature, latlng)
+function createLayerController ()
 {
-    const x = [latlng.lng, latlng.lat];
+    layerController = L.control.layers(null, null).addTo(map);
 
-    return (feature.properties.verified === 2)
-        ? L.marker(x, { icon: green_dot })
-        : L.marker(x, { icon: grey_dot });
-}
-
-/**
- * Create the cluster or point icon to display for each feature
- */
-function createClusterIcon (feature, latlng)
-{
-    if (!feature.properties.cluster)
-    {
-        return (feature.properties.verified === 2)
-            ? L.marker(latlng, { icon: green_dot })
-            : L.marker(latlng, { icon: grey_dot });
-    }
-
-    const count = feature.properties.point_count;
-    const size = (count < MEDIUM_CLUSTER_SIZE)
-        ? 'small'
-            : count < LARGE_CLUSTER_SIZE
-            ? 'medium'
-            : 'large';
-
-    const icon = L.divIcon({
-        html: '<div class="mi"><span class="ma">' + feature.properties.point_count_abbreviated + '</span></div>',
-        className: 'marker-cluster-' + size,
-        iconSize: L.point(40, 40)
-    });
-
-    return L.marker(latlng, { icon });
-}
-
-/**
- * Layer controller when below ZOOM_CLUSTER_THRESHOLD
- */
-function createGlobalGroups ()
-{
-    if (pointsControllerShowing)
-    {
-        map.removeControl(pointsLayerController);
-
-        pointsControllerShowing = false;
-    }
-
-    if (!globalControllerShowing)
-    {
-        globalLayerController = L.control.layers(null, null).addTo(map);
-
-        globalLayerController.addOverlay(clusters, 'Global');
-        globalLayerController.addOverlay(litterArtPoints, 'Litter Art');
-
-        globalControllerShowing = true;
-    }
-}
-
-/**
- * Layer Controller when above ZOOM_CLUSTER_THRESHOLD
- */
-function createPointGroups ()
-{
-    if (globalControllerShowing)
-    {
-        map.removeControl(globalLayerController)
-
-        globalControllerShowing = false;
-    }
-
-    if (!pointsControllerShowing)
-    {
-        const overlays = {
-            Alcohol: new L.LayerGroup(),
-            Brands: new L.LayerGroup(),
-            Coastal: new L.LayerGroup(),
-            Coffee: new L.LayerGroup(),
-            Dumping: new L.LayerGroup(),
-            Food: new L.LayerGroup(),
-            Industrial: new L.LayerGroup(),
-            Other: new L.LayerGroup(),
-            PetSurprise: new L.LayerGroup(),
-            Sanitary: new L.LayerGroup(),
-            Smoking: new L.LayerGroup(),
-            SoftDrinks: new L.LayerGroup(),
-        };
-
-        pointsLayerController = L.control.layers(null, overlays).addTo(map);
-
-        pointsControllerShowing = true;
-    }
-}
-
-/**
- * Zoom to a cluster when it is clicked
- */
-function onEachFeature (feature, layer)
-{
-    if (feature.properties.cluster)
-    {
-        layer.on('click', function (e)
-        {
-            const zoomTo = ((map.getZoom() + ZOOM_STEP) > MAX_ZOOM)
-                ? MAX_ZOOM
-                : (map.getZoom() + ZOOM_STEP);
-
-            map.flyTo(e.latlng, zoomTo, {
-                animate: true,
-                duration: 2
-            });
-        });
-    }
+    layerController.addOverlay(buildings, 'Buildings');
+    layerController.addOverlay(streets, 'Streets');
 }
 
 /**
@@ -209,6 +90,54 @@ function getBuildingsColour (buildingsDate)
     }
 
     return null;
+}
+
+/**
+ * On each street feature
+ */
+function onEachStreet (feature, layer)
+{
+    layer.on('click', function (e)
+    {
+        const keys = Object.keys(feature.properties);
+
+        let street = {};
+        let str = "";
+
+        keys.forEach(key => {
+            if (feature.properties[key])
+            {
+                street[key] = feature.properties[key];
+
+                str += key + ": " + feature.properties[key] + " <br> ";
+            }
+        })
+
+        console.log(street);
+
+        window.buildingsMap.street = street;
+
+        L.popup(mapHelper.popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(str)
+            .openOn(map);
+
+        L.DomEvent.stopPropagation(e);
+    });
+
+    layer.on("mouseover", function(e) {
+        layer.setStyle({
+            fillOpacity: 0.4,
+            color: 'yellow'
+        });
+    });
+
+    layer.on("mouseout",function(e) {
+        layer.setStyle({
+            fillOpacity: 0,
+            color: '#3388ff'
+        });
+    });
 }
 
 /**
@@ -317,6 +246,7 @@ export default {
     data () {
         return {
             building: null,
+            street: null,
             stories: [],
             buildingsKey: 0
         };
@@ -336,10 +266,6 @@ export default {
 
         map.scrollWheelZoom = true;
 
-        const date = new Date();
-        
-        const year = date.getFullYear();
-
         /** 2. Add tiles, attribution, set limits */
         const mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
 
@@ -349,36 +275,29 @@ export default {
             minZoom: MIN_ZOOM
         }).addTo(map);
 
-        map.attributionControl.addAttribution('Litter data &copy OpenLitterMap & Contributors ' + year + ' Clustering @ MapBox');
+        map.attributionControl.addAttribution(
+            'Litter data &copy OpenLitterMap & Contributors '
+                + new Date().getFullYear()
+                + ' Architecture Data &copy NIAH'
+        );
 
+        // Add the layers
         buildings = L.geoJSON(null, {
             onEachFeature: onEachBuilding
         }).addTo(map);
+        buildings.addData(this.$store.state.globalmap.buildings);
 
-        buildings.addData(this.$store.state.globalmap.buildingsGeojson);
+        streets = L.geoJSON(null, {
+            onEachFeature: onEachStreet
+        });
+        streets.addData(this.$store.state.globalmap.streets);
+
+        createLayerController();
 
         map.on('click', function (e) {
             window.buildingsMap.building = null;
+            window.buildingsMap.street = null;
         });
-
-        // // Empty Layer Group that will receive the clusters data on the fly.
-        // clusters = L.geoJSON(null, {
-        //     pointToLayer: createClusterIcon,
-        //     onEachFeature: onEachFeature,
-        // }).addTo(map);
-        //
-        // clusters.addData(this.$store.state.globalmap.geojson.features);
-
-        // litterArtPoints = L.geoJSON(null, {
-        //     pointToLayer: createArtIcon,
-        //     onEachFeature: onEachArtFeature
-        // });
-        //
-        // litterArtPoints.addData(this.$store.state.globalmap.artData.features);
-        //
-        // map.on('moveend', this.update);
-
-        // createGlobalGroups();
 
         map.on('overlayadd', this.update);
         map.on('overlayremove', this.update)
@@ -389,151 +308,149 @@ export default {
 
         legend.onAdd = function (map) {
 
-            let div = L.DomUtil.create('div', 'info legend');
+            let legend = L.DomUtil.create('div', 'info legend');
             // grades = [1200, 1300, 1500, 1650, 1650, 1765, 1790, 1815, 1880];
 
-            div.innerHTML += '<i style="background:' + getBuildingsColour(1200) + '"></i> 1200 - 1300' + '<br>';
-            div.innerHTML += '<i style="background:' + getBuildingsColour(1500) + '"></i> 1350 - 1650' + '<br>';
-            div.innerHTML += '<i style="background:' + getBuildingsColour(1651) + '"></i> 1651 - 1765' + '<br>';
-            div.innerHTML += '<i style="background:' + getBuildingsColour(1790) + '"></i> 1790' + '<br>';
-            div.innerHTML += '<i style="background:' + getBuildingsColour(1815) + '"></i> 1815 - 1880' + '<br>';
+            legend.innerHTML += '<i style="background:' + getBuildingsColour(1200) + '"></i> 1200 - 1300' + '<br>';
+            legend.innerHTML += '<i style="background:' + getBuildingsColour(1500) + '"></i> 1350 - 1650' + '<br>';
+            legend.innerHTML += '<i style="background:' + getBuildingsColour(1651) + '"></i> 1651 - 1765' + '<br>';
+            legend.innerHTML += '<i style="background:' + getBuildingsColour(1790) + '"></i> 1790' + '<br>';
+            legend.innerHTML += '<i style="background:' + getBuildingsColour(1815) + '"></i> 1815 - 1880' + '<br>';
 
-            return div;
+            return legend;
         };
 
         legend.addTo(map);
-
-
     },
     methods: {
-        /**
-         * The user dragged or zoomed the map, or changed a category
-         */
-        async update ()
-        {
-            const bounds = map.getBounds();
+        // /**
+        //  * The user dragged or zoomed the map, or changed a category
+        //  */
+        // async update ()
+        // {
+        //     const bounds = map.getBounds();
+        //
+        //     const bbox = {
+        //         'left': bounds.getWest(),
+        //         'bottom': bounds.getSouth(),
+        //         'right': bounds.getEast(),
+        //         'top': bounds.getNorth()
+        //     };
+        //
+        //     const zoom = Math.round(map.getZoom());
+        //
+        //     // We don't want to make a request at zoom level 2-5 if the user is just panning the map.
+        //     // At these levels, we just load all global data for now
+        //     if (zoom === 2 && zoom === prevZoom) return;
+        //     if (zoom === 3 && zoom === prevZoom) return;
+        //     if (zoom === 4 && zoom === prevZoom) return;
+        //     if (zoom === 5 && zoom === prevZoom) return;
+        //
+        //     // Remove points when zooming out
+        //     if (points)
+        //     {
+        //         clusters.clearLayers();
+        //         points.remove();
+        //     }
+        //
+        //     // Get Clusters or Points
+        //     if (zoom < CLUSTER_ZOOM_THRESHOLD)
+        //     {
+        //         createGlobalGroups();
+        //
+        //         await axios.get('/global/clusters', {
+        //             params: {
+        //                 zoom,
+        //                 bbox
+        //             }
+        //         })
+        //         .then(response => {
+        //             console.log('get_clusters.update', response);
+        //
+        //             clusters.clearLayers();
+        //             clusters.addData(response.data);
+        //         })
+        //         .catch(error => {
+        //             console.error('get_clusters.update', error);
+        //         });
+        //     }
+        //     else
+        //     {
+        //         createPointGroups()
+        //
+        //         const layers = getActiveLayers();
+        //
+        //         await axios.get('/global/points', {
+        //             params: {
+        //                 zoom,
+        //                 bbox,
+        //                 layers
+        //             }
+        //         })
+        //         .then(response => {
+        //             console.log('get_global_points', response);
 
-            const bbox = {
-                'left': bounds.getWest(),
-                'bottom': bounds.getSouth(),
-                'right': bounds.getEast(),
-                'top': bounds.getNorth()
-            };
+                //     // Clear layer if prev layer is cluster.
+                //     if (prevZoom < CLUSTER_ZOOM_THRESHOLD)
+                //     {
+                //         clusters.clearLayers();
+                //     }
+                //
+                //     const data = response.data.features.map(feature => {
+                //         return [feature.geometry.coordinates[0], feature.geometry.coordinates[1]];
+                //     });
+                //
+                //     // New way using webGL
+                //     points = glify.points({
+                //         map,
+                //         data,
+                //         size: 10,
+                //         color: { r: 0.054, g: 0.819, b: 0.27, a: 1 }, // 14, 209, 69 / 255
+                //         click:  (e, point, xy) => {
+                //             const feature = response.data.features.find(f => {
+                //                 return f.geometry.coordinates[0] === point[0]
+                //                     && f.geometry.coordinates[1] === point[1];
+                //             });
+                //
+                //             if (!feature) {
+                //                 return;
+                //             }
+                //
+                //             return this.renderLeafletPopup(feature, e.latlng)
+                //         },
+                //     });
+                // })
+                // .catch(error => {
+                //     console.error('get_global_points', error);
+                // });
+            // }
+            //
+            // prevZoom = zoom;
+        // },
 
-            const zoom = Math.round(map.getZoom());
-
-            // We don't want to make a request at zoom level 2-5 if the user is just panning the map.
-            // At these levels, we just load all global data for now
-            if (zoom === 2 && zoom === prevZoom) return;
-            if (zoom === 3 && zoom === prevZoom) return;
-            if (zoom === 4 && zoom === prevZoom) return;
-            if (zoom === 5 && zoom === prevZoom) return;
-
-            // Remove points when zooming out
-            if (points)
-            {
-                clusters.clearLayers();
-                points.remove();
-            }
-
-            // Get Clusters or Points
-            if (zoom < CLUSTER_ZOOM_THRESHOLD)
-            {
-                createGlobalGroups();
-
-                await axios.get('/global/clusters', {
-                    params: {
-                        zoom,
-                        bbox
-                    }
-                })
-                .then(response => {
-                    console.log('get_clusters.update', response);
-
-                    clusters.clearLayers();
-                    clusters.addData(response.data);
-                })
-                .catch(error => {
-                    console.error('get_clusters.update', error);
-                });
-            }
-            else
-            {
-                createPointGroups()
-
-                const layers = getActiveLayers();
-
-                await axios.get('/global/points', {
-                    params: {
-                        zoom,
-                        bbox,
-                        layers
-                    }
-                })
-                .then(response => {
-                    console.log('get_global_points', response);
-
-                    // Clear layer if prev layer is cluster.
-                    if (prevZoom < CLUSTER_ZOOM_THRESHOLD)
-                    {
-                        clusters.clearLayers();
-                    }
-
-                    const data = response.data.features.map(feature => {
-                        return [feature.geometry.coordinates[0], feature.geometry.coordinates[1]];
-                    });
-
-                    // New way using webGL
-                    points = glify.points({
-                        map,
-                        data,
-                        size: 10,
-                        color: { r: 0.054, g: 0.819, b: 0.27, a: 1 }, // 14, 209, 69 / 255
-                        click:  (e, point, xy) => {
-                            const feature = response.data.features.find(f => {
-                                return f.geometry.coordinates[0] === point[0]
-                                    && f.geometry.coordinates[1] === point[1];
-                            });
-
-                            if (!feature) {
-                                return;
-                            }
-
-                            return this.renderLeafletPopup(feature, e.latlng)
-                        },
-                    });
-                })
-                .catch(error => {
-                    console.error('get_global_points', error);
-                });
-            }
-
-            prevZoom = zoom;
-        },
-
-        /**
-         * Helper method to create a Popup
-         *
-         * @param feature
-         * @param latLng
-         */
-        renderLeafletPopup (feature, latLng)
-        {
-            const user = mapHelper.formatUserName(feature.properties.name, feature.properties.username);
-
-            L.popup(mapHelper.popupOptions)
-                .setLatLng(latLng)
-                .setContent(
-                    mapHelper.getMapImagePopupContent(
-                        feature.properties.filename,
-                        feature.properties.result_string,
-                        feature.properties.datetime,
-                        user,
-                        feature.properties.team
-                    )
-                )
-                .openOn(map);
-        }
+        // /**
+        //  * Helper method to create a Popup
+        //  *
+        //  * @param feature
+        //  * @param latLng
+        //  */
+        // renderLeafletPopup (feature, latLng)
+        // {
+        //     const user = mapHelper.formatUserName(feature.properties.name, feature.properties.username);
+        //
+        //     L.popup(mapHelper.popupOptions)
+        //         .setLatLng(latLng)
+        //         .setContent(
+        //             mapHelper.getMapImagePopupContent(
+        //                 feature.properties.filename,
+        //                 feature.properties.result_string,
+        //                 feature.properties.datetime,
+        //                 user,
+        //                 feature.properties.team
+        //             )
+        //         )
+        //         .openOn(map);
+        // }
     }
 };
 </script>

@@ -17,11 +17,13 @@ class GlobalMapController extends Controller
      */
     public function buildings ()
     {
-        $geojson = file_get_contents(public_path('/js/kilkenny_roi.geojson'));
+        $buildings = file_get_contents(public_path('/js/geojson/buildings.geojson'));
+        $streets = file_get_contents(public_path('/js/geojson/streets.geojson'));
 
         return [
             'success' => true,
-            'geojson' => $geojson
+            'buildings' => $buildings,
+            'streets' => $streets
         ];
     }
 

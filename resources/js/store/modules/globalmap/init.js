@@ -5,5 +5,6 @@ export const init = {
     datesOpen: false, // change dates box on global map
     langsOpen: false,
     geojson: [],
-    buildingsGeojson: null
+    buildings: null,
+    streets: null
 };

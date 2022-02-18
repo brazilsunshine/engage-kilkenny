@@ -32,7 +32,8 @@ export default {
     {
         if (this.isMobile) this.addEventListenerIfMobile();
 
-        await this.$store.dispatch('GET_BUILDINGS');
+        // get all layers
+        await this.$store.dispatch('GET_ALL_LAYERS');
 
         await this.$store.dispatch('GET_ALL_STORIES');
 

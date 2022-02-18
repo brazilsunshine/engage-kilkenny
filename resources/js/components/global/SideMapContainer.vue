@@ -5,10 +5,28 @@
         <div v-if="loggedIn" class="flex-1">
 
             <p v-if="buildingNotSelected">
-                Select a building and then you can add a story
+                Select a building and then you can add a story or some data
             </p>
 
             <div v-else>
+
+                <div>
+                    <p>Do you want to add a story or some data?</p>
+
+                    <button
+                        class="button is-medium is-primary"
+                        @click="changeFormType('story')"
+                    >
+                        Add Story
+                    </button>
+
+                    <button
+                        class="button is-medium is-info"
+                        @click="changeFormType('data')"
+                    >
+                        Add Data
+                    </button>
+                </div>
 
                 <p class="mb1">
                     Do you have any nice stories about this building?
