@@ -37,6 +37,7 @@ import SideMapContainer from "../../components/global/SideMapContainer";
 var map;
 
 var buildings;
+var buildingsWithoutYear;
 var streets;
 var streetTypes;
 var streetsMaterial;
@@ -60,7 +61,8 @@ function createLayerController ()
                 label: 'Buildings',
                 selectAllCheckbox: false,
                 children: [
-                    { label: ' Year Of Construction', layer: buildings }
+                    { label: ' Year Of Construction', layer: buildings },
+                    { label: ' Year Missing', layer: buildingsWithoutYear }
                 ]
             },
             {
@@ -384,6 +386,11 @@ function onEachBuilding (feature, layer)
     });
 }
 
+function onEachBuildingWithoutYear (feature, layer)
+{
+
+}
+
 export default {
     name: 'BuildingsMap',
     components: {
@@ -432,49 +439,74 @@ export default {
         buildings = L.geoJSON(null, {
             onEachFeature: onEachBuilding
         }).addTo(map);
-        buildings.addData(this.$store.state.globalmap.buildings);
-
-        streets = L.geoJSON(null, {
-            onEachFeature: onEachStreet
+        const filteredBuildingsWithYear = this.$store.state.globalmap.buildings.features.filter(feature => {
+            return (feature.properties.hasOwnProperty('NEWDATE'));
         });
-        streets.addData(this.$store.state.globalmap.streets);
-
-        streetTypes = L.geoJSON(null, {
-            onEachFeature: onEachStreetType
-        });
-
-        const filteredStreetsHighway = this.$store.state.globalmap.streets.features.filter(streetFeature => {
-            if (streetFeature.properties.hasOwnProperty('highway'))
-            {
-                return streetFeature;
-            }
-        });
-
-        const filteredStreetsHighwayGeojson = {
+        buildings.addData({
             crs: {
                 properties: {
                     name: "urn:ogc:def:crs:OGC:1.3:CRS84"
                 },
                 type: "name"
             },
-            features: filteredStreetsHighway,
+            features: filteredBuildingsWithYear,
             type: "FeatureCollection"
-        };
+        });
 
-        streetTypes.addData(filteredStreetsHighwayGeojson);
+        buildingsWithoutYear = L.geoJSON(null, {
+            onEachFeature: onEachBuilding
+        });
+        const filteredBuildingsWithoutYear = this.$store.state.globalmap.buildings.features.filter(feature => {
+            if (!feature.properties.hasOwnProperty('NEWDATE'))
+            {
+                return feature;
+            }
+        });
+        buildingsWithoutYear.addData({
+            crs: {
+                properties: {
+                    name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+                },
+                type: "name"
+            },
+            features: filteredBuildingsWithoutYear,
+            type: "FeatureCollection"
+        });
+
+        streets = L.geoJSON(this.$store.state.globalmap.streets, {
+            onEachFeature: onEachStreet
+        });
+
+        streetTypes = L.geoJSON(null, {
+            onEachFeature: onEachStreetType
+        });
+        const filteredStreetTypes = this.$store.state.globalmap.streets.features.filter(streetFeature => {
+            if (streetFeature.properties.hasOwnProperty('highway'))
+            {
+                return streetFeature;
+            }
+        });
+        streetTypes.addData({
+            crs: {
+                properties: {
+                    name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+                },
+                type: "name"
+            },
+            features: filteredStreetTypes,
+            type: "FeatureCollection"
+        });
 
         streetsMaterial = L.geoJSON(null, {
             onEachFeature: onEachStreetMaterial
         });
-
         const filteredStreetsMaterial = this.$store.state.globalmap.streets.features.filter(streetFeature => {
             if (streetFeature.properties.hasOwnProperty('material'))
             {
                 return streetFeature;
             }
         });
-
-        const filteredStreetsMaterialGeojson = {
+        streetsMaterial.addData({
             crs: {
                 properties: {
                     name: "urn:ogc:def:crs:OGC:1.3:CRS84"
@@ -483,9 +515,7 @@ export default {
             },
             features: filteredStreetsMaterial,
             type: "FeatureCollection"
-        };
-
-        streetsMaterial.addData(filteredStreetsMaterialGeojson);
+        });
 
         createLayerController();
 
