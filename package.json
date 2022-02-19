@@ -39,6 +39,7 @@
         "laravel-permission-to-vuejs": "^2.0.5",
         "leaflet": "^1.7.1",
         "leaflet-webgl-heatmap": "github:xlcrr/leaflet-webgl-heatmap",
+        "leaflet.control.layers.tree": "^1.1.0",
         "leaflet.glify": "^3.1.0",
         "leaflet.markercluster": "^1.4.1",
         "lodash.sortby": "^4.7.0",

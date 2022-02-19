@@ -1,4 +1,5 @@
 require('./bootstrap');
+require('leaflet.control.layers.tree');
 
 import Vue from 'vue';
 import axios from 'axios';

@@ -38,6 +38,9 @@ var map;
 
 var buildings;
 var streets;
+var streetTypes;
+var streetsMaterial;
+
 var parks;
 var carParks;
 var publicBuildings;
@@ -46,17 +49,49 @@ var stories;
 var layerController;
 
 /**
- * Layer Controller
+ * Create the Layer Controller
  */
 function createLayerController ()
 {
-    layerController = L.control.layers(null, null).addTo(map);
+    let overlayLayersTree = {
+        label: 'All Data',
+        children: [
+            {
+                label: 'Buildings',
+                selectAllCheckbox: false,
+                children: [
+                    { label: ' Year Of Construction', layer: buildings }
+                ]
+            },
+            {
+                label: 'Streets',
+                selectAllCheckbox: false,
+                children: [
+                    { label: ' Type', layer: streetTypes },
+                    // children: [
+                        // corridor
+                        // footway
+                        // path
+                        // pedestrian
+                        // residential
+                        // secondary
+                        // service
+                        // steps
+                        // tertiary
+                        // unclassified
+                    // ]
+                    { label: ' Material', layer: streetsMaterial }
+                ]
+            }
+        ]
+    }
 
-    layerController.addOverlay(buildings, 'Buildings');
-    layerController.addOverlay(streets, 'Streets');
+    layerController = L.control.layers.tree(null, overlayLayersTree).addTo(map);
 }
 
 /**
+ * Helper function
+ *
  * If the building has a NEWDATE (year of construction),
  *
  * Return a string hex colour if it exists.
@@ -93,6 +128,49 @@ function getBuildingsColour (buildingsDate)
 }
 
 /**
+ * Helper function
+ *
+ * Get the colour for a street based on its highway/type
+ *
+ * @param streetType
+ * @returns {string|null}
+ */
+function getStreetColour (streetType)
+{
+    console.log({ streetType });
+
+    if (streetType)
+    {
+        if (streetType === "corridor")
+        {
+            return "#000000";
+        }
+        else if (streetType === "footway")
+        {
+            return "#ccc";
+        }
+        else if (streetType === "path")
+        {
+            return "#ff00aa";
+        }
+        else if (streetType === "residential")
+        {
+            return "#abd123";
+        }
+        else if (streetType === "service")
+        {
+            return "#cb342b";
+        }
+        else if (streetType === "steps")
+        {
+            return "#3388ff";
+        }
+
+        return null;
+    }
+}
+
+/**
  * On each street feature
  */
 function onEachStreet (feature, layer)
@@ -123,6 +201,75 @@ function onEachStreet (feature, layer)
             .openOn(map);
 
         L.DomEvent.stopPropagation(e);
+    });
+
+    layer.on("mouseover", function(e) {
+        layer.setStyle({
+            fillOpacity: 0.4,
+            color: 'yellow'
+        });
+    });
+
+    layer.on("mouseout",function(e) {
+        layer.setStyle({
+            fillOpacity: 0,
+            color: '#3388ff'
+        });
+    });
+}
+
+/**
+ *
+ */
+function onEachStreetType (feature, layer)
+{
+    const colour = getStreetColour(feature.properties.highway);
+
+    if (colour)
+    {
+        layer.setStyle({
+            fillOpacity: 0.5,
+            color: colour
+        });
+    }
+
+    layer.on('click', function (e) {
+        console.log(feature);
+    });
+
+    layer.on("mouseover", function(e) {
+        layer.setStyle({
+            fillOpacity: 0.4,
+            color: 'yellow'
+        });
+    });
+
+    layer.on("mouseout",function(e) {
+
+        const colour = getStreetColour(feature.properties.highway);
+
+        if (colour)
+        {
+            layer.setStyle({
+                fillOpacity: 0.5,
+                color: colour
+            });
+        }
+
+        layer.setStyle({
+            fillOpacity: 0,
+            color: colour
+        });
+    });
+}
+
+/**
+ * On Each Street Material Layer
+ */
+function onEachStreetMaterial (feature, layer)
+{
+    layer.on('click', function (e) {
+        console.log(feature);
     });
 
     layer.on("mouseover", function(e) {
@@ -292,6 +439,54 @@ export default {
         });
         streets.addData(this.$store.state.globalmap.streets);
 
+        streetTypes = L.geoJSON(null, {
+            onEachFeature: onEachStreetType
+        });
+
+        const filteredStreetsHighway = this.$store.state.globalmap.streets.features.filter(streetFeature => {
+            if (streetFeature.properties.hasOwnProperty('highway'))
+            {
+                return streetFeature;
+            }
+        });
+
+        const filteredStreetsHighwayGeojson = {
+            crs: {
+                properties: {
+                    name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+                },
+                type: "name"
+            },
+            features: filteredStreetsHighway,
+            type: "FeatureCollection"
+        };
+
+        streetTypes.addData(filteredStreetsHighwayGeojson);
+
+        streetsMaterial = L.geoJSON(null, {
+            onEachFeature: onEachStreetMaterial
+        });
+
+        const filteredStreetsMaterial = this.$store.state.globalmap.streets.features.filter(streetFeature => {
+            if (streetFeature.properties.hasOwnProperty('material'))
+            {
+                return streetFeature;
+            }
+        });
+
+        const filteredStreetsMaterialGeojson = {
+            crs: {
+                properties: {
+                    name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+                },
+                type: "name"
+            },
+            features: filteredStreetsMaterial,
+            type: "FeatureCollection"
+        };
+
+        streetsMaterial.addData(filteredStreetsMaterialGeojson);
+
         createLayerController();
 
         map.on('click', function (e) {
@@ -321,136 +516,6 @@ export default {
         };
 
         legend.addTo(map);
-    },
-    methods: {
-        // /**
-        //  * The user dragged or zoomed the map, or changed a category
-        //  */
-        // async update ()
-        // {
-        //     const bounds = map.getBounds();
-        //
-        //     const bbox = {
-        //         'left': bounds.getWest(),
-        //         'bottom': bounds.getSouth(),
-        //         'right': bounds.getEast(),
-        //         'top': bounds.getNorth()
-        //     };
-        //
-        //     const zoom = Math.round(map.getZoom());
-        //
-        //     // We don't want to make a request at zoom level 2-5 if the user is just panning the map.
-        //     // At these levels, we just load all global data for now
-        //     if (zoom === 2 && zoom === prevZoom) return;
-        //     if (zoom === 3 && zoom === prevZoom) return;
-        //     if (zoom === 4 && zoom === prevZoom) return;
-        //     if (zoom === 5 && zoom === prevZoom) return;
-        //
-        //     // Remove points when zooming out
-        //     if (points)
-        //     {
-        //         clusters.clearLayers();
-        //         points.remove();
-        //     }
-        //
-        //     // Get Clusters or Points
-        //     if (zoom < CLUSTER_ZOOM_THRESHOLD)
-        //     {
-        //         createGlobalGroups();
-        //
-        //         await axios.get('/global/clusters', {
-        //             params: {
-        //                 zoom,
-        //                 bbox
-        //             }
-        //         })
-        //         .then(response => {
-        //             console.log('get_clusters.update', response);
-        //
-        //             clusters.clearLayers();
-        //             clusters.addData(response.data);
-        //         })
-        //         .catch(error => {
-        //             console.error('get_clusters.update', error);
-        //         });
-        //     }
-        //     else
-        //     {
-        //         createPointGroups()
-        //
-        //         const layers = getActiveLayers();
-        //
-        //         await axios.get('/global/points', {
-        //             params: {
-        //                 zoom,
-        //                 bbox,
-        //                 layers
-        //             }
-        //         })
-        //         .then(response => {
-        //             console.log('get_global_points', response);
-
-                //     // Clear layer if prev layer is cluster.
-                //     if (prevZoom < CLUSTER_ZOOM_THRESHOLD)
-                //     {
-                //         clusters.clearLayers();
-                //     }
-                //
-                //     const data = response.data.features.map(feature => {
-                //         return [feature.geometry.coordinates[0], feature.geometry.coordinates[1]];
-                //     });
-                //
-                //     // New way using webGL
-                //     points = glify.points({
-                //         map,
-                //         data,
-                //         size: 10,
-                //         color: { r: 0.054, g: 0.819, b: 0.27, a: 1 }, // 14, 209, 69 / 255
-                //         click:  (e, point, xy) => {
-                //             const feature = response.data.features.find(f => {
-                //                 return f.geometry.coordinates[0] === point[0]
-                //                     && f.geometry.coordinates[1] === point[1];
-                //             });
-                //
-                //             if (!feature) {
-                //                 return;
-                //             }
-                //
-                //             return this.renderLeafletPopup(feature, e.latlng)
-                //         },
-                //     });
-                // })
-                // .catch(error => {
-                //     console.error('get_global_points', error);
-                // });
-            // }
-            //
-            // prevZoom = zoom;
-        // },
-
-        // /**
-        //  * Helper method to create a Popup
-        //  *
-        //  * @param feature
-        //  * @param latLng
-        //  */
-        // renderLeafletPopup (feature, latLng)
-        // {
-        //     const user = mapHelper.formatUserName(feature.properties.name, feature.properties.username);
-        //
-        //     L.popup(mapHelper.popupOptions)
-        //         .setLatLng(latLng)
-        //         .setContent(
-        //             mapHelper.getMapImagePopupContent(
-        //                 feature.properties.filename,
-        //                 feature.properties.result_string,
-        //                 feature.properties.datetime,
-        //                 user,
-        //                 feature.properties.team
-        //             )
-        //         )
-        //         .openOn(map);
-        // }
     }
 };
 </script>
@@ -487,5 +552,70 @@ export default {
     .leaflet-popup-content {
         padding: 20px !important;
     }
+
+
+    .leaflet-control-layers-toggle.leaflet-layerstree-named-toggle {
+        margin: 2px 5px;
+        width: auto;
+        height: auto;
+        background-image: none;
+    }
+
+    .leaflet-layerstree-node {
+    }
+
+    .leaflet-layerstree-header input{
+        margin-left: 0px;
+    }
+
+
+    .leaflet-layerstree-header {
+    }
+
+    .leaflet-layerstree-header-pointer {
+        cursor: pointer;
+    }
+
+    .leaflet-layerstree-header label {
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .leaflet-layerstree-header-label {
+    }
+
+    .leaflet-layerstree-header-name {
+    }
+
+    .leaflet-layerstree-header-space {
+    }
+
+    .leaflet-layerstree-children {
+        padding-left: 10px;
+    }
+
+    .leaflet-layerstree-children-nopad {
+        padding-left: 0px;
+    }
+
+    .leaflet-layerstree-closed {
+    }
+
+    .leaflet-layerstree-opened {
+    }
+
+    .leaflet-layerstree-hide {
+        display: none;
+    }
+
+    .leaflet-layerstree-nevershow {
+        display: none;
+    }
+
+    .leaflet-layerstree-expand-collapse {
+        cursor: pointer;
+    }
+
+
 
 </style>
