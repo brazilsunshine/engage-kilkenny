@@ -222,6 +222,14 @@ export default {
         },
 
         /**
+         * Todo
+         */
+        changeFormType (type)
+        {
+            console.log(type);
+        },
+
+        /**
          * Delete one of the errors, if it exists
          */
         deleteError (key) {

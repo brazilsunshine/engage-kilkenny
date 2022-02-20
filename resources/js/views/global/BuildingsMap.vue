@@ -38,8 +38,21 @@ var map;
 
 var buildings;
 var buildingsWithoutYear;
+
 var streets;
 var streetTypes;
+
+var corridor;
+var footway;
+var path;
+var pedestrian;
+var residential;
+var secondary;
+var service;
+var steps;
+var tertiary;
+var unclassified;
+
 var streetsMaterial;
 
 // todo
@@ -72,20 +85,26 @@ function createLayerController ()
                 label: 'Streets',
                 selectAllCheckbox: false,
                 children: [
-                    { label: ' Type', layer: streetTypes },
-                    // children: [
-                        // corridor
-                        // footway
-                        // path
-                        // pedestrian
-                        // residential
-                        // secondary
-                        // service
-                        // steps
-                        // tertiary
-                        // unclassified
-                    // ]
-                    { label: ' Material', layer: streetsMaterial }
+                    {
+                        label: ' Type',
+                        layer: streetTypes,
+                        children: [
+                            { label: ' Corridor', layer: corridor },
+                            { label: ' Footway', layer: footway },
+                            { label: ' Path', layer: path },
+                            { label: ' Pedestrian', layer: pedestrian },
+                            { label: ' Residentail', layer: residential },
+                            { label: ' Secondary', layer: secondary },
+                            { label: ' Service', layer: service },
+                            { label: ' Steps', layer: steps },
+                            { label: ' Tertiary', layer: tertiary },
+                            { label: ' Unclassified', layer: unclassified }
+                        ],
+                    },
+                    {
+                        label: ' Material',
+                        layer: streetsMaterial
+                    }
                 ]
             }
         ]
@@ -107,26 +126,14 @@ function getBuildingsColour (buildingsDate)
 {
     if (buildingsDate)
     {
-        if (buildingsDate >= 1200 && buildingsDate <= 1300)
-        {
-            return '#ffc403';
-        }
-        else if (buildingsDate >= 1301 && buildingsDate <= 1650)
-        {
-            return '#f00';
-        }
-        else if (buildingsDate >= 1651 && buildingsDate <= 1765)
-        {
-            return '#ff403f';
-        }
-        else if (buildingsDate >= 1766 && buildingsDate <= 1790)
-        {
-            return '#ff8080';
-        }
-        else if (buildingsDate >= 1791 && buildingsDate <= 1950)
-        {
-            return '#ff8080';
-        }
+        if (buildingsDate >= 1200 && buildingsDate <= 1300) return '#fa6e6e';
+        else if (buildingsDate >= 1301 && buildingsDate <= 1650) return '#e36386';
+        else if (buildingsDate >= 1651 && buildingsDate <= 1765) return '#c16095';
+        else if (buildingsDate >= 1766 && buildingsDate <= 1815) return '#9a609b';
+        else if (buildingsDate >= 1816 && buildingsDate <= 1916) return '#715e96';
+        else if (buildingsDate >= 1917 && buildingsDate <= 1950) return '#4d5a86';
+        else if (buildingsDate >= 1951 && buildingsDate <= 2000) return '#345271';
+        else if (buildingsDate >= 2001 && buildingsDate <= 2022) return '#2a4858';
     }
 
     return null;
@@ -142,8 +149,6 @@ function getBuildingsColour (buildingsDate)
  */
 function getStreetColour (streetType)
 {
-    console.log({ streetType });
-
     if (streetType)
     {
         if (streetType === "corridor")
@@ -152,11 +157,15 @@ function getStreetColour (streetType)
         }
         else if (streetType === "footway")
         {
-            return "#ccc";
+            return "#95a5a6";
         }
         else if (streetType === "path")
         {
-            return "#ff00aa";
+            return "#2ecc71";
+        }
+        else if (streetType === "pedestrian")
+        {
+            return "#2ecc71"
         }
         else if (streetType === "residential")
         {
@@ -168,7 +177,19 @@ function getStreetColour (streetType)
         }
         else if (streetType === "steps")
         {
-            return "#3388ff";
+            return "#95a5a6";
+        }
+        else if (streetType === "secondary")
+        {
+            return "#3498db";
+        }
+        else if (streetType === "tertiary")
+        {
+            return "#4f955b";
+        }
+        else if (streetType === "unclassified")
+        {
+            return "#ccc";
         }
 
         return null;
@@ -196,7 +217,7 @@ function onEachStreet (feature, layer)
             }
         })
 
-        console.log(street);
+        console.log({ street });
 
         window.buildingsMap.street = street;
 
@@ -238,10 +259,33 @@ function onEachStreetType (feature, layer)
         });
     }
 
-    layer.on('click', function (e) {
-        console.log(feature);
-    });
+    layer.on('click', function (e)
+    {
+        const keys = Object.keys(feature.properties);
 
+        let street = {};
+        let str = "";
+
+        keys.forEach(key => {
+            if (feature.properties[key])
+            {
+                street[key] = feature.properties[key];
+
+                str += key + ": " + feature.properties[key] + " <br> ";
+            }
+        })
+
+        console.log({ street });
+
+        window.buildingsMap.street = street;
+
+        L.popup(mapHelper.popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(str)
+            .openOn(map);
+
+        L.DomEvent.stopPropagation(e);
+    });
     layer.on("mouseover", function(e) {
         layer.setStyle({
             fillOpacity: 0.4,
@@ -251,7 +295,7 @@ function onEachStreetType (feature, layer)
 
     layer.on("mouseout",function(e) {
 
-        const colour = getStreetColour(feature.properties.highway);
+        const colour = getStreetColour(feature.properties['highway']);
 
         if (colour)
         {
@@ -434,91 +478,13 @@ export default {
 
         map.attributionControl.addAttribution(
             'Litter data &copy OpenLitterMap & Contributors '
-                + new Date().getFullYear()
-                + ' Architecture Data &copy NIAH'
+            + new Date().getFullYear()
+            + ' Architecture Data &copy NIAH'
         );
 
         // Add the layers
-        buildings = L.geoJSON(null, {
-            onEachFeature: onEachBuilding
-        }).addTo(map);
-        const filteredBuildingsWithYear = this.$store.state.globalmap.buildings.features.filter(feature => {
-            return (feature.properties.hasOwnProperty('NEWDATE'));
-        });
-        buildings.addData({
-            crs: {
-                properties: {
-                    name: "urn:ogc:def:crs:OGC:1.3:CRS84"
-                },
-                type: "name"
-            },
-            features: filteredBuildingsWithYear,
-            type: "FeatureCollection"
-        });
-
-        buildingsWithoutYear = L.geoJSON(null, {
-            onEachFeature: onEachBuilding
-        });
-        const filteredBuildingsWithoutYear = this.$store.state.globalmap.buildings.features.filter(feature => {
-            if (!feature.properties.hasOwnProperty('NEWDATE'))
-            {
-                return feature;
-            }
-        });
-        buildingsWithoutYear.addData({
-            crs: {
-                properties: {
-                    name: "urn:ogc:def:crs:OGC:1.3:CRS84"
-                },
-                type: "name"
-            },
-            features: filteredBuildingsWithoutYear,
-            type: "FeatureCollection"
-        });
-
-        // streets = L.geoJSON(this.$store.state.globalmap.streets, {
-        //     onEachFeature: onEachStreet
-        // });
-
-        streetTypes = L.geoJSON(null, {
-            onEachFeature: onEachStreetType
-        });
-        const filteredStreetTypes = this.$store.state.globalmap.streets.features.filter(streetFeature => {
-            if (streetFeature.properties.hasOwnProperty('highway'))
-            {
-                return streetFeature;
-            }
-        });
-        streetTypes.addData({
-            crs: {
-                properties: {
-                    name: "urn:ogc:def:crs:OGC:1.3:CRS84"
-                },
-                type: "name"
-            },
-            features: filteredStreetTypes,
-            type: "FeatureCollection"
-        });
-
-        streetsMaterial = L.geoJSON(null, {
-            onEachFeature: onEachStreetMaterial
-        });
-        const filteredStreetsMaterial = this.$store.state.globalmap.streets.features.filter(streetFeature => {
-            if (streetFeature.properties.hasOwnProperty('material'))
-            {
-                return streetFeature;
-            }
-        });
-        streetsMaterial.addData({
-            crs: {
-                properties: {
-                    name: "urn:ogc:def:crs:OGC:1.3:CRS84"
-                },
-                type: "name"
-            },
-            features: filteredStreetsMaterial,
-            type: "FeatureCollection"
-        });
+        addBuildingLayers(this.$store.state.globalmap.buildings.features);
+        addStreetLayers(this.$store.state.globalmap.streets.features);
 
         createLayerController();
 
@@ -527,30 +493,317 @@ export default {
             window.buildingsMap.street = null;
         });
 
-        map.on('overlayadd', this.update);
-        map.on('overlayremove', this.update)
-
-        let legend = L.control({
-            position: 'bottomleft'
-        });
-
-        legend.onAdd = function (map) {
-
-            let legend = L.DomUtil.create('div', 'info legend');
-            // grades = [1200, 1300, 1500, 1650, 1650, 1765, 1790, 1815, 1880];
-
-            legend.innerHTML += '<i style="background:' + getBuildingsColour(1200) + '"></i> 1200 - 1300' + '<br>';
-            legend.innerHTML += '<i style="background:' + getBuildingsColour(1500) + '"></i> 1350 - 1650' + '<br>';
-            legend.innerHTML += '<i style="background:' + getBuildingsColour(1651) + '"></i> 1651 - 1765' + '<br>';
-            legend.innerHTML += '<i style="background:' + getBuildingsColour(1790) + '"></i> 1790' + '<br>';
-            legend.innerHTML += '<i style="background:' + getBuildingsColour(1815) + '"></i> 1815 - 1880' + '<br>';
-
-            return legend;
-        };
-
-        legend.addTo(map);
+        createLegends();
     }
 };
+
+/**
+ * Use the array of buildings from the backend
+ *
+ * Create many layers that can be turned on and off
+ */
+function addBuildingLayers (buildingsArray)
+{
+    buildings = L.geoJSON(null, {
+        onEachFeature: onEachBuilding
+    }).addTo(map);
+
+    const filteredBuildingsWithYear = buildingsArray.filter(feature => {
+        return (feature.properties.hasOwnProperty('NEWDATE'));
+    });
+
+    buildings.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: filteredBuildingsWithYear,
+        type: "FeatureCollection"
+    });
+
+    buildingsWithoutYear = L.geoJSON(null, {
+        onEachFeature: onEachBuilding
+    });
+
+    const filteredBuildingsWithoutYear = buildingsArray.filter(feature => {
+        if (!feature.properties.hasOwnProperty('NEWDATE'))
+        {
+            return feature;
+        }
+    });
+
+    buildingsWithoutYear.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: filteredBuildingsWithoutYear,
+        type: "FeatureCollection"
+    });
+}
+
+/**
+ * Use the array of streets from the backend
+ *
+ * Create many layers that can be turned on and off
+ */
+function addStreetLayers (streetsArray)
+{
+    // 1. Create empty L.geoJSON layers for every layer we want to use
+
+    // All Types
+    streetTypes = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    // Each Type (10)
+    corridor = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    footway = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    path = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    pedestrian = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    residential = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    secondary = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    service = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    steps = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    tertiary = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    unclassified = L.geoJSON(null, { onEachFeature: onEachStreetType });
+
+    // 2. Create a filtered geojson array of each layer we want to use
+    // All Types
+    const filteredStreetTypes = streetsArray.filter(streetFeature => {
+        if (streetFeature.properties.hasOwnProperty('highway')) {
+            return streetFeature;
+        }
+    });
+    const corridorArray = filteredStreetTypes.filter(feature => {
+        if (feature.properties['highway'] === 'corridor') {
+            return feature;
+        }
+    });
+    const footwayArray = filteredStreetTypes.filter(feature => {
+        if (feature.properties['highway'] === 'footway') {
+            return feature;
+        }
+    });
+    const pathArray = filteredStreetTypes.filter(feature => {
+        if (feature.properties['highway'] === 'path') {
+            return feature;
+        }
+    });
+    const pedestrianArray = filteredStreetTypes.filter(feature => {
+        if (feature.properties['highway'] === 'pedestrian') {
+            return feature;
+        }
+    });
+    const residentialArray = filteredStreetTypes.filter(feature => {
+        if (feature.properties['highway'] === 'residential') {
+            return feature;
+        }
+    });
+    const secondaryArray = filteredStreetTypes.filter(feature => {
+        if (feature.properties['highway'] === 'secondary') {
+            return feature;
+        }
+    });
+    const serviceArray = filteredStreetTypes.filter(feature => {
+        if (feature.properties['highway'] === 'service') {
+            return feature;
+        }
+    });
+    const stepsArray = filteredStreetTypes.filter(feature => {
+        if (feature.properties['highway'] === 'steps') {
+            return feature;
+        }
+    });
+    const tertiaryArray = filteredStreetTypes.filter(feature => {
+        if (feature.properties['highway'] === 'tertiary') {
+            return feature;
+        }
+    });
+    const unclassifiedArray = filteredStreetTypes.filter(feature => {
+        if (feature.properties['highway'] === 'unclassified') {
+            return feature;
+        }
+    });
+
+    // 3. Add the filtered array to the empty geojson type
+    streetTypes.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: filteredStreetTypes,
+        type: "FeatureCollection"
+    });
+    corridor.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: corridorArray,
+        type: "FeatureCollection"
+    });
+    footway.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: footwayArray,
+        type: "FeatureCollection"
+    });
+    path.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: pathArray,
+        type: "FeatureCollection"
+    });
+    pedestrian.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: pedestrianArray,
+        type: "FeatureCollection"
+    });
+    residential.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: residentialArray,
+        type: "FeatureCollection"
+    });
+    secondary.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: secondaryArray,
+        type: "FeatureCollection"
+    });
+    service.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: serviceArray,
+        type: "FeatureCollection"
+    });
+    steps.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: stepsArray,
+        type: "FeatureCollection"
+    });
+    tertiary.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: tertiaryArray,
+        type: "FeatureCollection"
+    });
+    unclassified.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: unclassifiedArray,
+        type: "FeatureCollection"
+    });
+
+    streetsMaterial = L.geoJSON(null, {
+        onEachFeature: onEachStreetMaterial
+    });
+    const filteredStreetsMaterial = streetsArray.filter(streetFeature => {
+        if (streetFeature.properties.hasOwnProperty('material'))
+        {
+            return streetFeature;
+        }
+    });
+    streetsMaterial.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: filteredStreetsMaterial,
+        type: "FeatureCollection"
+    });
+}
+
+function createLegends ()
+{
+    // Buildings: Year of construction
+    let legend = L.control({
+        position: 'bottomleft'
+    });
+
+    legend.onAdd = function (map) {
+        let legend = L.DomUtil.create('div', 'info legend');
+        legend.innerHTML += '<i style="background:' + getBuildingsColour(1200) + '"></i> 1200 - 1300' + '<br>';
+        legend.innerHTML += '<i style="background:' + getBuildingsColour(1301) + '"></i> 1301 - 1650' + '<br>';
+        legend.innerHTML += '<i style="background:' + getBuildingsColour(1651) + '"></i> 1651 - 1765' + '<br>';
+        legend.innerHTML += '<i style="background:' + getBuildingsColour(1790) + '"></i> 1766 - 1815' + '<br>';
+        legend.innerHTML += '<i style="background:' + getBuildingsColour(1816) + '"></i> 1816 - 1916' + '<br>';
+        legend.innerHTML += '<i style="background:' + getBuildingsColour(1816) + '"></i> 1917 - 1950' + '<br>';
+        legend.innerHTML += '<i style="background:' + getBuildingsColour(1816) + '"></i> 1951 - 2000' + '<br>';
+        legend.innerHTML += '<i style="background:' + getBuildingsColour(1816) + '"></i> 2001 - 2022' + '<br>';
+
+        return legend;
+    };
+    legend.addTo(map);
+
+    // Streets - Type of street (highway)
+    let streetLegend = L.control({
+        position: 'bottomleft'
+    });
+    streetLegend.onAdd = function (map) {
+        let legend = L.DomUtil.create('div', 'info legend street-legend');
+
+        legend.innerHTML += '<i style="background:' + getStreetColour('corridor') + '"></i> Corridor <br>';
+        legend.innerHTML += '<i style="background:' + getStreetColour('footway') + '"></i> Footway <br>';
+        legend.innerHTML += '<i style="background:' + getStreetColour('path') + '"></i> Path <br>';
+        legend.innerHTML += '<i style="background:' + getStreetColour('pedestrian') + '"></i> Pedestrial <br>';
+        legend.innerHTML += '<i style="background:' + getStreetColour('residential') + '"></i> Residential <br>';
+        legend.innerHTML += '<i style="background:' + getStreetColour('secondary') + '"></i> Secondary <br>';
+        legend.innerHTML += '<i style="background:' + getStreetColour('service') + '"></i> Service <br>';
+        legend.innerHTML += '<i style="background:' + getStreetColour('steps') + '"></i> Steps <br>';
+        legend.innerHTML += '<i style="background:' + getStreetColour('tertiary') + '"></i> Tertiary <br>';
+        legend.innerHTML += '<i style="background:' + getStreetColour('unclassified') + '"></i> Unclassified <br>';
+
+        return legend;
+    };
+    streetLegend.addTo(map);
+}
 </script>
 
 <style>
