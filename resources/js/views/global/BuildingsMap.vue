@@ -42,6 +42,7 @@ var streets;
 var streetTypes;
 var streetsMaterial;
 
+// todo
 var parks;
 var carParks;
 var publicBuildings;
@@ -50,7 +51,9 @@ var stories;
 var layerController;
 
 /**
- * Create the Layer Controller
+ * Create the Layer Controller used to toggle all layers
+ *
+ * This uses the Leaflet.Control.Layer.Tree plugin allowing us to nest layers.
  */
 function createLayerController ()
 {
@@ -108,7 +111,7 @@ function getBuildingsColour (buildingsDate)
         {
             return '#ffc403';
         }
-        else if (buildingsDate >= 1500 && buildingsDate <= 1650)
+        else if (buildingsDate >= 1301 && buildingsDate <= 1650)
         {
             return '#f00';
         }
@@ -116,11 +119,11 @@ function getBuildingsColour (buildingsDate)
         {
             return '#ff403f';
         }
-        else if (buildingsDate === 1790)
+        else if (buildingsDate >= 1766 && buildingsDate <= 1790)
         {
             return '#ff8080';
         }
-        else if (buildingsDate >= 1815 && buildingsDate <= 1880)
+        else if (buildingsDate >= 1791 && buildingsDate <= 1950)
         {
             return '#ff8080';
         }
@@ -473,9 +476,9 @@ export default {
             type: "FeatureCollection"
         });
 
-        streets = L.geoJSON(this.$store.state.globalmap.streets, {
-            onEachFeature: onEachStreet
-        });
+        // streets = L.geoJSON(this.$store.state.globalmap.streets, {
+        //     onEachFeature: onEachStreet
+        // });
 
         streetTypes = L.geoJSON(null, {
             onEachFeature: onEachStreetType
