@@ -270,13 +270,12 @@ export default {
 
         /**
          * Post request to sign a user up
-         * Load stripe if a plan is selected
          */
         async submit ()
         {
-            if (! this.checkbox)
+            if (!this.checkbox)
             {
-                alert ('Please accept the terms and conditions, and privacy policy to continue');
+                alert('Please accept the terms and conditions, and privacy policy to continue');
                 return;
             }
 

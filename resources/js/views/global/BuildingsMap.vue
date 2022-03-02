@@ -792,7 +792,7 @@ function createLegends ()
         legend.innerHTML += '<i style="background:' + getStreetColour('corridor') + '"></i> Corridor <br>';
         legend.innerHTML += '<i style="background:' + getStreetColour('footway') + '"></i> Footway <br>';
         legend.innerHTML += '<i style="background:' + getStreetColour('path') + '"></i> Path <br>';
-        legend.innerHTML += '<i style="background:' + getStreetColour('pedestrian') + '"></i> Pedestrial <br>';
+        legend.innerHTML += '<i style="background:' + getStreetColour('pedestrian') + '"></i> Pedestrian <br>';
         legend.innerHTML += '<i style="background:' + getStreetColour('residential') + '"></i> Residential <br>';
         legend.innerHTML += '<i style="background:' + getStreetColour('secondary') + '"></i> Secondary <br>';
         legend.innerHTML += '<i style="background:' + getStreetColour('service') + '"></i> Service <br>';

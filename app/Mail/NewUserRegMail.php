@@ -36,9 +36,8 @@ class NewUserRegMail extends Mailable
      */
     public function build()
     {
-        // return $this->view('view.name');
-        return $this->from('welcome@openlittermap.com')
-            ->subject('Register your email for Open Litter Map')
+        return $this->from('welcome@engagekilkenny.com')
+            ->subject('Register your email for #EngageKilkenny')
             ->view('auth.emails.confirm')
             ->with([
                 'token' => $this->user->token
