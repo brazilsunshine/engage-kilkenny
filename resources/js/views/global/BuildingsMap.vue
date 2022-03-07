@@ -359,11 +359,17 @@ function onEachBuilding (feature, layer)
         let str = "";
 
         keys.forEach(key => {
+
             if (feature.properties[key])
             {
                 building[key] = feature.properties[key];
 
-                str += key + ": " + feature.properties[key] + " <br> ";
+                str += "<p style='margin: 0 !important;'>" + key + ": " + feature.properties[key] + "</p>";
+
+                // If building has image
+                if (key === "REG_NO") {
+                    str += "<img class='building-img' src='https://www.buildingsofireland.ie/niah/images/survey_specific/fullsize/" + feature.properties[key] + "_1.jpg' />";
+                }
             }
         })
 
@@ -813,6 +819,12 @@ function createLegends ()
         margin: 0;
         position: relative;
         width: 70%;
+    }
+
+    .building-img {
+        position: absolute;
+        top: 1em;
+        right: 1em;
     }
 
     .leaflet-bottom {

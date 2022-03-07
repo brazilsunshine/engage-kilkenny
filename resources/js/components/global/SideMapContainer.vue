@@ -10,49 +10,48 @@
 
             <div v-else>
 
-                <div>
-                    <p>Do you want to add a story or some data?</p>
+                <div class="mb1">
+                    <p class="mb1">Do you want to add a story or some data?</p>
 
-                    <button
-                        class="button is-medium is-primary"
-                        @click="changeFormType('story')"
-                    >
-                        Add Story
-                    </button>
-
-                    <button
-                        class="button is-medium is-info"
-                        @click="changeFormType('data')"
-                    >
-                        Add Data
-                    </button>
+                    <select class="input" v-model="dataType">
+                        <option value="story">Add Story</option>
+                        <option value="data">Add Data</option>
+                    </select>
                 </div>
 
-                <p class="mb1">
-                    Do you have any nice stories about this building?
-                </p>
+                <div v-if="dataType === 'story'">
 
-                <input
-                    class="input mb1"
-                    v-model="title"
-                    placeholder="Give your story a nice title"
-                    @input="deleteError('title')"
-                />
+                    <p class="mb1">
+                        Do you have any nice stories about this building?
+                    </p>
 
-                <textarea
-                    v-model="story"
-                    rows="4"
-                    class="textarea mb1"
-                    placeholder="Once upon a time..."
-                    @input="deleteError('story')"
-                />
+                    <input
+                        class="input mb1"
+                        v-model="title"
+                        placeholder="Give your story a nice title"
+                        @input="deleteError('title')"
+                    />
 
-                <input
-                    class="input mb1"
-                    v-model="date"
-                    placeholder="When did it happen"
-                    @input="deleteError('date')"
-                />
+                    <textarea
+                        v-model="story"
+                        rows="4"
+                        class="textarea mb1"
+                        placeholder="Once upon a time..."
+                        @input="deleteError('story')"
+                    />
+
+                    <input
+                        class="input mb1"
+                        v-model="date"
+                        placeholder="When did it happen"
+                        @input="deleteError('date')"
+                    />
+
+                </div>
+
+                <div v-else>
+                    <p>must be data</p>
+                </div>
 
                 <p v-if="showError" class="is-red mb1">
                     {{ this.error }}
@@ -122,7 +121,8 @@ export default {
             loading: false,
             showError: false,
             error: "",
-            errors: {}
+            errors: {},
+            dataType: "story"
         };
     },
     computed: {
@@ -219,14 +219,6 @@ export default {
             });
 
             this.loading = false;
-        },
-
-        /**
-         * Todo
-         */
-        changeFormType (type)
-        {
-            console.log(type);
         },
 
         /**
