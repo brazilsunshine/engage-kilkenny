@@ -50,7 +50,22 @@
                 </div>
 
                 <div v-else>
-                    <p>must be data</p>
+
+                    <p class="mb1">
+                        Enter some data about this building.
+                    </p>
+
+                    <p class="input-label">Year of construction</p>
+
+                    <input
+                        class="input mb1"
+                        v-model="year"
+                        type="number"
+                        placeholder="Enter a year"
+                        min="1200"
+                        max="2022"
+                    />
+
                 </div>
 
                 <p v-if="showError" class="is-red mb1">
@@ -69,10 +84,10 @@
                 <button
                     class="button is-medium is-primary"
                     :class="loading ? 'is-loading' : ''"
-                    @click="addStory"
+                    @click="addStoryOrData"
                     :disabled="loading"
                 >
-                    Add Story
+                    {{ getButtonText }}
                 </button>
             </div>
         </div>
@@ -122,7 +137,8 @@ export default {
             showError: false,
             error: "",
             errors: {},
-            dataType: "story"
+            dataType: "story",
+            year: null
         };
     },
     computed: {
@@ -136,6 +152,15 @@ export default {
             }
 
             return (window.buildingsMap?.building === null);
+        },
+
+        /**
+         * Return Text for the button depending on the datatype
+         */
+        getButtonText () {
+            return (this.dataType === "story")
+                ? "Add Story"
+                : "Add Data";
         },
 
         /**
@@ -160,20 +185,35 @@ export default {
         }
     },
     methods: {
+
+        addStoryOrData () {
+
+            if (window.buildingsMap.building === null) {
+                this.showError = true;
+
+                this.error = "You must select a building."
+
+                return;
+            }
+
+            if (this.dataType === "story") {
+                this.addStory();
+            } else {
+                this.addData();
+            }
+
+        },
+
+        addData () {
+            console.log("addData");
+        },
+
         /**
          * Send a post request to our database
          *
          * That adds a new story to the stories table
          */
         async addStory () {
-
-            if (window.buildingsMap.building === null) {
-                this.showError = true;
-
-                this.error = "You must select a building to add a story to."
-
-                return;
-            }
 
             this.loading = true;
 
@@ -254,6 +294,12 @@ export default {
     .small_heritage_logo {
         height: 45px;
         margin-bottom: 0.5em;
+    }
+
+    .input-label {
+        text-align: left;
+        margin-bottom: 5px;
+        color: #807c7c;
     }
 
 </style>

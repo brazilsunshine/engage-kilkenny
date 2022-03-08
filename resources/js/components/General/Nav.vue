@@ -24,11 +24,6 @@
 <!--                            {{ $t('nav.about')}}-->
 <!--                        </router-link>-->
 
-                        <!-- Frequently Asked Questions -->
-                        <router-link to="/faq" class="navbar-item">
-                            FAQ
-                        </router-link>
-
                         <!-- Kilkenny Map -->
                         <router-link to="/map" class="navbar-item" @click.native="close">
                             Map
