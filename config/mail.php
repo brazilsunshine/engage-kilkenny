@@ -84,8 +84,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@openlittermap.com'),
-        'name' => env('MAIL_FROM_NAME', 'OpenLitterMap'),
+        'address' => env('MAIL_FROM_ADDRESS', 'hello@engagekilkenny.com'),
+        'name' => env('MAIL_FROM_NAME', 'EngageKilkenny'),
     ],
 
     /*
