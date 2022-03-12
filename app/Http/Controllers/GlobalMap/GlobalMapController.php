@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\GlobalMap;
 
+use App\Models\Engage\BuildingsData;
 use App\Models\Photo;
 use App\Traits\FilterPhotosByGeoHashTrait;
 
@@ -17,13 +18,40 @@ class GlobalMapController extends Controller
      */
     public function buildings ()
     {
-        $buildings = file_get_contents(public_path('/js/geojson/buildings.geojson'));
         $streets = file_get_contents(public_path('/js/geojson/streets.geojson'));
+        $walls = file_get_contents(public_path('/js/geojson/walls.geojson'));
+
+        $buildings = BuildingsData::all();
+
+        $buildingsGeojson = [
+            'type' => 'FeatureCollection',
+            "name" => "kilkenny_roi",
+            "crs" => [
+                "type" => "name",
+                "properties" => [
+                    "name" => "urn:ogc:def:crs:OGC:1.3:CRS84"
+                ]
+            ],
+            'features'  => []
+        ];
+
+        foreach ($buildings as $building)
+        {
+            $buildingsGeojson['features'][] = [
+                'type' => 'Feature',
+                'properties' => json_decode($building->attributes, true),
+                 "geometry" => [
+                     "type" => "MultiPolygon",
+                     "coordinates" => json_decode($building->polygon, true)
+                 ]
+            ];
+        }
 
         return [
             'success' => true,
-            'buildings' => $buildings,
-            'streets' => $streets
+            'buildings' => $buildingsGeojson,
+            'streets' => $streets,
+            'walls' => $walls
         ];
     }
 

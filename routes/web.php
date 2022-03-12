@@ -15,6 +15,8 @@ Route::get('/signup', 'HomeController@index');
 // Add a new story to a building
 Route::post('/add-story', 'StoryController@addNewStory');
 
+Route::post('/add-data', 'BuildingsController@addData');
+
 // Check if a building has any stories
 Route::get('/check-building', 'StoryController@checkStory');
 

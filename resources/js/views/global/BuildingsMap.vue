@@ -55,6 +55,8 @@ var unclassified;
 
 var streetsMaterial;
 
+var walls;
+
 // todo
 var parks;
 var carParks;
@@ -104,6 +106,16 @@ function createLayerController ()
                     {
                         label: ' Material',
                         layer: streetsMaterial
+                    }
+                ]
+            },
+            {
+                label: 'Historic',
+                selectAllCheckbox: false,
+                children: [
+                    {
+                        label: ' Walls',
+                        layer: walls
                     }
                 ]
             }
@@ -337,6 +349,40 @@ function onEachStreetMaterial (feature, layer)
 }
 
 /**
+ * On each walls feature
+ */
+function onEachWalls (feature, layer)
+{
+    layer.on('click', async function (e) {
+        const keys = Object.keys(feature.properties);
+
+        let wall = {};
+        let str = "";
+
+        keys.forEach(key => {
+
+            if (feature.properties[key])
+            {
+                wall[key] = feature.properties[key];
+
+                str += key + ": " + feature.properties[key] + " <br> ";
+            }
+        });
+
+        console.log(wall);
+
+        // window.buildingsMap.building = building;
+
+        L.popup(mapHelper.popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(str)
+            .openOn(map);
+
+        L.DomEvent.stopPropagation(e);
+    });
+}
+
+/**
  * On each building feature
  */
 function onEachBuilding (feature, layer)
@@ -491,6 +537,7 @@ export default {
         // Add the layers
         addBuildingLayers(this.$store.state.globalmap.buildings.features);
         addStreetLayers(this.$store.state.globalmap.streets.features);
+        addWallsLayer(this.$store.state.globalmap.walls.features);
 
         createLayerController();
 
@@ -762,6 +809,24 @@ function addStreetLayers (streetsArray)
             type: "name"
         },
         features: filteredStreetsMaterial,
+        type: "FeatureCollection"
+    });
+}
+
+function addWallsLayer (wallsArray)
+{
+    walls = L.geoJSON(null, {
+        onEachFeature: onEachWalls
+    }).addTo(map);
+
+    walls.addData({
+        crs: {
+            properties: {
+                name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+            },
+            type: "name"
+        },
+        features: wallsArray,
         type: "FeatureCollection"
     });
 }

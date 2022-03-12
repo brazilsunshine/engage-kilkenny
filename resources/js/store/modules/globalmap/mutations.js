@@ -65,15 +65,6 @@ export const mutations = {
      */
     setBuildings (state, payload)
     {
-        // Delete missing data. Should be preprocessed before loading the file but we will just do it here
-        payload.features = payload.features.map(feature => {
-            Object.keys(feature.properties).map(buildingsKey => {
-                if (!feature.properties[buildingsKey]) delete feature.properties[buildingsKey];
-            });
-
-            return feature;
-        });
-
         state.buildings = payload;
     },
 
@@ -92,6 +83,14 @@ export const mutations = {
         });
 
         state.streets = payload;
+    },
+
+    /**
+     * Walls.geojson is fetched from the backend
+     */
+    setWalls (state, payload)
+    {
+        state.walls = payload;
     },
 
     /**

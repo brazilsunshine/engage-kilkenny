@@ -119,7 +119,10 @@
 
             <img src="/assets/HC_logo_retina.png" class="small_heritage_logo" />
 
-            <p>This data has been sourced from <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a></p>
+            <p>This data has been sourced from <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>
+
+               and the <a href="https://maps.archaeology.ie/historicenvironment/">National Inventory of Architectual Heritage (NIAH)</a>
+            </p>
         </div>
 
     </div>
@@ -204,8 +207,17 @@ export default {
 
         },
 
-        addData () {
-            console.log("addData");
+        async addData () {
+
+            this.loading = true;
+
+            await axios.post('/add-data', {
+                year: this.year,
+                osm_id: window.buildingsMap.building.osm_id
+            });
+
+            this.loading = false;
+
         },
 
         /**

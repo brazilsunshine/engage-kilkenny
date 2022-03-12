@@ -26,8 +26,9 @@ export const actions = {
 
                 if (response.data.success)
                 {
-                    context.commit('setBuildings', JSON.parse(response.data.buildings));
+                    context.commit('setBuildings', response.data.buildings);
                     context.commit('setStreets', JSON.parse(response.data.streets));
+                    context.commit('setWalls', JSON.parse(response.data.walls));
                 }
             })
             .catch(error => {

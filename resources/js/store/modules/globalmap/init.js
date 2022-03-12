@@ -6,5 +6,6 @@ export const init = {
     langsOpen: false,
     geojson: [],
     buildings: null,
-    streets: null
+    streets: null,
+    walls: null
 };
