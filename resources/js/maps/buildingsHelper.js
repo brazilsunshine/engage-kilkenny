@@ -36,55 +36,6 @@ export const buildingsHelper = {
     },
 
     /**
-     * Use the array of buildings from the backend
-     *
-     * Create many layers that can be turned on and off
-     */
-    addBuildingLayers (buildingsArray)
-    {
-        let buildings = L.geoJSON(null, {
-            onEachFeature: onEachBuilding
-        }).addTo(map);
-
-        const filteredBuildingsWithYear = buildingsArray.filter(feature => {
-            return (feature.properties.hasOwnProperty('NEWDATE'));
-        });
-
-        buildings.addData({
-            crs: {
-                properties: {
-                    name: "urn:ogc:def:crs:OGC:1.3:CRS84"
-                },
-                type: "name"
-            },
-            features: filteredBuildingsWithYear,
-            type: "FeatureCollection"
-        });
-
-        let buildingsWithoutYear = L.geoJSON(null, {
-            onEachFeature: onEachBuilding
-        });
-
-        const filteredBuildingsWithoutYear = buildingsArray.filter(feature => {
-            if (!feature.properties.hasOwnProperty('NEWDATE'))
-            {
-                return feature;
-            }
-        });
-
-        buildingsWithoutYear.addData({
-            crs: {
-                properties: {
-                    name: "urn:ogc:def:crs:OGC:1.3:CRS84"
-                },
-                type: "name"
-            },
-            features: filteredBuildingsWithoutYear,
-            type: "FeatureCollection"
-        });
-    },
-
-    /**
      * From the feature.properties object,
      *
      * Extract the keys we need as a string and object
@@ -101,7 +52,7 @@ export const buildingsHelper = {
 
         keys.forEach(key => {
 
-            if (properties[key])
+            if (properties[key] && key !== 'NIAH_SITE_')
             {
                 building[key] = properties[key];
 
@@ -113,8 +64,6 @@ export const buildingsHelper = {
                 }
             }
         });
-
-        console.log(building);
 
         return { str, building };
     }

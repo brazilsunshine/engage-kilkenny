@@ -39,8 +39,7 @@ import SideMapContainer from "../../components/global/SideMapContainer";
 
 var map;
 
-var buildings;
-var buildingsWithoutYear;
+var buildings, buildingsWithoutYear;
 
 var streets, streetTypes;
 var corridor, footway, path, pedestrian, residential, secondary, service, steps, tertiary, unclassified;
@@ -343,6 +342,20 @@ function addWallsLayer (wallsArray)
  */
 function onEachWalls (feature, layer)
 {
+    layer.on("mouseover", function(e) {
+        layer.setStyle({
+            fillOpacity: 0.4,
+            color: 'yellow'
+        });
+    });
+
+    layer.on("mouseout",function(e) {
+        layer.setStyle({
+            fillOpacity: 0.5,
+            color: '#3388ff'
+        });
+    });
+
     layer.on('click', async function (e) {
 
         const str = wallsHelper.getWallsString(feature.properties);
