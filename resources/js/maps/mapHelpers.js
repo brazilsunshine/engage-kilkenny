@@ -106,4 +106,4 @@ const helper = {
     }
 };
 
-export {helper as mapHelper};
+export { helper as mapHelper };
