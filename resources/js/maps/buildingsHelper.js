@@ -59,9 +59,9 @@ export const buildingsHelper = {
                 str += "<p style='margin: 0 !important;'>" + key + ": " + properties[key] + "</p>";
 
                 // If building has image
-                if (key === "REG_NO") {
-                    str += "<img class='building-img' src='https://www.buildingsofireland.ie/niah/images/survey_specific/fullsize/" + properties[key] + "_1.jpg' />";
-                }
+                // if (key === "REG_NO") {
+                //     str += "<img class='building-img' src='https://www.buildingsofireland.ie/niah/images/survey_specific/fullsize/" + properties[key] + "_1.jpg' />";
+                // }
             }
         });
 

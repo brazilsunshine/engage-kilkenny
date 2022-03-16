@@ -20,6 +20,7 @@ class GlobalMapController extends Controller
     {
         $streets = file_get_contents(public_path('/js/geojson/streets.geojson'));
         $walls = file_get_contents(public_path('/js/geojson/walls.geojson'));
+        $points = file_get_contents(public_path('/js/geojson/points.geojson'));
 
         $buildings = BuildingsData::all();
 
@@ -51,7 +52,8 @@ class GlobalMapController extends Controller
             'success' => true,
             'buildings' => $buildingsGeojson,
             'streets' => $streets,
-            'walls' => $walls
+            'walls' => $walls,
+            'points' => $points
         ];
     }
 

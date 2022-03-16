@@ -69,14 +69,30 @@ export const mutations = {
     },
 
     /**
+     * points.geojson is fetched from the backend
+     */
+    setPoints (state, payload)
+    {
+        payload.features = payload.features.map(feature => {
+            Object.keys(feature.properties).map(key => {
+                if (!feature.properties[key]) delete feature.properties[key];
+            });
+
+            return feature;
+        });
+
+        state.points = payload;
+    },
+
+    /**
      * Streets.geojson is fetched from the backend
      */
     setStreets (state, payload)
     {
         // Delete missing data. Should be preprocessed before loading the file but we will just do it here
         payload.features = payload.features.map(feature => {
-            Object.keys(feature.properties).map(streetKey => {
-               if (!feature.properties[streetKey]) delete feature.properties[streetKey];
+            Object.keys(feature.properties).map(key => {
+               if (!feature.properties[key]) delete feature.properties[key];
             });
 
             return feature;

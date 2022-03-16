@@ -125,6 +125,12 @@
             </p>
         </div>
 
+        <img
+            v-show="!buildingNotSelected"
+            style="position: absolute; bottom: 1em; right: 30.5em; z-index: 999"
+            :src="getBuildingImage"
+        />
+
     </div>
 </template>
 
@@ -155,6 +161,16 @@ export default {
             }
 
             return (window.buildingsMap?.building === null);
+        },
+
+        getBuildingImage ()
+        {
+            if (window.buildingsMap?.building?.REG_NO)
+            {
+                return "https://www.buildingsofireland.ie/niah/images/survey_specific/fullsize/" + window.buildingsMap?.building.REG_NO + "_1.jpg";
+            }
+
+            return "";
         },
 
         /**

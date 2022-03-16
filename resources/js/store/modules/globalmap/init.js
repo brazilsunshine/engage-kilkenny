@@ -7,5 +7,6 @@ export const init = {
     geojson: [],
     buildings: null,
     streets: null,
-    walls: null
+    walls: null,
+    points: null
 };

@@ -4,28 +4,22 @@
         <div
             id="buildings-map"
             ref="buildings-map"
-        />
+        >
+
+        </div>
 
         <!-- Right-hand form container -->
         <SideMapContainer
             :key="buildingsKey"
         />
 
-        <!-- Websockets -->
-        <LiveEvents />
     </div>
 </template>
 
 <script>
-import LiveEvents from '../../components/LiveEvents';
-
 import {
-    CLUSTER_ZOOM_THRESHOLD,
     MAX_ZOOM,
-    MEDIUM_CLUSTER_SIZE,
-    LARGE_CLUSTER_SIZE,
     MIN_ZOOM,
-    ZOOM_STEP
 } from '../../constants';
 
 import L from 'leaflet';
@@ -35,6 +29,8 @@ import { mapHelper } from '../../maps/mapHelpers';
 import { buildingsHelper } from "../../maps/buildingsHelper";
 import { streetsHelper } from "../../maps/streetsHelper";
 import { wallsHelper } from "../../maps/wallsHelper";
+// import { pointsHelper } from "../../maps/pointsHelper";
+
 import SideMapContainer from "../../components/global/SideMapContainer";
 
 var map;
@@ -45,7 +41,15 @@ var streets, streetTypes;
 var corridor, footway, path, pedestrian, residential, secondary, service, steps, tertiary, unclassified;
 var streetsMaterial;
 
-var walls;
+var walls, historic, tomb, streetLamp, oghamStone, memorial, cityGate, archaeological, uncategorised;
+
+var art, statue, stainedGlassWindow, sculpture, relief, mural, graffiti;
+
+var points, wateringPlace, wasteBasket, vendingMachines, training, toilets, theatre, telephone, studio,
+    socialCentre, restaurant, recycling, publicOffice, pub, postOffice, postBox, placeOfWorship,
+    pharmacy, parkingEntrance, parking, musicSchool, motorcycleParking, marketplace, library,
+    kitchen, gritBin, fountain, fastFood, doctors, dentist, communityCentre, college, clock,
+    chargingStation, carWash, cafe, bicyclingParking, bench, bar, bank, atm, artsCentre, courtsCentre;
 
 // todo - var parks, carParks, publicBuildings, stories;
 
@@ -90,7 +94,7 @@ function createLayerController ()
                         ],
                     },
                     {
-                        label: ' Material',
+                        label: ' Street Material',
                         layer: streetsMaterial
                     }
                 ]
@@ -99,10 +103,76 @@ function createLayerController ()
                 label: 'Historic',
                 selectAllCheckbox: false,
                 children: [
+                    { label: ' Walls', layer: walls },
                     {
-                        label: ' Walls',
-                        layer: walls
+                        label: ' Other',
+                        layer: historic,
+                        children: [
+                            { label: ' Archealogical', layer: archaeological },
+                            { label: ' City Gate', layer: cityGate },
+                            { label: ' Memorial', layer: memorial },
+                            { label: ' Ogham Stone', layer: oghamStone },
+                            { label: ' Street Lamp', layer: streetLamp },
+                            { label: ' Tomb', layer: tomb },
+                            { label: ' Uncategorised', layer: uncategorised },
+                        ]
                     }
+                ]
+            },
+            {
+                label: ' Art',
+                selectAllCheckbox: true,
+                children: [
+                    { label: ' Graffiti', layer: graffiti },
+                    { label: ' Mural', layer: mural },
+                    { label: ' Relief', layer: relief },
+                    { label: ' Sculpture', layer: sculpture },
+                    { label: ' Stained Glass', layer: stainedGlassWindow },
+                    { label: ' Statue', layer: statue }
+                ]
+            },
+            {
+                label: ' Amenity',
+                selectAllCheckbox: true,
+                children: [
+                    { label: ' Arts Centre', layer: artsCentre },
+                    { label: ' ATM', layer: atm },
+                    { label: ' Bank', layer: bank },
+                    { label: ' Bench', layer: bench },
+                    { label: ' Bicycle parking', layer: bicyclingParking },
+                    { label: ' Cafe', layer: cafe },
+                    { label: ' Car Wash', layer: carWash },
+                    { label: ' Charging Station', layer: chargingStation },
+                    { label: ' Clock', layer: clock },
+                    { label: ' College', layer: college },
+                    { label: ' Community Centre', layer: communityCentre },
+                    { label: ' Dentist', layer: dentist },
+                    { label: ' Doctors', layer: doctors },
+                    { label: ' Fast Food', layer: fastFood },
+                    { label: ' Fountain', layer: fountain },
+                    { label: ' Grit Bin', layer: gritBin },
+                    { label: ' Kitchen', layer: kitchen },
+                    { label: ' Library', layer: library },
+                    { label: ' Marketplace', layer: marketplace },
+                    { label: ' Motorcycle Parking', layer: motorcycleParking },
+                    { label: ' Music School', layer: musicSchool },
+                    { label: ' Parking', layer: parking },
+                    { label: ' Parking Entrance', layer: parkingEntrance },
+                    { label: ' Pharmacy', layer: pharmacy },
+                    { label: ' Place of Worship', layer: placeOfWorship },
+                    { label: ' Post Box', layer: postBox },
+                    { label: ' Post Office', layer: postOffice },
+                    { label: ' Pub', layer: pub },
+                    { label: ' Public Office', layer: publicOffice },
+                    { label: ' Restaurant', layer: restaurant },
+                    { label: ' Social Centre', layer: socialCentre },
+                    { label: ' Studio', layer: studio },
+                    { label: ' Telephone', layer: telephone },
+                    { label: ' Toilets', layer: toilets },
+                    { label: ' Training', layer: training },
+                    { label: ' Vending Machine', layer: vendingMachines },
+                    { label: ' Waste Basket', layer: wasteBasket },
+                    { label: ' Watering Place', layer: wateringPlace },
                 ]
             }
         ]
@@ -111,16 +181,10 @@ function createLayerController ()
     layerController = L.control.layers.tree(null, overlayLayersTree).addTo(map);
 }
 
-// function onEachBuildingWithoutYear (feature, layer)
-// {
-//
-// }
-
 export default {
     name: 'BuildingsMap',
     components: {
         SideMapContainer,
-        LiveEvents
     },
     data () {
         return {
@@ -129,6 +193,16 @@ export default {
             stories: [],
             buildingsKey: 0
         };
+    },
+    computed: {
+        /**
+         * Return True if a building is selected
+         */
+        buildingIsSelected ()
+        {
+            console.log('hasBuilding', window.buildingsMap?.hasOwnProperty('building'));
+            return window.buildingsMap?.hasOwnProperty('building');
+        }
     },
     mounted () {
         /** 0: Bind variable outside of vue scope */
@@ -159,7 +233,9 @@ export default {
         // Add the layers
         addBuildingLayers(this.$store.state.globalmap.buildings.features);
         addStreetLayers(this.$store.state.globalmap.streets.features);
-        addWallsLayer(this.$store.state.globalmap.walls.features);
+        addWallsLayer(this.$store.state.globalmap.walls.features, this.$store.state.globalmap.points.features);
+        addPointsLayers(this.$store.state.globalmap.points.features);
+        addArtLayer(this.$store.state.globalmap.points.features);
 
         createLayerController();
 
@@ -328,13 +404,229 @@ function addStreetLayers (streetsArray)
     streetsMaterial.addData({ features: filteredStreetsMaterial, type: "FeatureCollection" });
 }
 
-function addWallsLayer (wallsArray)
+function addPointsLayers (pointsArray)
+{
+    // 1. Create empty L.geoJSON layers
+    // All Types
+    points = L.geoJson(null, { onEachFeature: onEachPoint });
+    // Each Filtered Type (41)
+    artsCentre = L.geoJSON(null, { onEachFeature: onEachPoint });
+    atm = L.geoJSON(null, { onEachFeature: onEachPoint });
+    bank = L.geoJSON(null, { onEachFeature: onEachPoint });
+    bar = L.geoJSON(null, { onEachFeature: onEachPoint });
+    bench = L.geoJSON(null, { onEachFeature: onEachPoint });
+    bicyclingParking = L.geoJSON(null, { onEachFeature: onEachPoint });
+    cafe = L.geoJSON(null, { onEachFeature: onEachPoint });
+    carWash = L.geoJSON(null, { onEachFeature: onEachPoint });
+    chargingStation = L.geoJSON(null, { onEachFeature: onEachPoint });
+    clock = L.geoJSON(null, { onEachFeature: onEachPoint });
+    college = L.geoJSON(null, { onEachFeature: onEachPoint });
+    communityCentre = L.geoJSON(null, { onEachFeature: onEachPoint });
+    dentist = L.geoJSON(null, { onEachFeature: onEachPoint });
+    doctors = L.geoJSON(null, { onEachFeature: onEachPoint });
+    fastFood = L.geoJSON(null, { onEachFeature: onEachPoint });
+    fountain = L.geoJSON(null, { onEachFeature: onEachPoint });
+    gritBin = L.geoJSON(null, { onEachFeature: onEachPoint });
+    kitchen = L.geoJSON(null, { onEachFeature: onEachPoint });
+    library = L.geoJSON(null, { onEachFeature: onEachPoint });
+    marketplace = L.geoJSON(null, { onEachFeature: onEachPoint });
+    motorcycleParking = L.geoJSON(null, { onEachFeature: onEachPoint });
+    musicSchool = L.geoJSON(null, { onEachFeature: onEachPoint });
+    parking = L.geoJSON(null, { onEachFeature: onEachPoint });
+    parkingEntrance = L.geoJSON(null, { onEachFeature: onEachPoint });
+    pharmacy = L.geoJSON(null, { onEachFeature: onEachPoint });
+    placeOfWorship = L.geoJSON(null, { onEachFeature: onEachPoint });
+    postBox = L.geoJSON(null, { onEachFeature: onEachPoint });
+    postOffice = L.geoJSON(null, { onEachFeature: onEachPoint });
+    pub = L.geoJSON(null, { onEachFeature: onEachPoint });
+    publicOffice = L.geoJSON(null, { onEachFeature: onEachPoint });
+    recycling = L.geoJSON(null, { onEachFeature: onEachPoint });
+    restaurant = L.geoJSON(null, { onEachFeature: onEachPoint });
+    socialCentre = L.geoJSON(null, { onEachFeature: onEachPoint });
+    studio = L.geoJSON(null, { onEachFeature: onEachPoint });
+    telephone = L.geoJSON(null, { onEachFeature: onEachPoint });
+    theatre = L.geoJSON(null, { onEachFeature: onEachPoint });
+    toilets = L.geoJSON(null, { onEachFeature: onEachPoint });
+    training = L.geoJSON(null, { onEachFeature: onEachPoint });
+    vendingMachines = L.geoJSON(null, { onEachFeature: onEachPoint });
+    wasteBasket = L.geoJSON(null, { onEachFeature: onEachPoint });
+    wateringPlace = L.geoJSON(null, { onEachFeature: onEachPoint });
+
+    // 2. Create a filtered geojson array of each layer we want to use
+    // Get array of streets of column name "highway"
+    const filteredPointsArray = streetsHelper.getFilteredArray(pointsArray, 'amenity');
+    // Use filtered array to find values within the column
+    const artsCentreArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'arts_centre');
+    const atmArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'atm');
+    const bankArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'bank');
+    const barArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'bar');
+    const benchArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'bench');
+    const bicycleParkingArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'bicycle_parking');
+    const cafeArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'cafe');
+    const carWashArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'car_wash');
+    const chargingStationArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'charging_station');
+    const clockArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'clock');
+    const collegeArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'college');
+    const communityCentreArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'community_centre');
+    const dentistArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'dentist');
+    const doctorArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'doctor');
+    const fastFoodArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'fast_food');
+    const fountainArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'fountain');
+    const gritBinArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'grit_bin');
+    const kitchenArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'kitchen');
+    const libraryArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'library');
+    const marketPlaceArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'marketplace');
+    const motorcycleParkingArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'motorcycle_parking');
+    const musicSchoolArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'music_school'); // maybe remove _
+    const parkingArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'parking');
+    const parkingEntranceArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'parking_entrance');
+    const pharmacyArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'pharmacy');
+    const placeOfWorshipArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'place_of_worship');
+    const postBoxArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'post_box');
+    const postOfficeArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'post_office');
+    const pubArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'pub');
+    const publicOfficeArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'public_office');
+    const recyclingArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'recycling');
+    const restaurantArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'restaurant');
+    const socialCentreArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'social_centre');
+    const studioArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'studio');
+    const telephoneArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'telephone');
+    const theatreArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'theatre');
+    const toiletsArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'toilets');
+    const trainingArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'training');
+    const vendingMachineArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'vending_machine');
+    const wasteBasketArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'waste_basket');
+    const wateringPlaceArray = streetsHelper.getStreetByType(filteredPointsArray, 'amenity', 'watering_place');
+
+    points.addData({ features: filteredPointsArray, type: "FeatureCollection" });
+    atm.addData({ features: atmArray, type: "FeatureCollection" });
+    artsCentre.addData({ features: artsCentreArray, type: "FeatureCollection" });
+    bank.addData({ features: bankArray, type: "FeatureCollection" });
+    bar.addData({ features: barArray, type: "FeatureCollection" });
+    bench.addData({ features: benchArray, type: "FeatureCollection" });
+    bicyclingParking.addData({ features: bicycleParkingArray, type: "FeatureCollection" });
+    cafe.addData({ features: cafeArray, type: "FeatureCollection" });
+    carWash.addData({ features: carWashArray, type: "FeatureCollection" });
+    chargingStation.addData({ features: chargingStationArray, type: "FeatureCollection" });
+    clock.addData({ features: clockArray, type: "FeatureCollection" });
+    college.addData({ features: collegeArray, type: "FeatureCollection" });
+    communityCentre.addData({ features: communityCentreArray, type: "FeatureCollection" });
+    dentist.addData({ features: dentistArray, type: "FeatureCollection" });
+    doctors.addData({ features: doctorArray, type: "FeatureCollection" });
+    fastFood.addData({ features: fastFoodArray, type: "FeatureCollection" });
+    fountain.addData({ features: fountainArray, type: "FeatureCollection" });
+    gritBin.addData({ features: gritBinArray, type: "FeatureCollection" });
+    kitchen.addData({ features: kitchenArray, type: "FeatureCollection" });
+    library.addData({ features: libraryArray, type: "FeatureCollection" });
+    marketplace.addData({ features: marketPlaceArray, type: "FeatureCollection" });
+    motorcycleParking.addData({ features: motorcycleParkingArray, type: "FeatureCollection" });
+    musicSchool.addData({ features: musicSchoolArray, type: "FeatureCollection" });
+    parking.addData({ features: parkingArray, type: "FeatureCollection" });
+    parkingEntrance.addData({ features: parkingEntranceArray, type: "FeatureCollection" });
+    pharmacy.addData({ features: pharmacyArray, type: "FeatureCollection" });
+    placeOfWorship.addData({ features: placeOfWorshipArray, type: "FeatureCollection" });
+    postBox.addData({ features: postBoxArray, type: "FeatureCollection" });
+    postOffice.addData({ features: postOfficeArray, type: "FeatureCollection" });
+    pub.addData({ features: pubArray, type: "FeatureCollection" });
+    publicOffice.addData({ features: publicOfficeArray, type: "FeatureCollection" });
+    recycling.addData({ features: recyclingArray, type: "FeatureCollection" });
+    restaurant.addData({ features: restaurantArray, type: "FeatureCollection" });
+    socialCentre.addData({ features: socialCentreArray, type: "FeatureCollection" });
+    studio.addData({ features: studioArray, type: "FeatureCollection" });
+    telephone.addData({ features: telephoneArray, type: "FeatureCollection" });
+    theatre.addData({ features: theatreArray, type: "FeatureCollection" });
+    toilets.addData({ features: toiletsArray, type: "FeatureCollection" });
+    training.addData({ features: trainingArray, type: "FeatureCollection" });
+    wasteBasket.addData({ features: wasteBasketArray, type: "FeatureCollection" });
+    vendingMachines.addData({ features: vendingMachineArray, type: "FeatureCollection" });
+    wateringPlace.addData({ features: wateringPlaceArray, type: "FeatureCollection" });
+}
+
+function onEachPoint (feature, layer)
+{
+    layer.on('click', async function (e) {
+
+        const str = wallsHelper.getWallsString(feature.properties);
+
+        L.popup(mapHelper.popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(str)
+            .openOn(map);
+
+        L.DomEvent.stopPropagation(e);
+    });
+}
+
+function addWallsLayer (wallsArray, pointsArray)
 {
     walls = L.geoJSON(null, {
         onEachFeature: onEachWalls
     }).addTo(map);
 
     walls.addData({ features: wallsArray, type: "FeatureCollection" });
+
+    // Parent array
+    historic = L.geoJSON(null, { onEachFeature: onEachWalls });
+    // Child arrays from historic
+    archaeological = L.geoJSON(null, { onEachFeature: onEachWalls });
+    cityGate = L.geoJSON(null, { onEachFeature: onEachWalls });
+    memorial = L.geoJSON(null, { onEachFeature: onEachWalls });
+    oghamStone = L.geoJSON(null, { onEachFeature: onEachWalls });
+    streetLamp = L.geoJSON(null, { onEachFeature: onEachWalls });
+    tomb = L.geoJSON(null, { onEachFeature: onEachWalls });
+    uncategorised = L.geoJSON(null, { onEachFeature: onEachWalls });
+
+    // All historic points
+    const filteredHistoricArray = streetsHelper.getFilteredArray(pointsArray, 'historic');
+    historic.addData({ features: filteredHistoricArray, type: "FeatureCollection" });
+
+    // Filter all historic points by values
+    const archeologicalArray = streetsHelper.getStreetByType(pointsArray, 'historic', 'archaeological_site');
+    const cityGateArray = streetsHelper.getStreetByType(pointsArray, 'historic', 'city_gate');
+    const memorialArray = streetsHelper.getStreetByType(pointsArray, 'historic', 'memorial');
+    const oghamStoneArray = streetsHelper.getStreetByType(pointsArray, 'historic', 'ogham_stone');
+    const streetLampArray = streetsHelper.getStreetByType(pointsArray, 'historic', 'street_lamp');
+    const tombArray = streetsHelper.getStreetByType(pointsArray, 'historic', 'tomb');
+    const uncategorisedArray = streetsHelper.getStreetByType(pointsArray, 'historic', 'yes');
+
+    archaeological.addData({ features: archeologicalArray, type: "FeatureCollection" });
+    cityGate.addData({ features: cityGateArray, type: "FeatureCollection" });
+    memorial.addData({ features: memorialArray, type: "FeatureCollection "});
+    oghamStone.addData({ features: oghamStoneArray, type: "FeatureCollection" });
+    streetLamp.addData({ features: streetLampArray, type: "FeatureCollection" });
+    tomb.addData({ features: tombArray, type: "FeatureCollection" });
+    uncategorised.addData({ features: uncategorisedArray, type: "FeatureCollection" });
+}
+
+function addArtLayer (pointsArray)
+{
+    art = L.geoJSON(null, { onEachFeature: onEachPoint });
+
+    // All art points
+    const filteredArtArray = streetsHelper.getFilteredArray(pointsArray, 'artwork_type');
+    historic.addData({ features: filteredArtArray, type: "FeatureCollection" });
+
+    graffiti = L.geoJSON(null, { onEachFeature: onEachPoint });
+    mural = L.geoJSON(null, { onEachFeature: onEachPoint });
+    relief = L.geoJSON(null, { onEachFeature: onEachPoint });
+    sculpture = L.geoJSON(null, { onEachFeature: onEachPoint });
+    stainedGlassWindow = L.geoJSON(null, { onEachFeature: onEachPoint });
+    statue = L.geoJSON(null, { onEachFeature: onEachPoint });
+
+    // Filtered art points
+    const graffitiArray = streetsHelper.getStreetByType(filteredArtArray, 'artwork_type', 'graffiti');
+    const muralArray = streetsHelper.getStreetByType(filteredArtArray, 'artwork_type', 'mural');
+    const reliefArray = streetsHelper.getStreetByType(filteredArtArray, 'artwork_type', 'relief');
+    const scultpureArray = streetsHelper.getStreetByType(filteredArtArray, 'artwork_type', 'sculpture');
+    const stainedGlassArray = streetsHelper.getStreetByType(filteredArtArray, 'artwork_type', 'stained-glass_window');
+    const statueArray = streetsHelper.getStreetByType(filteredArtArray, 'artwork_type', 'mural');
+
+    graffiti.addData({ features: graffitiArray, type: "FeatureCollection" });
+    mural.addData({ features: muralArray, type: "FeatureCollection" });
+    relief.addData({ features: reliefArray, type: "FeatureCollection" });
+    sculpture.addData({ features: scultpureArray, type: "FeatureCollection" });
+    stainedGlassWindow.addData({ features: stainedGlassArray, type: "FeatureCollection" });
+    statue.addData({ features: statueArray, type: "FeatureCollection" });
 }
 
 /**
@@ -424,11 +716,11 @@ function createLegends ()
         width: 70%;
     }
 
-    .building-img {
-        position: absolute;
-        top: 1em;
-        right: 1em;
-    }
+    /*.building-img {*/
+    /*    position: absolute;*/
+    /*    top: 1em;*/
+    /*    right: 1em;*/
+    /*}*/
 
     .leaflet-bottom {
         z-index: 1;
@@ -452,6 +744,7 @@ function createLegends ()
 
     .leaflet-popup-content {
         padding: 20px !important;
+        /*width: 550px !important;*/
     }
 
 

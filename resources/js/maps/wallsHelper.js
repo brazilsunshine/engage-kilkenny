@@ -8,7 +8,7 @@ export const wallsHelper = {
 
         keys.forEach(key => {
 
-            if (properties[key])
+            if (properties[key] && key !== 'fid' && key !== 'full_id' && key !== 'osm_id' && key !== 'osm_type')
             {
                 str += key + ": " + properties[key] + " <br> ";
             }

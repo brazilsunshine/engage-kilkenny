@@ -200,17 +200,17 @@ export const streetsHelper = {
     },
 
     /**
-     * Return a filtered streetsArray based on streetType
+     * Return a filtered array based on column name
      *
-     * @param streetsArray
-     * @param streetType
+     * @param array
+     * @param columnName
      * @return filteredStreetsArray
      */
-    getFilteredArray (streetsArray, streetType)
+    getFilteredArray (array, columnName)
     {
-        return streetsArray.filter(streetFeature => {
-            if (streetFeature.properties.hasOwnProperty(streetType)) {
-                return streetFeature;
+        return array.filter(feature => {
+            if (feature.properties.hasOwnProperty(columnName)) {
+                return feature;
             }
         });
     },
@@ -220,10 +220,10 @@ export const streetsHelper = {
      *
      * get street.highway = corridor
      */
-    getStreetByType (filteredStreetsArray, columnName, streetType)
+    getStreetByType (filteredArray, columnName, value)
     {
-        return filteredStreetsArray.filter(feature => {
-            if (feature.properties[columnName] === streetType) {
+        return filteredArray.filter(feature => {
+            if (feature.properties[columnName] === value) {
                 return feature;
             }
         });
