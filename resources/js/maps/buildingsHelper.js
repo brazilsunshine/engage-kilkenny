@@ -56,12 +56,18 @@ export const buildingsHelper = {
             {
                 building[key] = properties[key];
 
-                str += "<p style='margin: 0 !important;'>" + key + ": " + properties[key] + "</p>";
+                if (key !== 'osm_id' && key !== 'full_id' && key !== 'osm_type' && key !== "type")
+                {
+                    if (key === 'NEWDATE')
+                    {
+                        str += "<p style='margin: 0 !important;'>Year of Construction: " + properties[key] + "</p>";
+                    }
+                    else
+                    {
+                        str += "<p style='margin: 0 !important;'>" + key + ": " + properties[key] + "</p>";
+                    }
 
-                // If building has image
-                // if (key === "REG_NO") {
-                //     str += "<img class='building-img' src='https://www.buildingsofireland.ie/niah/images/survey_specific/fullsize/" + properties[key] + "_1.jpg' />";
-                // }
+                }
             }
         });
 

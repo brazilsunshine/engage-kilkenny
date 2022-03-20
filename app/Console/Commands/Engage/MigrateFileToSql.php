@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Engage;
 
-use App\Models\Engage\BuildingsData;
+use App\Models\Engage\Building;
 use Illuminate\Console\Command;
 
 class MigrateFileToSql extends Command
@@ -19,7 +19,7 @@ class MigrateFileToSql extends Command
      *
      * @var string
      */
-    protected $description = 'Migrate the buildings.geojson file to BuildingsData.php';
+    protected $description = 'Migrate the buildings.geojson file to Building.php';
 
     /**
      * Create a new command instance.
@@ -59,7 +59,7 @@ class MigrateFileToSql extends Command
             $coordinates = json_encode($feature['geometry']['coordinates']);
             $attributes = json_encode($properties);
 
-            BuildingsData::create([
+            Building::create([
                 'osm_id' => $properties['osm_id'],
                 'attributes' => $attributes,
                 'polygon' => $coordinates

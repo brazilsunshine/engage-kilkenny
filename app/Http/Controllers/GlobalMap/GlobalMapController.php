@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\GlobalMap;
 
-use App\Models\Engage\BuildingsData;
-use App\Models\Photo;
+use App\Models\Engage\Building;
 use App\Traits\FilterPhotosByGeoHashTrait;
 
 use Illuminate\Http\Request;
@@ -22,7 +21,7 @@ class GlobalMapController extends Controller
         $walls = file_get_contents(public_path('/js/geojson/walls.geojson'));
         $points = file_get_contents(public_path('/js/geojson/points.geojson'));
 
-        $buildings = BuildingsData::all();
+        $buildings = Building::all();
 
         $buildingsGeojson = [
             'type' => 'FeatureCollection',
@@ -57,78 +56,78 @@ class GlobalMapController extends Controller
         ];
     }
 
-    /**
-     * Convert our photos object to a geojson array
-     *
-     * @param $photos
-     *
-     * @return array
-     */
-    protected function photosToGeojson ($photos) :array
-    {
-        $geojson = [
-            'type'      => 'FeatureCollection',
-            'features'  => null
-        ];
+//    /**
+//     * Convert our photos object to a geojson array
+//     *
+//     * @param $photos
+//     *
+//     * @return array
+//     */
+//    protected function photosToGeojson ($photos) :array
+//    {
+//        $geojson = [
+//            'type'      => 'FeatureCollection',
+//            'features'  => null
+//        ];
+//
+//        $features = [];
+//
+//        // Loop over all clusters and add each feature to the features array
+//        // Todo - Remove duplication as 1 user may have uploaded many photos
+//        foreach ($photos as $photo)
+//        {
+//            $showName = $showUsername = $teamName = false;
+//
+//            if ($photo->user)
+//            {
+//                $showName = $photo->user->show_name_maps;
+//                $showUsername = $photo->user->show_username_maps;
+//            }
+//
+//            if ($photo->team)
+//            {
+//                $teamName = $photo->team->name;
+//            }
+//
+//            $feature = [
+//                'type' => 'Feature',
+//                'geometry' => [
+//                    'type' => 'Point',
+//                    'coordinates' => [$photo->lat, $photo->lon]
+//                ],
+//                'properties' => [
+//                    'result_string' => $photo->verified >= 2 ? $photo->result_string : null,
+//                    'filename' => $photo->verified >= 2 ? $photo->filename : '/assets/images/waiting.png',
+//                    'datetime' => $photo->datetime,
+//                    'cluster'  => false,
+//                    'verified' => $photo->verified,
+//                    'name'     => $showName ? $photo->user->name : null,
+//                    'username' => $showUsername ? $photo->user->username : null,
+//                    'team'     => $teamName ? $teamName : null
+//                ]
+//            ];
+//
+//            array_push($features, $feature);
+//        }
+//
+//        $geojson['features'] = $features;
+//
+//        return $geojson;
+//    }
 
-        $features = [];
-
-        // Loop over all clusters and add each feature to the features array
-        // Todo - Remove duplication as 1 user may have uploaded many photos
-        foreach ($photos as $photo)
-        {
-            $showName = $showUsername = $teamName = false;
-
-            if ($photo->user)
-            {
-                $showName = $photo->user->show_name_maps;
-                $showUsername = $photo->user->show_username_maps;
-            }
-
-            if ($photo->team)
-            {
-                $teamName = $photo->team->name;
-            }
-
-            $feature = [
-                'type' => 'Feature',
-                'geometry' => [
-                    'type' => 'Point',
-                    'coordinates' => [$photo->lat, $photo->lon]
-                ],
-                'properties' => [
-                    'result_string' => $photo->verified >= 2 ? $photo->result_string : null,
-                    'filename' => $photo->verified >= 2 ? $photo->filename : '/assets/images/waiting.png',
-                    'datetime' => $photo->datetime,
-                    'cluster'  => false,
-                    'verified' => $photo->verified,
-                    'name'     => $showName ? $photo->user->name : null,
-                    'username' => $showUsername ? $photo->user->username : null,
-                    'team'     => $teamName ? $teamName : null
-                ]
-            ];
-
-            array_push($features, $feature);
-        }
-
-        $geojson['features'] = $features;
-
-        return $geojson;
-    }
-
-    /**
-     * Get photos point data at zoom levels 16 or above
-     *
-     * @return array
-     */
-    public function index (): array
-    {
-        $photos = $this->filterPhotosByGeoHash(
-            request()->zoom,
-            request()->bbox,
-            request()->layers ?: null
-        )->get();
-
-        return $this->photosToGeojson($photos);
-    }
+//    /**
+//     * Get photos point data at zoom levels 16 or above
+//     *
+//     * @return array
+//     */
+//    public function index (): array
+//    {
+//        $photos = $this->filterPhotosByGeoHash(
+//            request()->zoom,
+//            request()->bbox,
+//            request()->layers ?: null
+//        )->get();
+//
+//        return $this->photosToGeojson($photos);
+//    }
 }

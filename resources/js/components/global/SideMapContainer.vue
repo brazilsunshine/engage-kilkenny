@@ -34,7 +34,7 @@
 
                     <textarea
                         v-model="story"
-                        rows="4"
+                        rows="8"
                         class="textarea mb1"
                         placeholder="Once upon a time..."
                         @input="deleteError('story')"
@@ -51,13 +51,18 @@
 
                 <div v-else>
 
-                    <p class="mb1">
+                    <p class="input-label mb1">
                         Enter some data about this building.
                     </p>
 
                     <p class="input-label">Year of construction</p>
 
+                    <p v-if="buildingHasDate" class="input-label mb1">
+                        Building already has a date: {{ getBuildingsDate }}
+                    </p>
+
                     <input
+                        v-else
                         class="input mb1"
                         v-model="year"
                         type="number"
@@ -65,6 +70,41 @@
                         min="1200"
                         max="2022"
                     />
+
+
+                    <div class="flex mb2">
+
+                        <div class="flex-1 mr1">
+                            <p class="input-label">Add key</p>
+
+                            <input
+                                class="input"
+                                v-model="buildingsKey"
+                                placeholder="eg. Name"
+                            />
+                        </div>
+
+                        <div class="flex-1">
+                            <p class="input-label">Add value</p>
+
+                            <input
+                                class="input"
+                                v-model="buildingsValue"
+                                placeholder="eg. Kilkenny Building"
+                            />
+                        </div>
+                    </div>
+
+                    <p class="input-label">Upload an image</p>
+
+                    <vue-dropzone
+                        id="customdropzone"
+                        :options="options"
+                        :use-custom-slot="true"
+                        style="min-height: 100px;"
+                    >
+                        <i class="fa fa-image upload-icon" aria-hidden="true"/>
+                    </vue-dropzone>
 
                 </div>
 
@@ -82,7 +122,7 @@
                 </div>
 
                 <button
-                    class="button is-medium is-primary"
+                    class="button is-medium is-primary mt1 mb1"
                     :class="loading ? 'is-loading' : ''"
                     @click="addStoryOrData"
                     :disabled="loading"
@@ -115,11 +155,11 @@
         </div>
 
         <div class="mb1">
-            <p class="mb1">Engage Kilkenny is brought to you by the Heritage Council's Collaborative Town Centre Health Check</p>
+            <p class="input-label mb1">Engage Kilkenny is brought to you by the Heritage Council's Collaborative Town Centre Health Check</p>
 
             <img src="/assets/HC_logo_retina.png" class="small_heritage_logo" />
 
-            <p>This data has been sourced from <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>
+            <p class="input-label">This data has been sourced from <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>
 
                and the <a href="https://maps.archaeology.ie/historicenvironment/">National Inventory of Architectual Heritage (NIAH)</a>
             </p>
@@ -135,8 +175,13 @@
 </template>
 
 <script>
+import vue2Dropzone from 'vue2-dropzone';
+
 export default {
     name: "SideMapContainer",
+    components: {
+        vueDropzone: vue2Dropzone
+    },
     data () {
         return {
             title: "",
@@ -147,7 +192,21 @@ export default {
             error: "",
             errors: {},
             dataType: "story",
-            year: null
+            year: null,
+            buildingsKey: "",
+            buildingsValue: "",
+            options: {
+                url: '/upload-building-image',
+                thumbnailWidth: 150,
+                maxFilesize: 20,
+                headers: {
+                    'X-CSRF-TOKEN': window.axios.defaults.headers.common['X-CSRF-TOKEN']
+                },
+                includeStyling: true,
+                duplicateCheck: true,
+                paramName: 'file',
+                acceptedFiles: 'image/*,.heic,.heif'
+            },
         };
     },
     computed: {
@@ -163,6 +222,30 @@ export default {
             return (window.buildingsMap?.building === null);
         },
 
+        /**
+         * Return True if the building already has a date
+         *
+         * @returns {bool}
+         */
+        buildingHasDate ()
+        {
+            return window.buildingsMap?.building.hasOwnProperty('NEWDATE');
+        },
+
+        /**
+         * Return the year a building was constructed
+         *
+         * @return {string}
+         */
+        getBuildingsDate ()
+        {
+            return window.buildingsMap.building.NEWDATE;
+        },
+
+        /**
+         *
+         * @returns {string}
+         */
         getBuildingImage ()
         {
             if (window.buildingsMap?.building?.REG_NO)
@@ -229,7 +312,9 @@ export default {
 
             await axios.post('/add-data', {
                 year: this.year,
-                osm_id: window.buildingsMap.building.osm_id
+                osm_id: window.buildingsMap.building.osm_id,
+                buildingsKey: this.buildingsKey,
+                buildingsValue: this.buildingsValue
             });
 
             this.loading = false;

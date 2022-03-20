@@ -15,15 +15,9 @@ class CreateBuildingsTable extends Migration
     {
         Schema::create('buildings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('derelict')->nullable();
-            $table->unsignedInteger('decorative_plaster')->nullable();
-            $table->unsignedInteger('mosaic')->nullable();
-            $table->unsignedInteger('plaque')->nullable();
-            $table->unsignedInteger('poorly_maintained')->nullable();
-            $table->unsignedInteger('projecting_chimney')->nullable();
-            $table->unsignedInteger('stone_arch')->nullable();
-            $table->unsignedInteger('stone_step')->nullable();
-            $table->unsignedInteger('vacant')->nullable();
+            $table->unsignedBigInteger('osm_id')->index();
+            $table->text('attributes');
+            $table->text('polygon');
             $table->timestamps();
         });
     }
