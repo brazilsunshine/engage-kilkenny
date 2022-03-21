@@ -52,6 +52,37 @@ var points, wateringPlace, wasteBasket, vendingMachines, training, toilets, thea
 
 var layerController;
 
+const green_dot = L.icon({
+    iconUrl: './images/vendor/leaflet/dist/dot.png',
+    iconSize: [10, 10]
+});
+
+const grey_dot = L.icon({
+    iconUrl: './images/vendor/leaflet/dist/grey-dot.jpg',
+    iconSize: [13, 10]
+});
+
+/**
+ * Create the point to display for each piece of non-art data
+ */
+function createGreenDotIcon (feature, latlng)
+{
+    const x = [latlng.lat, latlng.lng];
+
+    return L.marker(x, { icon: green_dot });
+}
+
+/**
+ * Create the point to display for each piece of Art data
+ */
+function createGreyDotIcon (feature, latlng)
+{
+    const x = [latlng.lat, latlng.lng];
+
+    return L.marker(x, { icon: grey_dot });
+}
+
+
 /**
  * Create the Layer Controller used to toggle all layers
  *
@@ -214,6 +245,8 @@ export default {
             smoothSensitivity: 1,
         });
 
+        window.buildingsMap.map = map;
+
         map.scrollWheelZoom = true;
 
         /** 2. Add tiles, attribution, set limits */
@@ -233,6 +266,8 @@ export default {
         addWallsLayer(this.$store.state.globalmap.walls.features, this.$store.state.globalmap.points.features);
         addPointsLayers(this.$store.state.globalmap.points.features);
         addArtLayer(this.$store.state.globalmap.points.features);
+
+        window.buildingsMap.buildings = buildings;
 
         createLayerController();
 
@@ -483,49 +518,49 @@ function addPointsLayers (pointsArray)
 {
     // 1. Create empty L.geoJSON layers
     // All Types
-    points = L.geoJson(null, { onEachFeature: onEachPoint });
+    points = L.geoJson(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
     // Each Filtered Type (41)
-    artsCentre = L.geoJSON(null, { onEachFeature: onEachPoint });
-    atm = L.geoJSON(null, { onEachFeature: onEachPoint });
-    bank = L.geoJSON(null, { onEachFeature: onEachPoint });
-    bar = L.geoJSON(null, { onEachFeature: onEachPoint });
-    bench = L.geoJSON(null, { onEachFeature: onEachPoint });
-    bicyclingParking = L.geoJSON(null, { onEachFeature: onEachPoint });
-    cafe = L.geoJSON(null, { onEachFeature: onEachPoint });
-    carWash = L.geoJSON(null, { onEachFeature: onEachPoint });
-    chargingStation = L.geoJSON(null, { onEachFeature: onEachPoint });
-    clock = L.geoJSON(null, { onEachFeature: onEachPoint });
-    college = L.geoJSON(null, { onEachFeature: onEachPoint });
-    communityCentre = L.geoJSON(null, { onEachFeature: onEachPoint });
-    dentist = L.geoJSON(null, { onEachFeature: onEachPoint });
-    doctors = L.geoJSON(null, { onEachFeature: onEachPoint });
-    fastFood = L.geoJSON(null, { onEachFeature: onEachPoint });
-    fountain = L.geoJSON(null, { onEachFeature: onEachPoint });
-    gritBin = L.geoJSON(null, { onEachFeature: onEachPoint });
-    kitchen = L.geoJSON(null, { onEachFeature: onEachPoint });
-    library = L.geoJSON(null, { onEachFeature: onEachPoint });
-    marketplace = L.geoJSON(null, { onEachFeature: onEachPoint });
-    motorcycleParking = L.geoJSON(null, { onEachFeature: onEachPoint });
-    musicSchool = L.geoJSON(null, { onEachFeature: onEachPoint });
-    parking = L.geoJSON(null, { onEachFeature: onEachPoint });
-    parkingEntrance = L.geoJSON(null, { onEachFeature: onEachPoint });
-    pharmacy = L.geoJSON(null, { onEachFeature: onEachPoint });
-    placeOfWorship = L.geoJSON(null, { onEachFeature: onEachPoint });
-    postBox = L.geoJSON(null, { onEachFeature: onEachPoint });
-    postOffice = L.geoJSON(null, { onEachFeature: onEachPoint });
-    pub = L.geoJSON(null, { onEachFeature: onEachPoint });
-    publicOffice = L.geoJSON(null, { onEachFeature: onEachPoint });
-    recycling = L.geoJSON(null, { onEachFeature: onEachPoint });
-    restaurant = L.geoJSON(null, { onEachFeature: onEachPoint });
-    socialCentre = L.geoJSON(null, { onEachFeature: onEachPoint });
-    studio = L.geoJSON(null, { onEachFeature: onEachPoint });
-    telephone = L.geoJSON(null, { onEachFeature: onEachPoint });
-    theatre = L.geoJSON(null, { onEachFeature: onEachPoint });
-    toilets = L.geoJSON(null, { onEachFeature: onEachPoint });
-    training = L.geoJSON(null, { onEachFeature: onEachPoint });
-    vendingMachines = L.geoJSON(null, { onEachFeature: onEachPoint });
-    wasteBasket = L.geoJSON(null, { onEachFeature: onEachPoint });
-    wateringPlace = L.geoJSON(null, { onEachFeature: onEachPoint });
+    artsCentre = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    atm = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    bank = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    bar = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    bench = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    bicyclingParking = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    cafe = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    carWash = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    chargingStation = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    clock = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    college = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    communityCentre = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    dentist = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    doctors = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    fastFood = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    fountain = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    gritBin = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    kitchen = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    library = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    marketplace = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    motorcycleParking = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    musicSchool = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    parking = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    parkingEntrance = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    pharmacy = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    placeOfWorship = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    postBox = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    postOffice = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    pub = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    publicOffice = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    recycling = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    restaurant = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    socialCentre = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    studio = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    telephone = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    theatre = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    toilets = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    training = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    vendingMachines = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    wasteBasket = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
+    wateringPlace = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreenDotIcon });
 
     // 2. Create a filtered geojson array of each layer we want to use
     // Get array of streets of column name "highway"
@@ -641,15 +676,15 @@ function addWallsLayer (wallsArray, pointsArray)
     walls.addData({ features: wallsArray, type: "FeatureCollection" });
 
     // Parent array
-    historic = L.geoJSON(null, { onEachFeature: onEachWalls });
+    historic = L.geoJSON(null, { onEachFeature: onEachWalls, pointToLayer: createGreenDotIcon });
     // Child arrays from historic
-    archaeological = L.geoJSON(null, { onEachFeature: onEachWalls });
-    cityGate = L.geoJSON(null, { onEachFeature: onEachWalls });
-    memorial = L.geoJSON(null, { onEachFeature: onEachWalls });
-    oghamStone = L.geoJSON(null, { onEachFeature: onEachWalls });
-    streetLamp = L.geoJSON(null, { onEachFeature: onEachWalls });
-    tomb = L.geoJSON(null, { onEachFeature: onEachWalls });
-    uncategorised = L.geoJSON(null, { onEachFeature: onEachWalls });
+    archaeological = L.geoJSON(null, { onEachFeature: onEachWalls, pointToLayer: createGreenDotIcon });
+    cityGate = L.geoJSON(null, { onEachFeature: onEachWalls, pointToLayer: createGreenDotIcon });
+    memorial = L.geoJSON(null, { onEachFeature: onEachWalls, pointToLayer: createGreenDotIcon });
+    oghamStone = L.geoJSON(null, { onEachFeature: onEachWalls, pointToLayer: createGreenDotIcon });
+    streetLamp = L.geoJSON(null, { onEachFeature: onEachWalls, pointToLayer: createGreenDotIcon });
+    tomb = L.geoJSON(null, { onEachFeature: onEachWalls, pointToLayer: createGreenDotIcon });
+    uncategorised = L.geoJSON(null, { onEachFeature: onEachWalls, pointToLayer: createGreenDotIcon });
 
     // All historic points
     const filteredHistoricArray = streetsHelper.getFilteredArray(pointsArray, 'historic');
@@ -675,18 +710,18 @@ function addWallsLayer (wallsArray, pointsArray)
 
 function addArtLayer (pointsArray)
 {
-    art = L.geoJSON(null, { onEachFeature: onEachPoint });
+    art = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreyDotIcon });
 
     // All art points
     const filteredArtArray = streetsHelper.getFilteredArray(pointsArray, 'artwork_type');
     historic.addData({ features: filteredArtArray, type: "FeatureCollection" });
 
-    graffiti = L.geoJSON(null, { onEachFeature: onEachPoint });
-    mural = L.geoJSON(null, { onEachFeature: onEachPoint });
-    relief = L.geoJSON(null, { onEachFeature: onEachPoint });
-    sculpture = L.geoJSON(null, { onEachFeature: onEachPoint });
-    stainedGlassWindow = L.geoJSON(null, { onEachFeature: onEachPoint });
-    statue = L.geoJSON(null, { onEachFeature: onEachPoint });
+    graffiti = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreyDotIcon });
+    mural = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreyDotIcon });
+    relief = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreyDotIcon });
+    sculpture = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreyDotIcon });
+    stainedGlassWindow = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreyDotIcon });
+    statue = L.geoJSON(null, { onEachFeature: onEachPoint, pointToLayer: createGreyDotIcon });
 
     // Filtered art points
     const graffitiArray = streetsHelper.getStreetByType(filteredArtArray, 'artwork_type', 'graffiti');

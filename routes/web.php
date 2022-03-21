@@ -38,7 +38,7 @@ Route::get('/current-user', 'UsersController@getAuthUser');
 
 // Upload page
 //Route::get('submit', 'HomeController@index'); // old route
-//Route::get('upload', 'HomeController@index')->name('upload');
+Route::get('upload', 'HomeController@index')->name('upload');
 
 // Upload the image, extract lat long, reverse geocode to address
 //Route::post('submit', 'PhotosController@store');
@@ -197,8 +197,10 @@ Route::group(['prefix' => '/admin'], function () {
 
     // Review stories
     Route::get('stories', 'HomeController@index');
+    Route::get('review', 'HomeController@index');
 
     // Get stories to review
+    Route::get('review/get-data', 'Admin\AdminReviewController@getData');
     Route::get('stories/get-stories', 'Admin\AdminStoryController@getStories');
 
     // Update a story as reviewed

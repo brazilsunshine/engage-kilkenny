@@ -106,8 +106,8 @@ const router = new VueRouter({
             }
         },
         {
-            path: '/admin/stories',
-            component: require('./views/admin/VerifyStories').default,
+            path: '/admin/review',
+            component: require('./views/admin/AdminReviewPage').default,
             meta: {
                 middleware: [ auth ] // admin
             }

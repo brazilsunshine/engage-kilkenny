@@ -4,9 +4,13 @@
 
         <div v-if="loggedIn" class="flex-1">
 
-            <p v-if="buildingNotSelected">
-                Select a building and then you can add a story or some data
-            </p>
+            <div v-if="buildingNotSelected">
+                <p class="mb1">Select a building and then you can add a story or some data</p>
+
+                <AdminReviewData
+                    v-if="isAdmin"
+                />
+            </div>
 
             <div v-else>
 
@@ -175,12 +179,22 @@
 </template>
 
 <script>
+import Vue from "vue";
 import vue2Dropzone from 'vue2-dropzone';
+import AdminReviewData from "../Admin/Review/AdminReviewData";
 
 export default {
     name: "SideMapContainer",
     components: {
-        vueDropzone: vue2Dropzone
+        vueDropzone: vue2Dropzone,
+        AdminReviewData
+    },
+    async created () {
+        if (this.isAdmin)
+        {
+            await this.$store.dispatch('ADMIN_GET_STORIES');
+            await this.$store.dispatch('ADMIN_GET_DATA');
+        }
     },
     data () {
         return {
@@ -273,6 +287,14 @@ export default {
         },
 
         /**
+         * TODO
+         */
+        isAdmin ()
+        {
+            return true;
+        },
+
+        /**
          * Return True or False to show if the user is logged in
          */
         loggedIn () {
@@ -306,6 +328,11 @@ export default {
 
         },
 
+        /**
+         * Send a post request to add data about a building
+         *
+         * @returns {Promise<void>}
+         */
         async addData () {
 
             this.loading = true;
@@ -315,6 +342,18 @@ export default {
                 osm_id: window.buildingsMap.building.osm_id,
                 buildingsKey: this.buildingsKey,
                 buildingsValue: this.buildingsValue
+            })
+            .then(response => {
+                if (response.data.success) {
+
+                    Vue.$vToastify.success({
+                        title: "Success",
+                        body: "Your data has been uploaded. It will be reviewed before it can be viewed."
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(error);
             });
 
             this.loading = false;

@@ -45,9 +45,9 @@
                                 <div class="navbar-dropdown" style="z-index: 2;">
 
                                     <!-- Admin - Review Stories -->
-<!--                                    v-if="can('review stories')"-->
-                                    <router-link  to="/admin/stories" class="navbar-item drop-item" @click.native="close">
-                                        ADMIN - Review Stories
+                                    <!-- v-if="can('review data')"-->
+                                    <router-link to="/admin/review" class="navbar-item drop-item" @click.native="close">
+                                        ADMIN - Review Data
                                     </router-link>
 
                                     <!-- Admin -->

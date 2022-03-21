@@ -2,13 +2,14 @@ import { init } from './init'
 
 export const mutations = {
 
-    /**
-     * Update filename for an image
-     */
-    adminImage (state, payload)
+    adminGetData (state, payload)
     {
-        state.id = payload.id;
-        state.filename = payload.filename;
+        state.data = payload;
+    },
+
+    adminGetStories (state, payload)
+    {
+        state.stories = payload;
     },
 
     /**
@@ -19,22 +20,7 @@ export const mutations = {
         state.loading = payload
     },
 
-    /**
-     *
-     */
-    initAdminMetadata (state, payload)
-    {
-        state.not_processed = payload.not_processed;
-        state.awaiting_verification = payload.awaiting_verification;
-    },
 
-    /**
-     * A new admin photo has been received for verification
-     */
-    initAdminPhoto (state, payload)
-    {
-        state.photo = payload;
-    },
 
     /**
      * Reset the user object (when we logout)
