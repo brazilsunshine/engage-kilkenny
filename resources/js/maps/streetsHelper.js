@@ -24,7 +24,7 @@ export const streetsHelper = {
             }
             else if (streetType === "path")
             {
-                return "#2ecc71";
+                return "#00a8ff";
             }
             else if (streetType === "pedestrian")
             {
@@ -52,151 +52,41 @@ export const streetsHelper = {
             }
             else if (streetType === "unclassified")
             {
-                return "#ccc";
+                return "#9c88ff";
             }
 
             return null;
         }
     },
 
-    // /**
-    //  * On each street feature
-    //  */
-    // onEachStreet (feature, layer)
-    // {
-    //     layer.on('click', function (e)
-    //     {
-    //         const keys = Object.keys(feature.properties);
-    //
-    //         let street = {};
-    //         let str = "";
-    //
-    //         keys.forEach(key => {
-    //             if (feature.properties[key])
-    //             {
-    //                 street[key] = feature.properties[key];
-    //
-    //                 str += key + ": " + feature.properties[key] + " <br> ";
-    //             }
-    //         })
-    //
-    //         console.log({ street });
-    //
-    //         window.buildingsMap.street = street;
-    //
-    //         L.popup(mapHelper.popupOptions)
-    //             .setLatLng(e.latlng)
-    //             .setContent(str)
-    //             .openOn(map);
-    //
-    //         L.DomEvent.stopPropagation(e);
-    //     });
-    //
-    //     layer.on("mouseover", function(e) {
-    //         layer.setStyle({
-    //             fillOpacity: 0.4,
-    //             color: 'yellow'
-    //         });
-    //     });
-    //
-    //     layer.on("mouseout",function(e) {
-    //         layer.setStyle({
-    //             fillOpacity: 0,
-    //             color: '#3388ff'
-    //         });
-    //     });
-    // }
-
     /**
+     * From feature.properties, return formatted string, object
      *
+     * @param properties
      */
-    onEachStreetType (feature, layer)
+    getStringObject (properties)
     {
-        const colour = streetsHelper.getStreetColour(feature.properties.highway);
+        const keys = Object.keys(properties);
 
-        if (colour)
-        {
-            layer.setStyle({
-                fillOpacity: 0.5,
-                color: colour
-            });
-        }
+        let street = {};
+        let str = "";
 
-        layer.on('click', function (e)
-        {
-            const keys = Object.keys(feature.properties);
-
-            let street = {};
-            let str = "";
-
-            keys.forEach(key => {
-                if (feature.properties[key])
-                {
-                    street[key] = feature.properties[key];
-
-                    str += key + ": " + feature.properties[key] + " <br> ";
-                }
-            })
-
-            console.log({ street });
-
-            window.buildingsMap.street = street;
-
-            L.popup(mapHelper.popupOptions)
-                .setLatLng(e.latlng)
-                .setContent(str)
-                .openOn(map);
-
-            L.DomEvent.stopPropagation(e);
-        });
-        layer.on("mouseover", function(e) {
-            layer.setStyle({
-                fillOpacity: 0.4,
-                color: 'yellow'
-            });
-        });
-
-        layer.on("mouseout",function(e) {
-
-            const colour = streetsHelper.getStreetColour(feature.properties['highway']);
-
-            if (colour)
+        keys.forEach(key => {
+            if (properties[key])
             {
-                layer.setStyle({
-                    fillOpacity: 0.5,
-                    color: colour
-                });
+                street[key] = properties[key];
+
+                if (key !== 'osm_id' && key !== 'full_id' && key !== 'osm_type' && key !== "type")
+                {
+                    str += key + ": " + properties[key] + " <br> ";
+                }
             }
+        })
 
-            layer.setStyle({
-                fillOpacity: 0,
-                color: colour
-            });
-        });
-    },
-
-    /**
-     * On Each Street Material Layer
-     */
-    onEachStreetMaterial (feature, layer)
-    {
-        layer.on('click', function (e) {
-            console.log(feature);
-        });
-
-        layer.on("mouseover", function(e) {
-            layer.setStyle({
-                fillOpacity: 0.4,
-                color: 'yellow'
-            });
-        });
-
-        layer.on("mouseout",function(e) {
-            layer.setStyle({
-                fillOpacity: 0,
-                color: '#3388ff'
-            });
-        });
+        return {
+            str,
+            street
+        }
     },
 
     /**

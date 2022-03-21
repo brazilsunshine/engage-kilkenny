@@ -4,9 +4,7 @@
         <div
             id="buildings-map"
             ref="buildings-map"
-        >
-
-        </div>
+        />
 
         <!-- Right-hand form container -->
         <SideMapContainer
@@ -29,7 +27,6 @@ import { mapHelper } from '../../maps/mapHelpers';
 import { buildingsHelper } from "../../maps/buildingsHelper";
 import { streetsHelper } from "../../maps/streetsHelper";
 import { wallsHelper } from "../../maps/wallsHelper";
-// import { pointsHelper } from "../../maps/pointsHelper";
 
 import SideMapContainer from "../../components/global/SideMapContainer";
 
@@ -310,21 +307,21 @@ function onEachBuilding (feature, layer)
         L.DomEvent.stopPropagation(e);
 
         // Check if the building has any stories
-        await axios.get('/check-building', {
-            params: {
-                osm_id: building.osm_id
-            }
-        })
-        .then(response => {
-            console.log('check_building', response);
-
-            if (response.data.success) {
-                window.buildingsMap.stories = response.data.stories;
-            }
-        })
-        .catch(error => {
-            console.error('check_building', error);
-        });
+        // await axios.get('/check-building', {
+        //     params: {
+        //         osm_id: building.osm_id
+        //     }
+        // })
+        // .then(response => {
+        //     console.log('check_building', response);
+        //
+        //     if (response.data.success) {
+        //         window.buildingsMap.stories = response.data.stories;
+        //     }
+        // })
+        // .catch(error => {
+        //     console.error('check_building', error);
+        // });
 
         window.buildingsMap.buildingsKey++;
     });
@@ -355,18 +352,18 @@ function addStreetLayers (streetsArray)
 {
     // 1. Create empty L.geoJSON layers
     // All Types
-    streetTypes = L.geoJSON(null, { onEachFeature: streetsHelper.onEachStreetType });
+    streetTypes = L.geoJSON(null, { onEachFeature: onEachStreetType });
     // Each Filtered Type (10)
-    corridor = L.geoJSON(null, { onEachFeature: streetsHelper.onEachStreetType });
-    footway = L.geoJSON(null, { onEachFeature: streetsHelper.onEachStreetType });
-    path = L.geoJSON(null, { onEachFeature: streetsHelper.onEachStreetType });
-    pedestrian = L.geoJSON(null, { onEachFeature: streetsHelper.onEachStreetType });
-    residential = L.geoJSON(null, { onEachFeature: streetsHelper.onEachStreetType });
-    secondary = L.geoJSON(null, { onEachFeature: streetsHelper.onEachStreetType });
-    service = L.geoJSON(null, { onEachFeature: streetsHelper.onEachStreetType });
-    steps = L.geoJSON(null, { onEachFeature: streetsHelper.onEachStreetType });
-    tertiary = L.geoJSON(null, { onEachFeature: streetsHelper.onEachStreetType });
-    unclassified = L.geoJSON(null, { onEachFeature: streetsHelper.onEachStreetType });
+    corridor = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    footway = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    path = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    pedestrian = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    residential = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    secondary = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    service = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    steps = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    tertiary = L.geoJSON(null, { onEachFeature: onEachStreetType });
+    unclassified = L.geoJSON(null, { onEachFeature: onEachStreetType });
 
     // 2. Create a filtered geojson array of each layer we want to use
     // Get array of streets of column name "highway"
@@ -398,10 +395,88 @@ function addStreetLayers (streetsArray)
     unclassified.addData({ features: unclassifiedArray, type: "FeatureCollection" });
     // 3.3 Add the streetMaterial column type
     streetsMaterial = L.geoJSON(null, {
-        onEachFeature: streetsHelper.onEachStreetMaterial
+        onEachFeature: onEachStreetMaterial
     });
     const filteredStreetsMaterial = streetsHelper.getFilteredArray(streetsArray, 'material');
     streetsMaterial.addData({ features: filteredStreetsMaterial, type: "FeatureCollection" });
+}
+
+/**
+ *
+ */
+function onEachStreetType (feature, layer)
+{
+    const colour = streetsHelper.getStreetColour(feature.properties.highway);
+
+    if (colour)
+    {
+        layer.setStyle({
+            fillOpacity: 0.5,
+            color: colour
+        });
+    }
+
+    layer.on('click', function (e)
+    {
+        const { str, street } = streetsHelper.getStringObject(feature.properties);
+
+        window.buildingsMap.street = street;
+
+        L.popup(mapHelper.popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(str)
+            .openOn(map);
+
+        L.DomEvent.stopPropagation(e);
+    });
+    layer.on("mouseover", function(e) {
+        layer.setStyle({
+            fillOpacity: 0.4,
+            color: 'yellow'
+        });
+    });
+
+    layer.on("mouseout",function(e) {
+
+        const colour = streetsHelper.getStreetColour(feature.properties['highway']);
+
+        if (colour)
+        {
+            layer.setStyle({
+                fillOpacity: 0.5,
+                color: colour
+            });
+        }
+
+        layer.setStyle({
+            fillOpacity: 0,
+            color: colour
+        });
+    });
+}
+
+/**
+ * On Each Street Material Layer
+ */
+function onEachStreetMaterial (feature, layer)
+{
+    layer.on('click', function (e) {
+        console.log(feature);
+    });
+
+    layer.on("mouseover", function(e) {
+        layer.setStyle({
+            fillOpacity: 0.4,
+            color: 'yellow'
+        });
+    });
+
+    layer.on("mouseout",function(e) {
+        layer.setStyle({
+            fillOpacity: 0,
+            color: '#3388ff'
+        });
+    });
 }
 
 function addPointsLayers (pointsArray)
