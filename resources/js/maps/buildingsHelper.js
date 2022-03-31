@@ -47,8 +47,62 @@ export const buildingsHelper = {
     {
         const keys = Object.keys(properties);
 
+        const niahKeysToInclude = [
+            'NAME',
+            'NAME_2',
+            'NUMBER',
+            'STREET1',
+            'STREET2',
+            'TLAND_NAME',
+            'REG_NO',
+            'created_da',
+            'last_edite',
+            'last_edi_1',
+            'VALUE_DESC', // regional, national ?
+            'ORIGINALTY',
+            'INUSETYPE', // interesting: list of features.
+            'NIAH_SITE_' // this is a link
+        ];
+
+        const niahKeysToExlude = [
+            'DATE_2', // A-B
+            'PUBLISH',
+            'SURVEY_ID',
+            'created_us',
+            'TOWN',
+            'COUNTY_COD',
+            'COUNTY',
+            'LOCAL_AUTH',
+            'RPS',
+            'RMP'
+        ]
+
         let building = {};
         let str = "";
+
+        // Check if the building has NIAH data first
+        if (properties['REG_NO']) {
+
+            str += "This data has been sourced from the <a href='https://maps.archaeology.ie/historicenvironment/' target='_blank'>National Inventory of Architectural Heritage</a>: <br> <br>";
+
+            // First, Add Year of Construction to the popup
+            if (properties['NEWDATE']) {
+                str += "<p style='margin: 0 !important;'>When it was built: " + properties['NEWDATE'] + "</p>";
+            }
+
+            // Add key: value from NIAH. Do not include date again.
+            niahKeysToInclude.forEach(key => {
+                if (properties[key] && key !== 'NEWDATE') {
+                    str += "<p style='margin: 0 !important;'>" + key + ": " + properties[key] + "</p>";
+                }
+            });
+
+            str += "<hr style='background-color: #ccc; margin: 1em; height: 1px;'>";
+        }
+
+        // If the building object does not have REG_NO, the data is from OSM, for now. Will be our data soon.
+
+        str += "This data has been sourced from <a href='https://openstreetmap.org' target='_blank'>OpenStreetMap</a>: <br> <br>";
 
         keys.forEach(key => {
 
@@ -56,23 +110,22 @@ export const buildingsHelper = {
             {
                 building[key] = properties[key];
 
-                if (key !== 'osm_id' && key !== 'full_id' && key !== 'osm_type' && key !== "type")
+                if (
+                    key !== 'osm_id'
+                    && key !== 'full_id'
+                    && key !== 'osm_type'
+                    && key !== 'type'
+                    && key !== 'NEWDATE'
+                    && !niahKeysToInclude.includes(key)
+                    && !niahKeysToExlude.includes(key)
+                )
                 {
-                    if (key === 'NEWDATE')
-                    {
-                        str += "<p style='margin: 0 !important;'>Year of Construction: " + properties[key] + "</p>";
-                    }
-                    else
-                    {
-                        str += "<p style='margin: 0 !important;'>" + key + ": " + properties[key] + "</p>";
-                    }
-
+                    str += "<p style='margin: 0 !important;'>" + key + ": " + properties[key] + "</p>";
                 }
             }
         });
 
         return { str, building };
     }
-
 }
 

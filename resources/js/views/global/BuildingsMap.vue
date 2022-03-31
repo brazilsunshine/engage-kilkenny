@@ -792,28 +792,6 @@ function createLegends ()
         return legend;
     };
     legend.addTo(map);
-
-    // Streets - Type of street (highway)
-    let streetLegend = L.control({
-        position: 'bottomleft'
-    });
-    streetLegend.onAdd = function (map) {
-        let legend = L.DomUtil.create('div', 'info legend street-legend');
-
-        legend.innerHTML += '<i style="background:' + streetsHelper.getStreetColour('corridor') + '"></i> Corridor <br>';
-        legend.innerHTML += '<i style="background:' + streetsHelper.getStreetColour('footway') + '"></i> Footway <br>';
-        legend.innerHTML += '<i style="background:' + streetsHelper.getStreetColour('path') + '"></i> Path <br>';
-        legend.innerHTML += '<i style="background:' + streetsHelper.getStreetColour('pedestrian') + '"></i> Pedestrian <br>';
-        legend.innerHTML += '<i style="background:' + streetsHelper.getStreetColour('residential') + '"></i> Residential <br>';
-        legend.innerHTML += '<i style="background:' + streetsHelper.getStreetColour('secondary') + '"></i> Secondary <br>';
-        legend.innerHTML += '<i style="background:' + streetsHelper.getStreetColour('service') + '"></i> Service <br>';
-        legend.innerHTML += '<i style="background:' + streetsHelper.getStreetColour('steps') + '"></i> Steps <br>';
-        legend.innerHTML += '<i style="background:' + streetsHelper.getStreetColour('tertiary') + '"></i> Tertiary <br>';
-        legend.innerHTML += '<i style="background:' + streetsHelper.getStreetColour('unclassified') + '"></i> Unclassified <br>';
-
-        return legend;
-    };
-    streetLegend.addTo(map);
 }
 </script>
 
@@ -825,12 +803,6 @@ function createLegends ()
         position: relative;
         width: 70%;
     }
-
-    /*.building-img {*/
-    /*    position: absolute;*/
-    /*    top: 1em;*/
-    /*    right: 1em;*/
-    /*}*/
 
     .leaflet-bottom {
         z-index: 1;
