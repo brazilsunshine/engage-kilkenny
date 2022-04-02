@@ -73,8 +73,8 @@ export const buildingsHelper = {
             'COUNTY_COD',
             'COUNTY',
             'LOCAL_AUTH',
-            'RPS',
-            'RMP'
+            'RPS', // Need this - Record of Protected Structures
+            'RMP' // Need this - Record of Momuments + Places
         ]
 
         let building = {};

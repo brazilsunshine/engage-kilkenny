@@ -64,7 +64,6 @@ class MigrateFileToSql extends Command
                 'attributes' => $attributes,
                 'polygon' => $coordinates
             ]);
-
         }
     }
 }

@@ -48,6 +48,8 @@ var points, wateringPlace, wasteBasket, vendingMachines, training, toilets, thea
     kitchen, gritBin, fountain, fastFood, doctors, dentist, communityCentre, college, clock,
     chargingStation, carWash, cafe, bicyclingParking, bench, bar, bank, atm, artsCentre, courtsCentre;
 
+var monuments;
+
 // todo - var parks, carParks, publicBuildings, stories;
 
 var layerController;
@@ -100,6 +102,10 @@ function createLayerController ()
                     { label: ' Year Of Construction', layer: buildings },
                     { label: ' Year Missing', layer: buildingsWithoutYear }
                 ]
+            },
+            {
+                label: ' Monuments',
+                layer: monuments
             },
             {
                 label: 'Streets',
@@ -266,6 +272,7 @@ export default {
         addWallsLayer(this.$store.state.globalmap.walls.features, this.$store.state.globalmap.points.features);
         addPointsLayers(this.$store.state.globalmap.points.features);
         addArtLayer(this.$store.state.globalmap.points.features);
+        addMonumentsLayer(this.$store.state.globalmap.monuments.features);
 
         window.buildingsMap.buildings = buildings;
 
@@ -511,6 +518,33 @@ function onEachStreetMaterial (feature, layer)
             fillOpacity: 0,
             color: '#3388ff'
         });
+    });
+}
+
+function addMonumentsLayer (monumentsArray)
+{
+    monuments = L.geoJSON(null, {
+        onEachFeature: onEachMonument
+    });
+
+    monuments.addData({
+        features: monumentsArray,
+        type: "FeatureCollection"
+    });
+}
+
+function onEachMonument (feature, layer)
+{
+    layer.on('click', function (e)
+    {
+        const { str } = streetsHelper.getStringObject(feature.properties);
+
+        L.popup(mapHelper.popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(str)
+            .openOn(map);
+
+        L.DomEvent.stopPropagation(e);
     });
 }
 
