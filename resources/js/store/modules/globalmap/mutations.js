@@ -97,6 +97,19 @@ export const mutations = {
         state.monuments = payload;
     },
 
+    setBridges (state, payload)
+    {
+        payload.features = payload.features.map(feature => {
+            Object.keys(feature.properties).map(key => {
+                if (!feature.properties[key]) delete feature.properties[key];
+            });
+
+            return feature;
+        });
+
+        state.bridges = payload;
+    },
+
     /**
      * Streets.geojson is fetched from the backend
      */

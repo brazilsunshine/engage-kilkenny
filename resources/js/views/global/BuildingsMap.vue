@@ -27,6 +27,7 @@ import { mapHelper } from '../../maps/mapHelpers';
 import { buildingsHelper } from "../../maps/buildingsHelper";
 import { streetsHelper } from "../../maps/streetsHelper";
 import { wallsHelper } from "../../maps/wallsHelper";
+import { monumentsHelper } from "../../maps/monumentsHelper";
 
 import SideMapContainer from "../../components/global/SideMapContainer";
 
@@ -49,6 +50,7 @@ var points, wateringPlace, wasteBasket, vendingMachines, training, toilets, thea
     chargingStation, carWash, cafe, bicyclingParking, bench, bar, bank, atm, artsCentre, courtsCentre;
 
 var monuments;
+var bridges, greensBridge, stFrancisBridge, ladyDesartBridge, johnsBridge;
 
 // todo - var parks, carParks, publicBuildings, stories;
 
@@ -104,58 +106,54 @@ function createLayerController ()
                 ]
             },
             {
-                label: ' Monuments',
-                layer: monuments
+                label: 'Historic',
+                collapsed: true,
+                selectAllCheckbox: false,
+                children: [
+                    { label: ' Archealogical', layer: archaeological },
+                    { label: ' City Gate', layer: cityGate },
+                    { label: ' Memorial', layer: memorial },
+                    { label: ' Monuments', layer: monuments },
+                    { label: ' Ogham Stone', layer: oghamStone },
+                    { label: ' Other', layer: historic },
+                    { label: ' Street Lamp', layer: streetLamp },
+                    { label: ' Tomb', layer: tomb },
+                    { label: ' Uncategorised', layer: uncategorised },
+                    { label: ' Walls', layer: walls },
+                ]
+            },
+            {
+                label: 'Bridges',
+                collapsed: true,
+                selectAllCheckbox: false,
+                children: [
+                    { label: ' Greens Bridge', layer: greensBridge },
+                    { label: ' Lady Desart Bridge', layer: ladyDesartBridge },
+                    { label: ' St. Francis Bridge', layer: stFrancisBridge },
+                    { label: ' Johns Bridge', layer: johnsBridge }
+                ]
             },
             {
                 label: 'Streets',
+                collapsed: true,
                 selectAllCheckbox: false,
                 children: [
-                    {
-                        label: ' Type',
-                        layer: streetTypes,
-                        children: [
-                            { label: ' Corridor', layer: corridor },
-                            { label: ' Footway', layer: footway },
-                            { label: ' Path', layer: path },
-                            { label: ' Pedestrian', layer: pedestrian },
-                            { label: ' Residential', layer: residential },
-                            { label: ' Secondary', layer: secondary },
-                            { label: ' Service', layer: service },
-                            { label: ' Steps', layer: steps },
-                            { label: ' Tertiary', layer: tertiary },
-                            { label: ' Unclassified', layer: unclassified }
-                        ],
-                    },
-                    {
-                        label: ' Street Material',
-                        layer: streetsMaterial
-                    }
-                ]
-            },
-            {
-                label: 'Historic',
-                selectAllCheckbox: false,
-                children: [
-                    { label: ' Walls', layer: walls },
-                    {
-                        label: ' Other',
-                        layer: historic,
-                        children: [
-                            { label: ' Archealogical', layer: archaeological },
-                            { label: ' City Gate', layer: cityGate },
-                            { label: ' Memorial', layer: memorial },
-                            { label: ' Ogham Stone', layer: oghamStone },
-                            { label: ' Street Lamp', layer: streetLamp },
-                            { label: ' Tomb', layer: tomb },
-                            { label: ' Uncategorised', layer: uncategorised },
-                        ]
-                    }
-                ]
+                    { label: ' Corridor', layer: corridor },
+                    { label: ' Footway', layer: footway },
+                    { label: ' Path', layer: path },
+                    { label: ' Pedestrian', layer: pedestrian },
+                    { label: ' Residential', layer: residential },
+                    { label: ' Secondary', layer: secondary },
+                    { label: ' Service', layer: service },
+                    { label: ' Steps', layer: steps },
+                    { label: ' Tertiary', layer: tertiary },
+                    { label: ' Unclassified', layer: unclassified }
+                ],
             },
             {
                 label: ' Art',
-                selectAllCheckbox: true,
+                collapsed: true,
+                selectAllCheckbox: false,
                 children: [
                     { label: ' Graffiti', layer: graffiti },
                     { label: ' Mural', layer: mural },
@@ -167,7 +165,8 @@ function createLayerController ()
             },
             {
                 label: ' Amenity',
-                selectAllCheckbox: true,
+                collapsed: true,
+                selectAllCheckbox: false,
                 children: [
                     { label: ' Arts Centre', layer: artsCentre },
                     { label: ' ATM', layer: atm },
@@ -234,7 +233,6 @@ export default {
          */
         buildingIsSelected ()
         {
-            console.log('hasBuilding', window.buildingsMap?.hasOwnProperty('building'));
             return window.buildingsMap?.hasOwnProperty('building');
         }
     },
@@ -524,7 +522,8 @@ function onEachStreetMaterial (feature, layer)
 function addMonumentsLayer (monumentsArray)
 {
     monuments = L.geoJSON(null, {
-        onEachFeature: onEachMonument
+        onEachFeature: onEachMonument,
+        pointToLayer: createGreenDotIcon
     });
 
     monuments.addData({
@@ -537,7 +536,7 @@ function onEachMonument (feature, layer)
 {
     layer.on('click', function (e)
     {
-        const { str } = streetsHelper.getStringObject(feature.properties);
+        const { str } = monumentsHelper.getString(feature.properties);
 
         L.popup(mapHelper.popupOptions)
             .setLatLng(e.latlng)

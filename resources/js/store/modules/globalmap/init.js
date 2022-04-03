@@ -9,5 +9,6 @@ export const init = {
     streets: null,
     walls: null,
     points: null,
-    monuments: null
+    monuments: null,
+    bridges: null
 };

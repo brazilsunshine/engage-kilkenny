@@ -31,6 +31,7 @@ export const actions = {
                     context.commit('setWalls', JSON.parse(response.data.walls));
                     context.commit('setPoints', JSON.parse(response.data.points));
                     context.commit('setMonuments', JSON.parse(response.data.monuments));
+                    context.commit('setBridges', JSON.parse(response.data.bridges));
                 }
             })
             .catch(error => {
