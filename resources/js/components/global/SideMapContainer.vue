@@ -4,7 +4,7 @@
 
         <div v-if="loggedIn" class="flex-1">
 
-            <div v-if="buildingNotSelected">
+            <div v-if="buildingOrBridgeNotSelected">
                 <p class="mb1">Select a building and then you can add a story or some data</p>
 
                 <AdminReviewData
@@ -163,16 +163,18 @@
 
             <img src="/assets/HC_logo_retina.png" class="small_heritage_logo" />
 
-            <p class="input-label">This data has been sourced from <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>
+            <p class="input-label">This data has been sourced from <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>,
 
-               and the <a href="https://maps.archaeology.ie/historicenvironment/">National Inventory of Architectual Heritage (NIAH)</a>
+                <a href="https://www.kilkennycoco.ie/" target="_blank">Kilkenny County Council</a>
+
+                and the <a href="https://maps.archaeology.ie/historicenvironment/">National Inventory of Architectural Heritage (NIAH)</a>
             </p>
         </div>
 
         <img
-            v-show="!buildingNotSelected"
-            style="position: absolute; bottom: 1em; right: 30.5em; z-index: 999"
-            :src="getBuildingImage"
+            v-show="!buildingOrBridgeNotSelected"
+            :src="getBuildingOrBridgeImage"
+            class="side-map-img"
         />
 
     </div>
@@ -225,15 +227,18 @@ export default {
     },
     computed: {
         /**
-         * Return True if the building object is null
+         * Return True if building and bridge is null
          */
-        buildingNotSelected () {
-
+        buildingOrBridgeNotSelected ()
+        {
             if (!window.hasOwnProperty('buildingsMap')) {
                 return true;
             }
 
-            return (window.buildingsMap?.building === null);
+            console.log('building', window.buildingsMap?.building);
+            console.log('bridge', window.buildingsMap?.bridge);
+
+            return (window.buildingsMap?.building === null && window.buildingsMap?.bridge === null);
         },
 
         /**
@@ -243,7 +248,7 @@ export default {
          */
         buildingHasDate ()
         {
-            return window.buildingsMap?.building.hasOwnProperty('NEWDATE');
+            return window.buildingsMap?.building?.hasOwnProperty('NEWDATE');
         },
 
         /**
@@ -253,18 +258,28 @@ export default {
          */
         getBuildingsDate ()
         {
-            return window.buildingsMap.building.NEWDATE;
+            return window.buildingsMap?.building?.NEWDATE;
         },
 
         /**
+         * Get the image to show, over the map, left of the SideMapContainer
          *
          * @returns {string}
          */
-        getBuildingImage ()
+        getBuildingOrBridgeImage ()
         {
+            console.log('get image');
+
             if (window.buildingsMap?.building?.REG_NO)
             {
                 return "https://www.buildingsofireland.ie/niah/images/survey_specific/fullsize/" + window.buildingsMap?.building.REG_NO + "_1.jpg";
+            }
+
+            if (window.buildingsMap?.bridge?.img)
+            {
+                console.log('get bridge image');
+
+                return window.buildingsMap.bridge.img;
             }
 
             return "";
@@ -452,6 +467,14 @@ export default {
         text-align: left;
         margin-bottom: 5px;
         color: #807c7c;
+    }
+
+    .side-map-img {
+        position: absolute;
+        bottom: 1em;
+        right: 30.5em;
+        z-index: 999;
+        max-height: 15em;
     }
 
 </style>

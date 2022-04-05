@@ -28,6 +28,8 @@ import { buildingsHelper } from "../../maps/buildingsHelper";
 import { streetsHelper } from "../../maps/streetsHelper";
 import { wallsHelper } from "../../maps/wallsHelper";
 import { monumentsHelper } from "../../maps/monumentsHelper";
+import { bridgesHelper } from "../../maps/bridgesHelper";
+import { acasHelper } from "../../maps/acasHelper";
 
 import SideMapContainer from "../../components/global/SideMapContainer";
 
@@ -49,8 +51,10 @@ var points, wateringPlace, wasteBasket, vendingMachines, training, toilets, thea
     kitchen, gritBin, fountain, fastFood, doctors, dentist, communityCentre, college, clock,
     chargingStation, carWash, cafe, bicyclingParking, bench, bar, bank, atm, artsCentre, courtsCentre;
 
-var monuments;
+var monuments, talbotsTower;
 var bridges, greensBridge, stFrancisBridge, ladyDesartBridge, johnsBridge;
+
+var acas;
 
 // todo - var parks, carParks, publicBuildings, stories;
 
@@ -113,10 +117,11 @@ function createLayerController ()
                     { label: ' Archealogical', layer: archaeological },
                     { label: ' City Gate', layer: cityGate },
                     { label: ' Memorial', layer: memorial },
-                    { label: ' Monuments', layer: monuments },
+                    { label: ' Protected Monuments', layer: monuments },
                     { label: ' Ogham Stone', layer: oghamStone },
                     { label: ' Other', layer: historic },
                     { label: ' Street Lamp', layer: streetLamp },
+                    { label: ' Talbot\s Tower', layer: talbotsTower },
                     { label: ' Tomb', layer: tomb },
                     { label: ' Uncategorised', layer: uncategorised },
                     { label: ' Walls', layer: walls },
@@ -128,8 +133,8 @@ function createLayerController ()
                 selectAllCheckbox: false,
                 children: [
                     { label: ' Greens Bridge', layer: greensBridge },
-                    { label: ' Lady Desart Bridge', layer: ladyDesartBridge },
                     { label: ' St. Francis Bridge', layer: stFrancisBridge },
+                    { label: ' Lady Desart Bridge', layer: ladyDesartBridge },
                     { label: ' Johns Bridge', layer: johnsBridge }
                 ]
             },
@@ -161,6 +166,14 @@ function createLayerController ()
                     { label: ' Sculpture', layer: sculpture },
                     { label: ' Stained Glass', layer: stainedGlassWindow },
                     { label: ' Statue', layer: statue }
+                ]
+            },
+            {
+                label: 'Areas of Conservation',
+                collapsed: true,
+                selectAllCheckbox: false,
+                children: [
+                    { label: ' Kilkenny', layer: acas }
                 ]
             },
             {
@@ -227,15 +240,6 @@ export default {
             buildingsKey: 0
         };
     },
-    computed: {
-        /**
-         * Return True if a building is selected
-         */
-        buildingIsSelected ()
-        {
-            return window.buildingsMap?.hasOwnProperty('building');
-        }
-    },
     mounted () {
         /** 0: Bind variable outside of vue scope */
         window.buildingsMap = this;
@@ -271,6 +275,9 @@ export default {
         addPointsLayers(this.$store.state.globalmap.points.features);
         addArtLayer(this.$store.state.globalmap.points.features);
         addMonumentsLayer(this.$store.state.globalmap.monuments.features);
+        addBridgesLayer(this.$store.state.globalmap.bridges.features);
+        addTalbotsTowerLayer(this.$store.state.globalmap.talbotsTower.features);
+        addACAsLayer(this.$store.state.globalmap.acas.features);
 
         window.buildingsMap.buildings = buildings;
 
@@ -279,6 +286,9 @@ export default {
         map.on('click', function (e) {
             window.buildingsMap.building = null;
             window.buildingsMap.street = null;
+            window.buildingsMap.bridge = null;
+
+            window.buildingsMap.buildingsKey++;
         });
 
         createLegends();
@@ -434,11 +444,11 @@ function addStreetLayers (streetsArray)
     tertiary.addData({ features: tertiaryArray, type: "FeatureCollection" });
     unclassified.addData({ features: unclassifiedArray, type: "FeatureCollection" });
     // 3.3 Add the streetMaterial column type
-    streetsMaterial = L.geoJSON(null, {
-        onEachFeature: onEachStreetMaterial
-    });
-    const filteredStreetsMaterial = streetsHelper.getFilteredArray(streetsArray, 'material');
-    streetsMaterial.addData({ features: filteredStreetsMaterial, type: "FeatureCollection" });
+    // streetsMaterial = L.geoJSON(null, {
+    //     onEachFeature: onEachStreetMaterial
+    // });
+    // const filteredStreetsMaterial = streetsHelper.getFilteredArray(streetsArray, 'material');
+    // streetsMaterial.addData({ features: filteredStreetsMaterial, type: "FeatureCollection" });
 }
 
 /**
@@ -495,13 +505,58 @@ function onEachStreetType (feature, layer)
     });
 }
 
-/**
- * On Each Street Material Layer
- */
-function onEachStreetMaterial (feature, layer)
+function addMonumentsLayer (monumentsArray)
 {
-    layer.on('click', function (e) {
-        console.log(feature);
+    monuments = L.geoJSON(null, {
+        onEachFeature: onEachMonument,
+        pointToLayer: createGreenDotIcon
+    });
+
+    monuments.addData({
+        features: monumentsArray,
+        type: "FeatureCollection"
+    });
+}
+
+function addBridgesLayer (bridgesArray)
+{
+    const greensBridgeJS = streetsHelper.getStreetByType(bridgesArray, 'name', 'Green\'s Bridge');
+    const stFrancisBridgeJS = streetsHelper.getStreetByType(bridgesArray, 'name', 'Saint Francis Bridge');
+    const ladyDesartBridgeJS = streetsHelper.getStreetByType(bridgesArray, 'name', 'Lady Desart Bridge');
+    const johnsBridgeJS = streetsHelper.getStreetByType(bridgesArray, 'name', 'John\'s Bridge');
+
+    greensBridge = L.geoJSON(greensBridgeJS, { onEachFeature: onEachBridge });
+    stFrancisBridge = L.geoJSON(stFrancisBridgeJS, { onEachFeature: onEachBridge });
+    ladyDesartBridge = L.geoJSON(ladyDesartBridgeJS, { onEachFeature: onEachBridge });
+    johnsBridge = L.geoJSON(johnsBridgeJS, { onEachFeature: onEachBridge });
+}
+
+function addTalbotsTowerLayer (talbotsTowerArray)
+{
+    talbotsTower = L.geoJSON(talbotsTowerArray, {
+        onEachFeature: onEachBridge
+    }).addTo(map);
+}
+
+function addACAsLayer (acasArray)
+{
+    acas = L.geoJSON(acasArray, {
+        onEachFeature: onEachACA
+    });
+}
+
+function onEachACA (feature, layer)
+{
+    layer.on('click', function (e)
+    {
+        const { str } = acasHelper.getString(feature.properties);
+
+        L.popup(mapHelper.popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(str)
+            .openOn(map);
+
+        L.DomEvent.stopPropagation(e);
     });
 
     layer.on("mouseover", function(e) {
@@ -513,22 +568,42 @@ function onEachStreetMaterial (feature, layer)
 
     layer.on("mouseout",function(e) {
         layer.setStyle({
-            fillOpacity: 0,
-            color: '#3388ff'
+            fillOpacity: 0.5,
+            color: "#3388ff"
         });
     });
 }
 
-function addMonumentsLayer (monumentsArray)
+function onEachBridge (feature, layer)
 {
-    monuments = L.geoJSON(null, {
-        onEachFeature: onEachMonument,
-        pointToLayer: createGreenDotIcon
+    layer.on('click', function (e)
+    {
+        const { str, bridge } = bridgesHelper.getString(feature.properties);
+
+        window.buildingsMap.bridge = bridge;
+
+        L.popup(mapHelper.popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(str)
+            .openOn(map);
+
+        window.buildingsMap.buildingsKey++;
+
+        L.DomEvent.stopPropagation(e);
     });
 
-    monuments.addData({
-        features: monumentsArray,
-        type: "FeatureCollection"
+    layer.on("mouseover", function(e) {
+        layer.setStyle({
+            fillOpacity: 0.4,
+            color: 'yellow'
+        });
+    });
+
+    layer.on("mouseout",function(e) {
+        layer.setStyle({
+            fillOpacity: 0.5,
+            color: "#3388ff"
+        });
     });
 }
 

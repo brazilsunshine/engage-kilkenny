@@ -10,5 +10,7 @@ export const init = {
     walls: null,
     points: null,
     monuments: null,
-    bridges: null
+    bridges: null,
+    talbotsTower: null,
+    acas: null
 };

@@ -22,7 +22,7 @@ export const actions = {
     {
         await axios.get('/global/buildings')
             .then(response => {
-                console.log('get_buildings', response);
+                console.log('get_all_layers', response);
 
                 if (response.data.success)
                 {
@@ -32,10 +32,12 @@ export const actions = {
                     context.commit('setPoints', JSON.parse(response.data.points));
                     context.commit('setMonuments', JSON.parse(response.data.monuments));
                     context.commit('setBridges', JSON.parse(response.data.bridges));
+                    context.commit('setTalbotsTower', JSON.parse(response.data.talbotsTower));
+                    context.commit('setACAs', JSON.parse(response.data.acas));
                 }
             })
             .catch(error => {
-                console.error('get_buildings', error);
+                console.error('get_all_layers', error);
             });
     },
 

@@ -110,6 +110,24 @@ export const mutations = {
         state.bridges = payload;
     },
 
+    setTalbotsTower (state, payload)
+    {
+        payload.features = payload.features.map(feature => {
+            Object.keys(feature.properties).map(key => {
+                if (!feature.properties[key]) delete feature.properties[key];
+            });
+
+            return feature;
+        });
+
+        state.talbotsTower = payload;
+    },
+
+    setACAs (state, payload)
+    {
+        state.acas = payload;
+    },
+
     /**
      * Streets.geojson is fetched from the backend
      */
