@@ -126,6 +126,16 @@ export const buildingsHelper = {
         });
 
         return { str, building };
+    },
+
+    /**
+     * Filter the buildings with years by Start, End date
+     */
+    getBuildingByYear (buildings, startRange, endRange)
+    {
+        return buildings.filter(building => {
+            return (building.properties.NEWDATE >= startRange && building.properties.NEWDATE <= endRange)
+        });
     }
 }
 

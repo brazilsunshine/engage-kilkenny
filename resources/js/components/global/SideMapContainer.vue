@@ -139,7 +139,7 @@
         <div v-else class="flex-1">
             <p>Click any building to see the data associated with it</p>
 
-            <p>Sign up to add stories about buildings</p>
+            <!-- <p>Sign up to add stories about buildings</p> -->
 
             <div
                 v-if="hasStories"

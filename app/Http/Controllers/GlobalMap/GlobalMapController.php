@@ -18,7 +18,7 @@ class GlobalMapController extends Controller
     public function buildings ()
     {
         $streets = file_get_contents(public_path('/js/geojson/streets.geojson'));
-        $walls = file_get_contents(public_path('/js/geojson/walls.geojson'));
+        $walls = file_get_contents(public_path('/js/geojson/newWalls2.geojson'));
         $points = file_get_contents(public_path('/js/geojson/points.geojson'));
         $monuments = file_get_contents(public_path('/js/geojson/monuments.geojson'));
         $bridges = file_get_contents(public_path('/js/geojson/bridges.geojson'));

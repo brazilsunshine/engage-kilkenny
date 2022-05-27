@@ -35,7 +35,15 @@ import SideMapContainer from "../../components/global/SideMapContainer";
 
 var map;
 
-var buildings, buildingsWithoutYear;
+var buildings, buildingsWithoutYear,
+    buildings_1200_1300,
+    buildings_1301_1605,
+    buildings_1651_1765,
+    buildings_1766_1815,
+    buildings_1816_1916,
+    buildings_1917_1950,
+    buildings_1951_2000,
+    buildings_2001_2022;
 
 var streets, streetTypes;
 var corridor, footway, path, pedestrian, residential, secondary, service, steps, tertiary, unclassified;
@@ -105,7 +113,20 @@ function createLayerController ()
                 label: 'Buildings',
                 selectAllCheckbox: false,
                 children: [
-                    { label: ' Year Of Construction', layer: buildings },
+                    {
+                        label: ' Year Of Construction',
+                        layer: buildings,
+                        children: [
+                            { label: '1200-1300', layer: buildings_1200_1300 },
+                            { label: '1301-1650', layer: buildings_1301_1605 },
+                            { label: '1651-1765', layer: buildings_1651_1765 },
+                            { label: '1766-1815', layer: buildings_1766_1815 },
+                            { label: '1816-1916', layer: buildings_1816_1916 },
+                            { label: '1917-1950', layer: buildings_1917_1950 },
+                            { label: '1951-2000', layer: buildings_1951_2000 },
+                            { label: '2001-2022', layer: buildings_2001_2022 }
+                        ]
+                    },
                     { label: ' Year Missing', layer: buildingsWithoutYear }
                 ]
             },
@@ -250,7 +271,7 @@ export default {
             zoom: 15,
             scrollWheelZoom: false,
             smoothWheelZoom: true,
-            smoothSensitivity: 1,
+            smoothSensitivity: 1
         });
 
         window.buildingsMap.map = map;
@@ -329,6 +350,24 @@ function addBuildingLayers (buildingsArray)
         features: filteredBuildingsWithoutYear,
         type: "FeatureCollection"
     });
+
+    const buildings_1200_1300_JS = buildingsHelper.getBuildingByYear(filteredBuildingsWithYear, 1200, 1300);
+    const buildings_1301_1605_JS = buildingsHelper.getBuildingByYear(filteredBuildingsWithYear, 1301, 1605);
+    const buildings_1651_1765_JS = buildingsHelper.getBuildingByYear(filteredBuildingsWithYear, 1651, 1765);
+    const buildings_1766_1815_JS = buildingsHelper.getBuildingByYear(filteredBuildingsWithYear, 1766, 1815);
+    const buildings_1816_1916_JS = buildingsHelper.getBuildingByYear(filteredBuildingsWithYear, 1816, 1916);
+    const buildings_1917_1950_JS = buildingsHelper.getBuildingByYear(filteredBuildingsWithYear, 1917, 1950);
+    const buildings_1951_2000_JS = buildingsHelper.getBuildingByYear(filteredBuildingsWithYear, 1951, 2000);
+    const buildings_2001_2022_JS = buildingsHelper.getBuildingByYear(filteredBuildingsWithYear, 2001, 2022);
+
+    buildings_1200_1300 = L.geoJSON(buildings_1200_1300_JS, { onEachFeature: onEachBuilding });
+    buildings_1301_1605 = L.geoJSON(buildings_1301_1605_JS, { onEachFeature: onEachBuilding });
+    buildings_1651_1765 = L.geoJSON(buildings_1651_1765_JS, { onEachFeature: onEachBuilding });
+    buildings_1766_1815 = L.geoJSON(buildings_1766_1815_JS, { onEachFeature: onEachBuilding });
+    buildings_1816_1916 = L.geoJSON(buildings_1816_1916_JS, { onEachFeature: onEachBuilding });
+    buildings_1917_1950 = L.geoJSON(buildings_1917_1950_JS, { onEachFeature: onEachBuilding });
+    buildings_1951_2000 = L.geoJSON(buildings_1951_2000_JS, { onEachFeature: onEachBuilding });
+    buildings_2001_2022 = L.geoJSON(buildings_2001_2022_JS, { onEachFeature: onEachBuilding });
 }
 
 /**
@@ -574,7 +613,7 @@ function onEachACA (feature, layer)
     });
 }
 
-function onEachBridge (feature, layer)
+    function onEachBridge (feature, layer)
 {
     layer.on('click', function (e)
     {
