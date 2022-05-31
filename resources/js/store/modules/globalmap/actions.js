@@ -20,7 +20,7 @@ export const actions = {
      */
     async GET_ALL_LAYERS (context)
     {
-        await axios.get('/global/buildings')
+        await axios.get('/map/get-layers')
             .then(response => {
                 console.log('get_all_layers', response);
 
@@ -34,6 +34,9 @@ export const actions = {
                     context.commit('setBridges', JSON.parse(response.data.bridges));
                     context.commit('setTalbotsTower', JSON.parse(response.data.talbotsTower));
                     context.commit('setACAs', JSON.parse(response.data.acas));
+                    context.commit('setCityBoundary', JSON.parse(response.data.cityBoundary));
+                    context.commit('setParishes', JSON.parse(response.data.parishes));
+                    context.commit('setFloodZone', JSON.parse(response.data.floodzone));
                 }
             })
             .catch(error => {

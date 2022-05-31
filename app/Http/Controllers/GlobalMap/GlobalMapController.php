@@ -13,18 +13,12 @@ class GlobalMapController extends Controller
     use FilterPhotosByGeoHashTrait;
 
     /**
-     * Get the buildings geojson file
+     * Get the buildings geojson file from the database
+     *
+     * Load all other layers from file
      */
-    public function buildings ()
+    public function getAllLayers ()
     {
-        $streets = file_get_contents(public_path('/js/geojson/streets.geojson'));
-        $walls = file_get_contents(public_path('/js/geojson/newWalls2.geojson'));
-        $points = file_get_contents(public_path('/js/geojson/points.geojson'));
-        $monuments = file_get_contents(public_path('/js/geojson/monuments.geojson'));
-        $bridges = file_get_contents(public_path('/js/geojson/bridges.geojson'));
-        $talbotsTower = file_get_contents(public_path('/js/geojson/talbotsTower.geojson'));
-        $acas = file_get_contents(public_path('/js/geojson/acas.geojson'));
-
         $buildings = Building::all();
 
         $buildingsGeojson = [
@@ -51,6 +45,17 @@ class GlobalMapController extends Controller
             ];
         }
 
+        $streets = file_get_contents(public_path('/js/geojson/streets.geojson'));
+        $walls = file_get_contents(public_path('/js/geojson/newWalls2.geojson'));
+        $points = file_get_contents(public_path('/js/geojson/points.geojson'));
+        $monuments = file_get_contents(public_path('/js/geojson/monuments.geojson'));
+        $bridges = file_get_contents(public_path('/js/geojson/bridges.geojson'));
+        $talbotsTower = file_get_contents(public_path('/js/geojson/talbotsTower.geojson'));
+        $acas = file_get_contents(public_path('/js/geojson/acas.geojson'));
+        $cityboundary = file_get_contents(public_path('/js/geojson/cityboundary.geojson'));
+        $parishes = file_get_contents(public_path('/js/geojson/parishes.geojson'));
+        $floodzone = file_get_contents(public_path('/js/geojson/floodzone.geojson'));
+
         return [
             'success' => true,
             'buildings' => $buildingsGeojson,
@@ -60,7 +65,10 @@ class GlobalMapController extends Controller
             'monuments' => $monuments,
             'bridges' => $bridges,
             'talbotsTower' => $talbotsTower,
-            'acas' => $acas
+            'acas' => $acas,
+            'cityBoundary' => $cityboundary,
+            'parishes' => $parishes,
+            'floodzone' => $floodzone
         ];
     }
 

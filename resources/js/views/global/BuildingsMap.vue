@@ -63,6 +63,7 @@ var monuments, talbotsTower;
 var bridges, greensBridge, stFrancisBridge, ladyDesartBridge, johnsBridge;
 
 var acas;
+var cityBoundary, parishes, floodzone;
 
 // todo - var parks, carParks, publicBuildings, stories;
 
@@ -198,6 +199,15 @@ function createLayerController ()
                 ]
             },
             {
+                label: ' Administrative',
+                collapsed: true,
+                selectAllCheckbox: false,
+                children: [
+                    { label: ' City Boundary', layer: cityBoundary },
+                    { label: ' Parishes', layer: parishes }
+                ]
+            },
+            {
                 label: ' Amenity',
                 collapsed: true,
                 selectAllCheckbox: false,
@@ -299,6 +309,9 @@ export default {
         addBridgesLayer(this.$store.state.globalmap.bridges.features);
         addTalbotsTowerLayer(this.$store.state.globalmap.talbotsTower.features);
         addACAsLayer(this.$store.state.globalmap.acas.features);
+        addCityBoundaryLayer(this.$store.state.globalmap.cityBoundary);
+        addParishesLayer(this.$store.state.globalmap.parishes);
+        addFloodZoneLayer(this.$store.state.globalmap.floodzone);
 
         window.buildingsMap.buildings = buildings;
 
@@ -613,7 +626,80 @@ function onEachACA (feature, layer)
     });
 }
 
-    function onEachBridge (feature, layer)
+function addCityBoundaryLayer (cityBoundaryArray)
+{
+    cityBoundary = L.geoJSON(cityBoundaryArray, {
+        onEachFeature: onCityBoundary
+    });
+}
+
+function addParishesLayer (parishesArray)
+{
+    parishes = L.geoJSON(parishesArray, {
+        onEachFeature: onEachParish
+    });
+}
+
+function addFloodZoneLayer (floodZoneArray)
+{
+    floodzone = L.geoJSON(floodZoneArray, {
+        onEachFeature: onEachFloodZone
+    });
+}
+
+function onEachParish (feature, layer)
+{
+    layer.on('click', function (e) {
+        L.popup(mapHelper.popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(feature.properties.Name)
+            .openOn(map);
+
+        L.DomEvent.stopPropagation(e);    });
+
+    layer.on("mouseover", function(e) {
+        layer.setStyle({
+            fillOpacity: 0.4,
+            color: 'yellow'
+        });
+    });
+
+    layer.on("mouseout",function(e) {
+        layer.setStyle({
+            fillOpacity: 0.5,
+            color: "#3388ff"
+        });
+    });
+}
+
+function onCityBoundary (feature, layer)
+{
+    layer.on('click', function (e) {
+        const str = "1842 Municipal Boundary of Kilkenny city";
+
+        L.popup(mapHelper.popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(str)
+            .openOn(map);
+
+        L.DomEvent.stopPropagation(e);    });
+
+    layer.on("mouseover", function(e) {
+        layer.setStyle({
+            fillOpacity: 0.4,
+            color: 'yellow'
+        });
+    });
+
+    layer.on("mouseout",function(e) {
+        layer.setStyle({
+            fillOpacity: 0.5,
+            color: "#3388ff"
+        });
+    });
+}
+
+function onEachBridge (feature, layer)
 {
     layer.on('click', function (e)
     {

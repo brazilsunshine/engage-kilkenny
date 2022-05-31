@@ -12,5 +12,8 @@ export const init = {
     monuments: null,
     bridges: null,
     talbotsTower: null,
-    acas: null
+    acas: null,
+    cityBoundary: null,
+    parishes: null,
+    floodzone: null
 };

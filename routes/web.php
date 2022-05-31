@@ -25,8 +25,7 @@ Route::post('/stripe/webhook', 'WebhookController@handleWebhook')->name('webhook
 
 Route::get('map', 'HomeController@index');
 
-Route::get('/global/buildings', 'GlobalMap\GlobalMapController@buildings');
-Route::get('/global/art-data', 'GlobalMap\GlobalMapController@artData');
+Route::get('/map/get-layers', 'GlobalMap\GlobalMapController@getAllLayers');
 
 // Get all stories for all buildings
 Route::get('/buildings/all-stories', 'StoryController@getAllStories');

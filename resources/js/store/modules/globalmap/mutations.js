@@ -129,6 +129,30 @@ export const mutations = {
     },
 
     /**
+     * cityboundary.geojson
+     */
+    setCityBoundary (state, payload)
+    {
+        state.cityBoundary = payload;
+    },
+
+    /**
+     * parishes.geojson
+     */
+    setParishes (state, payload)
+    {
+        state.parishes = payload;
+    },
+
+    /**
+     * floodzone.geojson
+     */
+    setFloodZone (state, payload)
+    {
+        state.floodzone = payload;
+    },
+
+    /**
      * Streets.geojson is fetched from the backend
      */
     setStreets (state, payload)
