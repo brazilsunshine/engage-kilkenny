@@ -63,7 +63,8 @@ var monuments, talbotsTower;
 var bridges, greensBridge, stFrancisBridge, ladyDesartBridge, johnsBridge;
 
 var acas;
-var cityBoundary, parishes, floodzone;
+var cityBoundary, parishes, stMarysParish, stCanicesParish, stPatricksParish, stMaulsParish, stJohnsParish;
+var floodzone;
 
 // todo - var parks, carParks, publicBuildings, stories;
 
@@ -204,7 +205,18 @@ function createLayerController ()
                 selectAllCheckbox: false,
                 children: [
                     { label: ' City Boundary', layer: cityBoundary },
-                    { label: ' Parishes', layer: parishes }
+                    {
+                        label: ' Parishes',
+                        collapsed: true,
+                        selectAllCheckbox: false,
+                        children: [
+                            { label: 'St Mary\'s', layer: stMarysParish },
+                            { label: 'St Canice\'s', layer: stCanicesParish },
+                            { label: 'St Patrick\'s', layer: stPatricksParish },
+                            { label: 'St Mauls\'', layer: stMaulsParish },
+                            { label: 'St Johns\'', layer: stJohnsParish }
+                        ]
+                    }
                 ]
             },
             {
@@ -251,6 +263,10 @@ function createLayerController ()
                     { label: ' Waste Basket', layer: wasteBasket },
                     { label: ' Watering Place', layer: wateringPlace },
                 ]
+            },
+            {
+                label: ' Floodzone',
+                layer: floodzone
             }
         ]
     }
@@ -638,12 +654,53 @@ function addParishesLayer (parishesArray)
     parishes = L.geoJSON(parishesArray, {
         onEachFeature: onEachParish
     });
+
+    const stMarysParishArray = streetsHelper.getStreetByType(parishesArray.features, 'Name', 'Parish of St Mary\'s');
+    const stCanicesParishArray = streetsHelper.getStreetByType(parishesArray.features, 'Name', 'Parish of St Canice\'s');
+    const stPatricksParishArray = streetsHelper.getStreetByType(parishesArray.features, 'Name', 'Parish of St Patrick\'s');
+    const stMaulsParishArray = streetsHelper.getStreetByType(parishesArray.features, 'Name', 'Parish of St Maul\'s');
+    const stJohnsParishArray = streetsHelper.getStreetByType(parishesArray.features, 'Name', 'Parish of St John\'s');
+
+    stMarysParish = L.geoJSON(stMarysParishArray, { onEachFeature: onEachParish });
+    stCanicesParish = L.geoJSON(stCanicesParishArray, { onEachFeature: onEachParish });
+    stPatricksParish = L.geoJSON(stPatricksParishArray, { onEachFeature: onEachParish });
+    stMaulsParish = L.geoJSON(stMaulsParishArray, { onEachFeature: onEachParish });
+    stJohnsParish = L.geoJSON(stJohnsParishArray, { onEachFeature: onEachParish });
 }
 
 function addFloodZoneLayer (floodZoneArray)
 {
     floodzone = L.geoJSON(floodZoneArray, {
         onEachFeature: onEachFloodZone
+    });
+}
+
+function onEachFloodZone (feature, layer)
+{
+    layer.on('click', function (e)
+    {
+        const str = "Apparently this area is at risk of flooding.";
+
+        L.popup(mapHelper.popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(str)
+            .openOn(map);
+
+        L.DomEvent.stopPropagation(e);
+    });
+
+    layer.on("mouseover", function(e) {
+        layer.setStyle({
+            fillOpacity: 0.4,
+            color: 'yellow'
+        });
+    });
+
+    layer.on("mouseout",function(e) {
+        layer.setStyle({
+            fillOpacity: 0.5,
+            color: "#3388ff"
+        });
     });
 }
 
@@ -655,7 +712,8 @@ function onEachParish (feature, layer)
             .setContent(feature.properties.Name)
             .openOn(map);
 
-        L.DomEvent.stopPropagation(e);    });
+        L.DomEvent.stopPropagation(e);
+    });
 
     layer.on("mouseover", function(e) {
         layer.setStyle({
