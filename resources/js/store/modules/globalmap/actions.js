@@ -37,6 +37,7 @@ export const actions = {
                     context.commit('setCityBoundary', JSON.parse(response.data.cityBoundary));
                     context.commit('setParishes', JSON.parse(response.data.parishes));
                     context.commit('setFloodZone', JSON.parse(response.data.floodzone));
+                    context.commit('setLandUseTypes', JSON.parse(response.data.landUseTypes));
                 }
             })
             .catch(error => {

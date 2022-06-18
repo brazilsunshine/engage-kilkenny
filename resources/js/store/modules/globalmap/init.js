@@ -15,5 +15,6 @@ export const init = {
     acas: null,
     cityBoundary: null,
     parishes: null,
-    floodzone: null
+    floodzone: null,
+    landUseTypes: null
 };

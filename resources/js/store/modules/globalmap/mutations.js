@@ -137,6 +137,14 @@ export const mutations = {
     },
 
     /**
+     * landUseTypes.geojson
+     */
+    setLandUseTypes (state, payload)
+    {
+        state.landUseTypes = payload;
+    },
+
+    /**
      * parishes.geojson
      */
     setParishes (state, payload)

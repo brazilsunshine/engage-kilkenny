@@ -55,6 +55,7 @@ class GlobalMapController extends Controller
         $cityboundary = file_get_contents(public_path('/js/geojson/cityboundary.geojson'));
         $parishes = file_get_contents(public_path('/js/geojson/parishes.geojson'));
         $floodzone = file_get_contents(public_path('/js/geojson/floodzone.geojson'));
+        $landUseTypes = file_get_contents(public_path('/js/geojson/landuseTypes.geojson'));
 
         return [
             'success' => true,
@@ -68,7 +69,8 @@ class GlobalMapController extends Controller
             'acas' => $acas,
             'cityBoundary' => $cityboundary,
             'parishes' => $parishes,
-            'floodzone' => $floodzone
+            'floodzone' => $floodzone,
+            'landUseTypes' => $landUseTypes
         ];
     }
 

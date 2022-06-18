@@ -62,8 +62,11 @@ var points, wateringPlace, wasteBasket, vendingMachines, training, toilets, thea
 var monuments, talbotsTower;
 var bridges, greensBridge, stFrancisBridge, ladyDesartBridge, johnsBridge;
 
+// Administrative
 var acas;
 var cityBoundary, parishes, stMarysParish, stCanicesParish, stPatricksParish, stMaulsParish, stJohnsParish;
+var brownfield, cemetery, commercial, construction, flowerbed, forest, government, grass, industrial, meadow,
+    orchard, railway, religious, residentialLandUse, retail, landUseTypes;
 var floodzone;
 
 // todo - var parks, carParks, publicBuildings, stories;
@@ -216,6 +219,29 @@ function createLayerController ()
                             { label: 'St Mauls\'', layer: stMaulsParish },
                             { label: 'St Johns\'', layer: stJohnsParish }
                         ]
+                    },
+                    {
+                        label: ' Land Use Types',
+                        layer: landUseTypes,
+                        collapsed: true,
+                        selectAllCheckbox: false,
+                        children: [
+                            { label: 'Brownfield', layer: brownfield },
+                            { label: 'Cemetery', layer: cemetery },
+                            { label: 'Commercial', layer: commercial },
+                            { label: 'Construction', layer: construction },
+                            { label: 'Flower bed', layer: flowerbed },
+                            { label: 'Forest', layer: forest },
+                            { label: 'Government', layer: government },
+                            { label: 'Grass', layer: grass },
+                            { label: 'Industrial', layer: industrial },
+                            { label: 'Meadow', layer: meadow },
+                            { label: 'Orchard', layer: orchard },
+                            { label: 'Railway', layer: railway },
+                            { label: 'Religious', layer: religious },
+                            { label: 'Residential', layer: residentialLandUse },
+                            { label: 'Retail', layer: retail }
+                        ]
                     }
                 ]
             },
@@ -328,6 +354,7 @@ export default {
         addCityBoundaryLayer(this.$store.state.globalmap.cityBoundary);
         addParishesLayer(this.$store.state.globalmap.parishes);
         addFloodZoneLayer(this.$store.state.globalmap.floodzone);
+        addLandUseTypes(this.$store.state.globalmap.landUseTypes);
 
         window.buildingsMap.buildings = buildings;
 
@@ -672,6 +699,78 @@ function addFloodZoneLayer (floodZoneArray)
 {
     floodzone = L.geoJSON(floodZoneArray, {
         onEachFeature: onEachFloodZone
+    });
+}
+
+function addLandUseTypes (landUseTypesArray)
+{
+    landUseTypes = L.geoJSON(landUseTypesArray, {
+        onEachFeature: onEachLandUseType
+    });
+
+    const brownFieldArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'brownfield');
+    const cemeteryArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'cemetery');
+    const commercialArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'commercial');
+    const constructionArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'construction');
+    const flowerBedArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'flowerbed');
+    const forestArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'forest');
+    const governmentArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'government');
+    const grassArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'grass');
+    const industrialArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'industrial');
+    const meadowArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'meadow');
+    const orchardArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'orchard');
+    const railwayArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'railway');
+    const religiousArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'religious');
+    const resLandUseArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'residential');
+    const retailArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'retail');
+
+    brownfield = L.geoJSON(brownFieldArray, { onEachFeature: onEachLandUseType });
+    cemetery = L.geoJSON(cemeteryArray, { onEachFeature: onEachLandUseType });
+    commercial = L.geoJSON(commercialArray, { onEachFeature: onEachLandUseType });
+    construction = L.geoJSON(constructionArray, { onEachFeature: onEachLandUseType });
+    flowerbed = L.geoJSON(flowerBedArray, { onEachFeature: onEachLandUseType });
+    forest = L.geoJSON(forestArray, { onEachFeature: onEachLandUseType });
+    government = L.geoJSON(governmentArray, { onEachFeature: onEachLandUseType });
+    grass = L.geoJSON(grassArray, { onEachFeature: onEachLandUseType });
+    industrial = L.geoJSON(industrialArray, { onEachFeature: onEachLandUseType });
+    meadow = L.geoJSON(meadowArray, { onEachFeature: onEachLandUseType });
+    orchard = L.geoJSON(orchardArray, { onEachFeature: onEachLandUseType });
+    railway = L.geoJSON(railwayArray, { onEachFeature: onEachLandUseType });
+    religious = L.geoJSON(religiousArray, { onEachFeature: onEachLandUseType });
+    residentialLandUse = L.geoJSON(resLandUseArray, { onEachFeature: onEachLandUseType });
+    retail = L.geoJSON(retailArray, { onEachFeature: onEachLandUseType });
+}
+
+function onEachLandUseType (feature, layer)
+{
+    layer.on('click', function (e)
+    {
+        const { str, bridge } = streetsHelper.getStringObject(feature.properties);
+
+        window.buildingsMap.bridge = bridge;
+
+        L.popup(mapHelper.popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(str)
+            .openOn(map);
+
+        window.buildingsMap.buildingsKey++;
+
+        L.DomEvent.stopPropagation(e);
+    });
+
+    layer.on("mouseover", function(e) {
+        layer.setStyle({
+            fillOpacity: 0.4,
+            color: 'yellow'
+        });
+    });
+
+    layer.on("mouseout",function(e) {
+        layer.setStyle({
+            fillOpacity: 0.5,
+            color: "#3388ff"
+        });
     });
 }
 
