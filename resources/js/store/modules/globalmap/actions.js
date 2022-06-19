@@ -38,6 +38,9 @@ export const actions = {
                     context.commit('setParishes', JSON.parse(response.data.parishes));
                     context.commit('setFloodZone', JSON.parse(response.data.floodzone));
                     context.commit('setLandUseTypes', JSON.parse(response.data.landUseTypes));
+                    context.commit('setOsmBoundaries', JSON.parse(response.data.osmBoundaries));
+                    context.commit('setNaturalOsm', JSON.parse(response.data.natural));
+                    context.commit('setLeisureOsm', JSON.parse(response.data.leisure));
                 }
             })
             .catch(error => {

@@ -137,6 +137,30 @@ export const mutations = {
     },
 
     /**
+     * osmBoundaries.geojson
+     */
+    setOsmBoundaries (state, payload)
+    {
+        state.osmBoundaries = payload;
+    },
+
+    /**
+     * leisureOsm.geojson
+     */
+    setLeisureOsm (state, payload)
+    {
+        state.leisure = payload;
+    },
+
+    /**
+     * naturalOSM.geojson
+     */
+    setNaturalOsm (state, payload)
+    {
+        state.naturalOsm = payload;
+    },
+
+    /**
      * landUseTypes.geojson
      */
     setLandUseTypes (state, payload)

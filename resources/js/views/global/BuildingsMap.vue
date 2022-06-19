@@ -30,6 +30,7 @@ import { wallsHelper } from "../../maps/wallsHelper";
 import { monumentsHelper } from "../../maps/monumentsHelper";
 import { bridgesHelper } from "../../maps/bridgesHelper";
 import { acasHelper } from "../../maps/acasHelper";
+import { landUseHelper } from "../../maps/landUseHelper";
 
 import SideMapContainer from "../../components/global/SideMapContainer";
 
@@ -44,6 +45,12 @@ var buildings, buildingsWithoutYear,
     buildings_1917_1950,
     buildings_1951_2000,
     buildings_2001_2022;
+
+var apartmentsPoly, bankPoly, bridgePoly, chapelPoly, churchPoly, cinemaPoly, civicPoly, clinicPoly, collegePoly,
+    commercialPoly, constructionPoly, dovecotePoly, detatchedPoly, fireStationPoly, garagePoly, governmentPoly,
+    hospitalPoly, hotelPoly, housePoly, industrialPoly, officePoly, publicPoly, residentialPoly, retailPoly,
+    roofPoly, ruinsPoly, schoolPoly, servicePoly, shedPoly, stadiumPoly, teahousePoly, terracePoly, towerPoly,
+    trainStationPoly, warehousePoly;
 
 var streets, streetTypes;
 var corridor, footway, path, pedestrian, residential, secondary, service, steps, tertiary, unclassified;
@@ -67,6 +74,10 @@ var acas;
 var cityBoundary, parishes, stMarysParish, stCanicesParish, stPatricksParish, stMaulsParish, stJohnsParish;
 var brownfield, cemetery, commercial, construction, flowerbed, forest, government, grass, industrial, meadow,
     orchard, railway, religious, residentialLandUse, retail, landUseTypes;
+var osmBoundaries;
+var naturalOsm;
+var leisure, garden, outdoor_seating, park, pitch, playground, sports_centre, stadium;
+
 var floodzone;
 
 // todo - var parks, carParks, publicBuildings, stories;
@@ -115,132 +126,37 @@ function createLayerController ()
         label: 'All Data',
         children: [
             {
-                label: 'Buildings',
-                selectAllCheckbox: false,
-                children: [
-                    {
-                        label: ' Year Of Construction',
-                        layer: buildings,
-                        children: [
-                            { label: '1200-1300', layer: buildings_1200_1300 },
-                            { label: '1301-1650', layer: buildings_1301_1605 },
-                            { label: '1651-1765', layer: buildings_1651_1765 },
-                            { label: '1766-1815', layer: buildings_1766_1815 },
-                            { label: '1816-1916', layer: buildings_1816_1916 },
-                            { label: '1917-1950', layer: buildings_1917_1950 },
-                            { label: '1951-2000', layer: buildings_1951_2000 },
-                            { label: '2001-2022', layer: buildings_2001_2022 }
-                        ]
-                    },
-                    { label: ' Year Missing', layer: buildingsWithoutYear }
-                ]
-            },
-            {
-                label: 'Historic',
-                collapsed: true,
-                selectAllCheckbox: false,
-                children: [
-                    { label: ' Archealogical', layer: archaeological },
-                    { label: ' City Gate', layer: cityGate },
-                    { label: ' Memorial', layer: memorial },
-                    { label: ' Protected Monuments', layer: monuments },
-                    { label: ' Ogham Stone', layer: oghamStone },
-                    { label: ' Other', layer: historic },
-                    { label: ' Street Lamp', layer: streetLamp },
-                    { label: ' Talbot\s Tower', layer: talbotsTower },
-                    { label: ' Tomb', layer: tomb },
-                    { label: ' Uncategorised', layer: uncategorised },
-                    { label: ' Walls', layer: walls },
-                ]
-            },
-            {
-                label: 'Bridges',
-                collapsed: true,
-                selectAllCheckbox: false,
-                children: [
-                    { label: ' Greens Bridge', layer: greensBridge },
-                    { label: ' St. Francis Bridge', layer: stFrancisBridge },
-                    { label: ' Lady Desart Bridge', layer: ladyDesartBridge },
-                    { label: ' Johns Bridge', layer: johnsBridge }
-                ]
-            },
-            {
-                label: 'Streets',
-                collapsed: true,
-                selectAllCheckbox: false,
-                children: [
-                    { label: ' Corridor', layer: corridor },
-                    { label: ' Footway', layer: footway },
-                    { label: ' Path', layer: path },
-                    { label: ' Pedestrian', layer: pedestrian },
-                    { label: ' Residential', layer: residential },
-                    { label: ' Secondary', layer: secondary },
-                    { label: ' Service', layer: service },
-                    { label: ' Steps', layer: steps },
-                    { label: ' Tertiary', layer: tertiary },
-                    { label: ' Unclassified', layer: unclassified }
-                ],
-            },
-            {
-                label: ' Art',
-                collapsed: true,
-                selectAllCheckbox: false,
-                children: [
-                    { label: ' Graffiti', layer: graffiti },
-                    { label: ' Mural', layer: mural },
-                    { label: ' Relief', layer: relief },
-                    { label: ' Sculpture', layer: sculpture },
-                    { label: ' Stained Glass', layer: stainedGlassWindow },
-                    { label: ' Statue', layer: statue }
-                ]
-            },
-            {
-                label: 'Areas of Conservation',
-                collapsed: true,
-                selectAllCheckbox: false,
-                children: [
-                    { label: ' Kilkenny', layer: acas }
-                ]
-            },
-            {
                 label: ' Administrative',
                 collapsed: true,
                 selectAllCheckbox: false,
                 children: [
-                    { label: ' City Boundary', layer: cityBoundary },
+                    {
+                        label: ' Official',
+                        collapsed: true,
+                        selectAllCheckbox: false,
+                        children: [
+                            { label: ' Areas of Conservation', layer: acas },
+                            { label: ' City Boundary', layer: cityBoundary },
+                        ]
+                    },
                     {
                         label: ' Parishes',
                         collapsed: true,
                         selectAllCheckbox: false,
                         children: [
-                            { label: 'St Mary\'s', layer: stMarysParish },
-                            { label: 'St Canice\'s', layer: stCanicesParish },
-                            { label: 'St Patrick\'s', layer: stPatricksParish },
-                            { label: 'St Mauls\'', layer: stMaulsParish },
-                            { label: 'St Johns\'', layer: stJohnsParish }
+                            { label: ' St Mary\'s', layer: stMarysParish },
+                            { label: ' St Canice\'s', layer: stCanicesParish },
+                            { label: ' St Patrick\'s', layer: stPatricksParish },
+                            { label: ' St Mauls\'', layer: stMaulsParish },
+                            { label: ' St Johns\'', layer: stJohnsParish }
                         ]
                     },
                     {
-                        label: ' Land Use Types',
-                        layer: landUseTypes,
+                        label: ' OpenStreetMap',
                         collapsed: true,
                         selectAllCheckbox: false,
                         children: [
-                            { label: 'Brownfield', layer: brownfield },
-                            { label: 'Cemetery', layer: cemetery },
-                            { label: 'Commercial', layer: commercial },
-                            { label: 'Construction', layer: construction },
-                            { label: 'Flower bed', layer: flowerbed },
-                            { label: 'Forest', layer: forest },
-                            { label: 'Government', layer: government },
-                            { label: 'Grass', layer: grass },
-                            { label: 'Industrial', layer: industrial },
-                            { label: 'Meadow', layer: meadow },
-                            { label: 'Orchard', layer: orchard },
-                            { label: 'Railway', layer: railway },
-                            { label: 'Religious', layer: religious },
-                            { label: 'Residential', layer: residentialLandUse },
-                            { label: 'Retail', layer: retail }
+                            { label: ' OSM Boundaries', layer: osmBoundaries }
                         ]
                     }
                 ]
@@ -291,8 +207,167 @@ function createLayerController ()
                 ]
             },
             {
-                label: ' Floodzone',
-                layer: floodzone
+                label: ' Art',
+                collapsed: true,
+                selectAllCheckbox: false,
+                children: [
+                    { label: ' Graffiti', layer: graffiti },
+                    { label: ' Mural', layer: mural },
+                    { label: ' Relief', layer: relief },
+                    { label: ' Sculpture', layer: sculpture },
+                    { label: ' Stained Glass', layer: stainedGlassWindow },
+                    { label: ' Statue', layer: statue }
+                ]
+            },
+            {
+                label: 'Bridges',
+                collapsed: true,
+                selectAllCheckbox: false,
+                children: [
+                    { label: ' Greens Bridge', layer: greensBridge },
+                    { label: ' St. Francis Bridge', layer: stFrancisBridge },
+                    { label: ' Lady Desart Bridge', layer: ladyDesartBridge },
+                    { label: ' Johns Bridge', layer: johnsBridge }
+                ]
+            },
+            {
+                label: 'Buildings',
+                selectAllCheckbox: false,
+                children: [
+                    {
+                        label: ' Year Of Construction',
+                        layer: buildings,
+                        children: [
+                            { label: ' 1200-1300', layer: buildings_1200_1300 },
+                            { label: ' 1301-1650', layer: buildings_1301_1605 },
+                            { label: ' 1651-1765', layer: buildings_1651_1765 },
+                            { label: ' 1766-1815', layer: buildings_1766_1815 },
+                            { label: ' 1816-1916', layer: buildings_1816_1916 },
+                            { label: ' 1917-1950', layer: buildings_1917_1950 },
+                            { label: ' 1951-2000', layer: buildings_1951_2000 },
+                            { label: ' 2001-2022', layer: buildings_2001_2022 }
+                        ]
+                    },
+                    {
+                        label: ' Year Missing',
+                        layer: buildingsWithoutYear
+                    },
+                    {
+                        label: ' Types',
+                        selectAllCheckbox: false,
+                        collapsed: true,
+                        children: [
+                            { label: ' Apartments', layer: apartmentsPoly },
+                            { label: ' Bank', layer: bankPoly },
+                            { label: ' Bridge', layer: bridgePoly },
+                            { label: ' Chapel', layer: chapelPoly },
+                            { label: ' Church', layer: churchPoly },
+                            { label: ' Cinema', layer: cinemaPoly },
+                            { label: ' Civic', layer: civicPoly },
+                            { label: ' Clinic', layer: clinicPoly },
+                            { label: ' College', layer: collegePoly },
+                            { label: ' Commercial', layer: commercialPoly },
+                            { label: ' Construction', layer: constructionPoly },
+                            { label: ' Dovecote', layer: dovecotePoly },
+                            { label: ' Detatched', layer: detatchedPoly },
+                            { label: ' Fire Station', layer: fireStationPoly },
+                            { label: ' Garage', layer: garagePoly },
+                            { label: ' Government', layer: governmentPoly },
+                            { label: ' Hospital', layer: hospitalPoly },
+                            { label: ' Hotel', layer: hotelPoly },
+                            { label: ' House', layer: housePoly },
+                            { label: ' Industrial', layer: industrialPoly },
+                            { label: ' Office', layer: officePoly },
+                            { label: ' Public', layer: publicPoly },
+                            { label: ' Residential', layer: residentialPoly },
+                            { label: ' Retail', layer: retailPoly },
+                            { label: ' Roof', layer: roofPoly },
+                            { label: ' Ruins', layer: ruinsPoly },
+                            { label: ' School', layer: schoolPoly },
+                            { label: ' Service', layer: servicePoly },
+                            { label: ' Shed', layer: shedPoly },
+                            { label: ' Stadium', layer: stadiumPoly },
+                            { label: ' Teahouse', layer: teahousePoly },
+                            { label: ' Terrace', layer: terracePoly },
+                            { label: ' Tower', layer: towerPoly },
+                            { label: ' Train Station', layer: trainStationPoly },
+                            { label: ' Warehouse', layer: warehousePoly }
+                        ]
+                    }
+                ]
+            },
+            {
+                label: 'Historic',
+                collapsed: true,
+                selectAllCheckbox: false,
+                children: [
+                    { label: ' Archealogical', layer: archaeological },
+                    { label: ' City Gate', layer: cityGate },
+                    { label: ' Memorial', layer: memorial },
+                    { label: ' Protected Monuments', layer: monuments },
+                    { label: ' Ogham Stone', layer: oghamStone },
+                    { label: ' Other', layer: historic },
+                    { label: ' Street Lamp', layer: streetLamp },
+                    { label: ' Talbot\s Tower', layer: talbotsTower },
+                    { label: ' Tomb', layer: tomb },
+                    { label: ' Uncategorised', layer: uncategorised },
+                    { label: ' Walls', layer: walls },
+                ]
+            },
+            {
+                label: ' Land Use Types',
+                collapsed: true,
+                selectAllCheckbox: false,
+                children: [
+                    { label: ' Brownfield', layer: brownfield },
+                    { label: ' Cemetery', layer: cemetery },
+                    { label: ' Commercial', layer: commercial },
+                    { label: ' Construction', layer: construction },
+                    { label: ' Floodzone', layer: floodzone },
+                    { label: ' Flower bed', layer: flowerbed },
+                    { label: ' Forest', layer: forest },
+                    { label: ' Government', layer: government },
+                    { label: ' Grass', layer: grass },
+                    { label: ' Industrial', layer: industrial },
+                    {
+                        label: ' Leisure',
+                        collapsed: false,
+                        selectAllCheckbox: false,
+                        children: [
+                            { label: ' Garden', layer: garden },
+                            { label: ' Outdoor seating', layer: outdoor_seating },
+                            { label: ' Park', layer: park },
+                            { label: ' Pitch', layer: pitch },
+                            { label: ' Playground', layer: playground },
+                            { label: ' Sports Centre', layer: sports_centre },
+                            { label: ' Stadium', layer: stadium }
+                        ]
+                    },
+                    { label: ' Meadow', layer: meadow },
+                    { label: ' Natural', layer: naturalOsm },
+                    { label: ' Orchard', layer: orchard },
+                    { label: ' Railway', layer: railway },
+                    { label: ' Religious', layer: religious },
+                    { label: ' Residential', layer: residentialLandUse },
+                    { label: ' Retail', layer: retail }
+                ]
+            },
+            {
+                label: 'Streets',
+                collapsed: true,
+                selectAllCheckbox: false,
+                children: [
+                    { label: ' Corridor', layer: corridor },
+                    { label: ' Footway', layer: footway },
+                    { label: ' Path', layer: path },
+                    { label: ' Pedestrian', layer: pedestrian },
+                    { label: ' Residential', layer: residential },
+                    { label: ' Secondary', layer: secondary },
+                    { label: ' Service', layer: service },
+                    { label: ' Steps', layer: steps },
+                    { label: ' Tertiary', layer: tertiary },
+                    { label: ' Unclassified', layer: unclassified }
+                ],
             }
         ]
     }
@@ -355,6 +430,9 @@ export default {
         addParishesLayer(this.$store.state.globalmap.parishes);
         addFloodZoneLayer(this.$store.state.globalmap.floodzone);
         addLandUseTypes(this.$store.state.globalmap.landUseTypes);
+        addOsmBoundaries(this.$store.state.globalmap.osmBoundaries);
+        addNaturalOsm(this.$store.state.globalmap.naturalOsm);
+        addLeisureOsm(this.$store.state.globalmap.leisure);
 
         window.buildingsMap.buildings = buildings;
 
@@ -377,13 +455,13 @@ export default {
  *
  * Create many layers that can be turned on and off
  */
-function addBuildingLayers (buildingsArray)
+function addBuildingLayers (buildingsGeojson)
 {
     buildings = L.geoJSON(null, {
         onEachFeature: onEachBuilding
     }).addTo(map);
 
-    const filteredBuildingsWithYear = buildingsArray.filter(feature => {
+    const filteredBuildingsWithYear = buildingsGeojson.filter(feature => {
         return (feature.properties.hasOwnProperty('NEWDATE'));
     });
 
@@ -396,7 +474,7 @@ function addBuildingLayers (buildingsArray)
         onEachFeature: onEachBuilding
     });
 
-    const filteredBuildingsWithoutYear = buildingsArray.filter(feature => {
+    const filteredBuildingsWithoutYear = buildingsGeojson.filter(feature => {
         if (!feature.properties.hasOwnProperty('NEWDATE')) {
             return feature;
         }
@@ -424,6 +502,79 @@ function addBuildingLayers (buildingsArray)
     buildings_1917_1950 = L.geoJSON(buildings_1917_1950_JS, { onEachFeature: onEachBuilding });
     buildings_1951_2000 = L.geoJSON(buildings_1951_2000_JS, { onEachFeature: onEachBuilding });
     buildings_2001_2022 = L.geoJSON(buildings_2001_2022_JS, { onEachFeature: onEachBuilding });
+
+    const apartmentsArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'apartments');
+    const bankArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'bank');
+    const bridgeArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'bridge');
+    const chapelArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'chapel');
+    const churchArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'church');
+    const cinemaArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'cinema');
+    const civicArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'civic');
+    const clinicArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'clinic');
+    const collegeArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'college');
+    const commercialArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'commercial');
+    const constructionArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'construction');
+    const dovecoteArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'dovecote');
+    const detatchedArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'detatched');
+    const fireStationArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'fire_station');
+    const garageArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'garage');
+    const governmentArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'government');
+    const hospitalArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'hospital');
+    const hotelArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'hotel');
+    const houseArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'house');
+    const industrialArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'industrial');
+    const officeArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'office');
+    const publicArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'public');
+    const residentialArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'residential');
+    const retailArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'retail');
+    const roofArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'roof');
+    const ruinsArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'ruins');
+    const schoolArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'school');
+    const serviceArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'service');
+    const shedArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'apartments');
+    const stadiumArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'apartments');
+    const teahouseArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'apartments');
+    const terraceArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'apartments');
+    const towerArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'apartments');
+    const trainStationAarray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'apartments');
+    const warehouseArray = streetsHelper.getStreetByType(buildingsGeojson, 'building', 'apartments');
+
+    apartmentsPoly = L.geoJSON(apartmentsArray, { onEachFeature: onEachDefaultLayer });
+    bankPoly = L.geoJSON(bankArray, { onEachFeature: onEachDefaultLayer });
+    bridgePoly = L.geoJSON(bridgeArray, { onEachFeature: onEachDefaultLayer });
+    chapelPoly = L.geoJSON(chapelArray, { onEachFeature: onEachDefaultLayer });
+    churchPoly = L.geoJSON(churchArray, { onEachFeature: onEachDefaultLayer });
+    cinemaPoly = L.geoJSON(cinemaArray, { onEachFeature: onEachDefaultLayer });
+    civicPoly = L.geoJSON(civicArray, { onEachFeature: onEachDefaultLayer });
+    clinicPoly = L.geoJSON(clinicArray, { onEachFeature: onEachDefaultLayer });
+    collegePoly = L.geoJSON(collegeArray, { onEachFeature: onEachDefaultLayer });
+    commercialPoly = L.geoJSON(commercialArray, { onEachFeature: onEachDefaultLayer });
+    constructionPoly = L.geoJSON(constructionArray, { onEachFeature: onEachDefaultLayer });
+    dovecotePoly = L.geoJSON(dovecoteArray, { onEachFeature: onEachDefaultLayer });
+    detatchedPoly = L.geoJSON(detatchedArray, { onEachFeature: onEachDefaultLayer });
+    fireStationPoly = L.geoJSON(fireStationArray, { onEachFeature: onEachDefaultLayer });
+    garagePoly = L.geoJSON(garageArray, { onEachFeature: onEachDefaultLayer });
+    governmentPoly = L.geoJSON(governmentArray, { onEachFeature: onEachDefaultLayer });
+    hospitalPoly = L.geoJSON(hospitalArray, { onEachFeature: onEachDefaultLayer });
+    hotelPoly = L.geoJSON(hotelArray, { onEachFeature: onEachDefaultLayer });
+    housePoly = L.geoJSON(houseArray, { onEachFeature: onEachDefaultLayer });
+    industrialPoly = L.geoJSON(industrialArray, { onEachFeature: onEachDefaultLayer });
+    officePoly = L.geoJSON(officeArray, { onEachFeature: onEachDefaultLayer });
+    publicPoly = L.geoJSON(publicArray, { onEachFeature: onEachDefaultLayer });
+    residentialPoly = L.geoJSON(residentialArray, { onEachFeature: onEachDefaultLayer });
+    retailPoly = L.geoJSON(retailArray, { onEachFeature: onEachDefaultLayer });
+    roofPoly = L.geoJSON(roofArray, { onEachFeature: onEachDefaultLayer });
+    ruinsPoly = L.geoJSON(ruinsArray, { onEachFeature: onEachDefaultLayer });
+    schoolPoly = L.geoJSON(schoolArray, { onEachFeature: onEachDefaultLayer });
+    servicePoly = L.geoJSON(serviceArray, { onEachFeature: onEachDefaultLayer });
+    // apartmentsPoly = L.geoJSON(apartmentsArray, { onEachFeature: onEachDefaultLayer });
+    // apartmentsPoly = L.geoJSON(apartmentsArray, { onEachFeature: onEachDefaultLayer });
+    // apartmentsPoly = L.geoJSON(apartmentsArray, { onEachFeature: onEachDefaultLayer });
+    // apartmentsPoly = L.geoJSON(apartmentsArray, { onEachFeature: onEachDefaultLayer });
+    // apartmentsPoly = L.geoJSON(apartmentsArray, { onEachFeature: onEachDefaultLayer });
+    // apartmentsPoly = L.geoJSON(apartmentsArray, { onEachFeature: onEachDefaultLayer });
+    // apartmentsPoly = L.geoJSON(apartmentsArray, { onEachFeature: onEachDefaultLayer });
+    // apartmentsPoly = L.geoJSON(apartmentsArray, { onEachFeature: onEachDefaultLayer });
 }
 
 /**
@@ -702,27 +853,101 @@ function addFloodZoneLayer (floodZoneArray)
     });
 }
 
-function addLandUseTypes (landUseTypesArray)
+function addNaturalOsm (naturalOsmGeojson)
 {
-    landUseTypes = L.geoJSON(landUseTypesArray, {
+    naturalOsm = L.geoJSON(naturalOsmGeojson, {
+        onEachFeature: onEachDefaultLayer
+    });
+}
+
+function addLeisureOsm (leisureGeojson)
+{
+    leisure = L.geoJSON(leisureGeojson, {
+        onEachFeature: onEachDefaultLayer
+    });
+
+    const gardenArray = streetsHelper.getStreetByType(leisureGeojson.features, 'leisure', 'garden');
+    const outdoorSeatingArray = streetsHelper.getStreetByType(leisureGeojson.features, 'leisure', 'outdoor_seating');
+    const parkArray = streetsHelper.getStreetByType(leisureGeojson.features, 'leisure', 'park');
+    const pitchArray = streetsHelper.getStreetByType(leisureGeojson.features, 'leisure', 'pitch');
+    const playgroundArray = streetsHelper.getStreetByType(leisureGeojson.features, 'leisure', 'playground');
+    const sportsCentreArray = streetsHelper.getStreetByType(leisureGeojson.features, 'leisure', 'sports_centre');
+    const stadiumArray = streetsHelper.getStreetByType(leisureGeojson.features, 'leisure', 'stadium');
+
+    garden = L.geoJSON(gardenArray, { onEachFeature: onEachDefaultLayer });
+    outdoor_seating = L.geoJSON(outdoorSeatingArray, { onEachFeature: onEachDefaultLayer });
+    park = L.geoJSON(parkArray, { onEachFeature: onEachDefaultLayer });
+    pitch = L.geoJSON(pitchArray, { onEachFeature: onEachDefaultLayer });
+    playground = L.geoJSON(playgroundArray, { onEachFeature: onEachDefaultLayer });
+    sports_centre = L.geoJSON(sportsCentreArray, { onEachFeature: onEachDefaultLayer });
+    stadium = L.geoJSON(stadiumArray, { onEachFeature: onEachDefaultLayer });
+
+}
+
+function addOsmBoundaries (osmBoundariesGeojson)
+{
+    osmBoundaries = L.geoJSON(osmBoundariesGeojson, {
+        onEachFeature: onEachDefaultLayer
+    });
+}
+
+/**
+ * Default layer:
+ *
+ * Blue colour,
+ * Shows generic popup,
+ * Yellow on hover.
+ */
+function onEachDefaultLayer (feature, layer)
+{
+    layer.on('click', function (e)
+    {
+        const { str } = streetsHelper.getStringObject(feature.properties);
+
+        L.popup(mapHelper.popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(str)
+            .openOn(map);
+
+        L.DomEvent.stopPropagation(e);
+    });
+
+    layer.on("mouseover", function(e) {
+        layer.setStyle({
+            fillOpacity: 0.4,
+            color: 'yellow'
+        });
+    });
+
+    layer.on("mouseout",function(e) {
+        layer.setStyle({
+            fillOpacity: 0.5,
+            color: "#3388ff"
+        });
+    });
+}
+
+function addLandUseTypes (landUseGeoJson)
+{
+    landUseTypes = L.geoJSON(landUseGeoJson, {
         onEachFeature: onEachLandUseType
     });
 
-    const brownFieldArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'brownfield');
-    const cemeteryArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'cemetery');
-    const commercialArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'commercial');
-    const constructionArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'construction');
-    const flowerBedArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'flowerbed');
-    const forestArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'forest');
-    const governmentArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'government');
-    const grassArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'grass');
-    const industrialArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'industrial');
-    const meadowArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'meadow');
-    const orchardArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'orchard');
-    const railwayArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'railway');
-    const religiousArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'religious');
-    const resLandUseArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'residential');
-    const retailArray = streetsHelper.getStreetByType(landUseTypesArray.features, 'landuse', 'retail');
+    const brownFieldArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'brownfield');
+    const cemeteryArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'cemetery');
+    const commercialArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'commercial');
+    const constructionArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'construction');
+    const flowerBedArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'flowerbed');
+    const forestArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'forest');
+    const governmentArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'government');
+    const grassArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'grass');
+    const industrialArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'industrial');
+    const meadowArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'meadow');
+    const orchardArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'orchard');
+    const railwayArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'railway');
+    const religiousArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'religious');
+    const resLandUseArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'residential');
+    const retailArray = streetsHelper.getStreetByType(landUseGeoJson.features, 'landuse', 'retail');
 
     brownfield = L.geoJSON(brownFieldArray, { onEachFeature: onEachLandUseType });
     cemetery = L.geoJSON(cemeteryArray, { onEachFeature: onEachLandUseType });
@@ -743,18 +968,25 @@ function addLandUseTypes (landUseTypesArray)
 
 function onEachLandUseType (feature, layer)
 {
+    const colour = landUseHelper.getColour(feature.properties.landuse);
+
+    layer.setStyle({
+        fillOpacity: 0.4,
+        color: colour
+    });
+
     layer.on('click', function (e)
     {
         const { str, bridge } = streetsHelper.getStringObject(feature.properties);
 
-        window.buildingsMap.bridge = bridge;
+        // window.buildingsMap.bridge = bridge;
 
         L.popup(mapHelper.popupOptions)
             .setLatLng(e.latlng)
             .setContent(str)
             .openOn(map);
 
-        window.buildingsMap.buildingsKey++;
+        // window.buildingsMap.buildingsKey++;
 
         L.DomEvent.stopPropagation(e);
     });
@@ -769,7 +1001,7 @@ function onEachLandUseType (feature, layer)
     layer.on("mouseout",function(e) {
         layer.setStyle({
             fillOpacity: 0.5,
-            color: "#3388ff"
+            color: colour
         });
     });
 }

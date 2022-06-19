@@ -167,7 +167,9 @@
 
                 <a href="https://www.kilkennycoco.ie/" target="_blank">Kilkenny County Council</a>
 
-                and the <a href="https://maps.archaeology.ie/historicenvironment/">National Inventory of Architectural Heritage (NIAH)</a>
+                and the <a href="https://maps.archaeology.ie/historicenvironment/">National Inventory of Architectural Heritage (NIAH). </a>
+
+                The initial codebase was forked from <a href="https://openlittermap.com">OpenLitterMap.</a>
             </p>
         </div>
 

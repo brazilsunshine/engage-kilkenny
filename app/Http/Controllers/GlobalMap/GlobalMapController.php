@@ -56,6 +56,9 @@ class GlobalMapController extends Controller
         $parishes = file_get_contents(public_path('/js/geojson/parishes.geojson'));
         $floodzone = file_get_contents(public_path('/js/geojson/floodzone.geojson'));
         $landUseTypes = file_get_contents(public_path('/js/geojson/landuseTypes.geojson'));
+        $osmBoundaries = file_get_contents(public_path('/js/geojson/osmBoundaries.geojson'));
+        $natural = file_get_contents(public_path('/js/geojson/naturalOSM.geojson'));
+        $leisure = file_get_contents(public_path('/js/geojson/leisureOsm.geojson'));
 
         return [
             'success' => true,
@@ -70,7 +73,10 @@ class GlobalMapController extends Controller
             'cityBoundary' => $cityboundary,
             'parishes' => $parishes,
             'floodzone' => $floodzone,
-            'landUseTypes' => $landUseTypes
+            'landUseTypes' => $landUseTypes,
+            'osmBoundaries' => $osmBoundaries,
+            'natural' => $natural,
+            'leisure' => $leisure
         ];
     }
 
