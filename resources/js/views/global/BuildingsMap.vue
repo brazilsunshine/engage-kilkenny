@@ -52,6 +52,14 @@ var apartmentsPoly, bankPoly, bridgePoly, chapelPoly, churchPoly, cinemaPoly, ci
     roofPoly, ruinsPoly, schoolPoly, servicePoly, shedPoly, stadiumPoly, teahousePoly, terracePoly, towerPoly,
     trainStationPoly, warehousePoly;
 
+
+var bankAmenity, barAmenity, bicyclingParkingAmenity, cafeAmenity, carWashAmenity, cinemaAmenity, clinicAmenity,
+    collegeAmenity, communityCentreAmenity, courtHouseAmenity, coworkingSpaceAmenity, fastFoodAmenity, fireStationAmenity,
+    fuelAmenity, graveyardAmenity, libraryAmenity, kindergartenAmenity, parkingAmenity, policeAmenity, postOfficeAmenity, pharmacyAmenity,
+    placeOfWorshipAmenity, pubAmenity, restaurantAmenity, schoolAmenity, shelterAmenity, socialFacilityAmenity,
+    taxiAmenity, theatreAmenity, townhallAmenity, vetinaryAmenity;
+
+
 var streets, streetTypes;
 var corridor, footway, path, pedestrian, residential, secondary, service, steps, tertiary, unclassified;
 var streetsMaterial;
@@ -293,6 +301,44 @@ function createLayerController ()
                             { label: ' Train Station', layer: trainStationPoly },
                             { label: ' Warehouse', layer: warehousePoly }
                         ]
+                    },
+                    {
+                        label: ' Amenities',
+                        selectAllCheckbox: false,
+                        collapsed: true,
+                        children: [
+                            { label: ' Bank', layer: bankAmenity },
+                            { label: ' Bar', layer: barAmenity },
+                            { label: ' Bicycle Parking', layer: bicyclingParkingAmenity },
+                            { label: ' Cafe', layer: cafeAmenity },
+                            { label: ' Car Wash', layer: carWashAmenity },
+                            { label: ' Cinema', layer: cinemaAmenity },
+                            { label: ' Clinic', layer: clinicAmenity },
+                            { label: ' College', layer: collegeAmenity },
+                            { label: ' Community Centre', layer: communityCentreAmenity },
+                            { label: ' Courthouse', layer: courtHouseAmenity },
+                            { label: ' Coworking Space', layer: coworkingSpaceAmenity },
+                            { label: ' Fast Food', layer: fastFoodAmenity },
+                            { label: ' Fire Station', layer: fireStationAmenity },
+                            { label: ' Fuel', layer: fuelAmenity },
+                            { label: ' Graveyard', layer: graveyardAmenity },
+                            { label: ' Library', layer: libraryAmenity },
+                            { label: ' Kindergarten', layer: kindergartenAmenity },
+                            { label: ' Parking', layer: parkingAmenity },
+                            { label: ' Pharmacy', layer: pharmacyAmenity },
+                            { label: ' Place of Worship', layer: placeOfWorshipAmenity },
+                            { label: ' Police', layer: policeAmenity },
+                            { label: ' Post Office', layer: postOfficeAmenity },
+                            { label: ' Pub', layer: pubAmenity },
+                            { label: ' Restaurant', layer: restaurantAmenity },
+                            { label: ' School', layer: schoolAmenity },
+                            { label: ' Shelter', layer: shelterAmenity },
+                            { label: ' Social Facility', layer: socialFacilityAmenity },
+                            { label: ' Taxi', layer: taxiAmenity },
+                            { label: ' Theatre', layer: theatreAmenity },
+                            { label: ' Townhall', layer: townhallAmenity },
+                            { label: ' Vetinary', layer: vetinaryAmenity},
+                        ]
                     }
                 ]
             },
@@ -433,6 +479,7 @@ export default {
         addOsmBoundaries(this.$store.state.globalmap.osmBoundaries);
         addNaturalOsm(this.$store.state.globalmap.naturalOsm);
         addLeisureOsm(this.$store.state.globalmap.leisure);
+        addAmenitiesOsm(this.$store.state.globalmap.amenities);
 
         window.buildingsMap.buildings = buildings;
 
@@ -882,6 +929,73 @@ function addLeisureOsm (leisureGeojson)
     sports_centre = L.geoJSON(sportsCentreArray, { onEachFeature: onEachDefaultLayer });
     stadium = L.geoJSON(stadiumArray, { onEachFeature: onEachDefaultLayer });
 
+}
+
+function addAmenitiesOsm (amenitiesGeojson)
+{
+    const bankArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'bank');
+    const barArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'bar');
+    const bicyclingParkingArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'bicycle_parking');
+    const cafeArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'cafe');
+    const carWashArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'car_wash');
+    const cinemaArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'cinema');
+    const clinicArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'clinic');
+    const collegeArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'college');
+    const communityCentreArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'community_centre');
+    const courtHouseArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'courthouse');
+    const coworkingSpaceArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'coworking_space');
+    const fastFoodArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'fast_food');
+    const fireStationArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'fire_station');
+    const fuelArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'fuel');
+    const graveyardArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'grave_yard');
+    const libraryArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'library');
+    const kindergartenArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'kindergarten');
+    const parkingArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'parking');
+    const pharmacyArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'pharmacy');
+    const placeOfWorshipArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'place_of_worship');
+    const policeArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'police');
+    const postOfficeArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'post_office');
+    const pubArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'pub');
+    const restaurantArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'restaurant');
+    const schoolArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'school');
+    const shelterArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'shelter');
+    const socialFacilityArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'social_facility');
+    const taxiArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'taxi');
+    const theatreArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'theatre');
+    const townhallArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'townhall');
+    const vetinaryArray = streetsHelper.getStreetByType(amenitiesGeojson.features, 'amenity', 'vetinary');
+
+    bankAmenity = L.geoJSON(bankArray, { onEachFeature: onEachDefaultLayer });
+    barAmenity = L.geoJSON(barArray, { onEachFeature: onEachDefaultLayer });
+    bicyclingParkingAmenity = L.geoJSON(bicyclingParkingArray, { onEachFeature: onEachDefaultLayer });
+    cafeAmenity = L.geoJSON(cafeArray, { onEachFeature: onEachDefaultLayer });
+    carWashAmenity = L.geoJSON(carWashArray, { onEachFeature: onEachDefaultLayer });
+    cinemaAmenity = L.geoJSON(cinemaArray, { onEachFeature: onEachDefaultLayer });
+    clinicAmenity = L.geoJSON(clinicArray, { onEachFeature: onEachDefaultLayer });
+    collegeAmenity = L.geoJSON(collegeArray, { onEachFeature: onEachDefaultLayer });
+    communityCentreAmenity = L.geoJSON(communityCentreArray, { onEachFeature: onEachDefaultLayer });
+    courtHouseAmenity = L.geoJSON(courtHouseArray, { onEachFeature: onEachDefaultLayer });
+    coworkingSpaceAmenity = L.geoJSON(coworkingSpaceArray, { onEachFeature: onEachDefaultLayer });
+    fastFoodAmenity = L.geoJSON(fastFoodArray, { onEachFeature: onEachDefaultLayer });
+    fireStationAmenity = L.geoJSON(fireStationArray, { onEachFeature: onEachDefaultLayer });
+    fuelAmenity = L.geoJSON(fuelArray, { onEachFeature: onEachDefaultLayer });
+    graveyardAmenity = L.geoJSON(graveyardArray, { onEachFeature: onEachDefaultLayer });
+    libraryAmenity = L.geoJSON(libraryArray, { onEachFeature: onEachDefaultLayer });
+    kindergartenAmenity = L.geoJSON(kindergartenArray, { onEachFeature: onEachDefaultLayer });
+    parkingAmenity = L.geoJSON(parkingArray, { onEachFeature: onEachDefaultLayer });
+    pharmacyAmenity = L.geoJSON(pharmacyArray, { onEachFeature: onEachDefaultLayer });
+    placeOfWorshipAmenity = L.geoJSON(placeOfWorshipArray, { onEachFeature: onEachDefaultLayer });
+    policeAmenity = L.geoJSON(policeArray, { onEachFeature: onEachDefaultLayer });
+    postOfficeAmenity = L.geoJSON(postOfficeArray, { onEachFeature: onEachDefaultLayer });
+    pubAmenity = L.geoJSON(pubArray, { onEachFeature: onEachDefaultLayer });
+    restaurantAmenity = L.geoJSON(restaurantArray, { onEachFeature: onEachDefaultLayer });
+    schoolAmenity = L.geoJSON(schoolArray, { onEachFeature: onEachDefaultLayer });
+    shelterAmenity = L.geoJSON(shelterArray, { onEachFeature: onEachDefaultLayer });
+    socialFacilityAmenity = L.geoJSON(socialFacilityArray, { onEachFeature: onEachDefaultLayer });
+    taxiAmenity = L.geoJSON(taxiArray, { onEachFeature: onEachDefaultLayer });
+    theatreAmenity = L.geoJSON(theatreArray, { onEachFeature: onEachDefaultLayer });
+    townhallAmenity = L.geoJSON(townhallArray, { onEachFeature: onEachDefaultLayer });
+    vetinaryAmenity = L.geoJSON(vetinaryArray, { onEachFeature: onEachDefaultLayer });
 }
 
 function addOsmBoundaries (osmBoundariesGeojson)
